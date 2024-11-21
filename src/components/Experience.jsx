@@ -1,20 +1,21 @@
 import {
-  ContactShadows,
-  Environment,
-  Float,
   OrbitControls,
+  PerspectiveCamera,
 } from "@react-three/drei";
-import { Mug } from "./Mug";
+import Card from "./Card";
 
 export const Experience = () => {
   return (
     <>
-      <OrbitControls />
-      <Float>
-        <Mug />
-      </Float>
-      <ContactShadows position-y={-0.5} opacity={0.4} blur={2} />
-      <Environment preset="sunset" background blur={4} />
+        {/* Camera */}
+        <PerspectiveCamera makeDefault position={[0, 0, 5]} />
+        {/* Controls */}
+        <OrbitControls />
+        {/* Lights */}
+        <ambientLight intensity={5} />
+        <directionalLight position={[10, 10, 10]} />
+
+        <Card  />
     </>
   );
 };
