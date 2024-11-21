@@ -1,6 +1,6 @@
+import blendUVs from "./blendUVs";
 
 
-import blendUVs from './blendUvs.jsx';
 
 /**
  * Combines all texture maps for the given layers

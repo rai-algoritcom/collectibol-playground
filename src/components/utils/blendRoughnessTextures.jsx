@@ -1,5 +1,5 @@
 
-import blendUVs from './blendUvs.jsx';
+import blendUVs from './blendUVs.jsx';
 
 
 /**
