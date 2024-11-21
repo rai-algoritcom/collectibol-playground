@@ -259,6 +259,17 @@ export default function LayeredMaterialCard({ textures }) {
 
     useEffect(() => {
         refreshMesh(); 
+
+        return () => {
+            if (shaderRef.current) {
+                shaderRef.current.dispose()
+                shaderRef.current = null
+            }
+            if (overlayRef.current) {
+                overlayRef.current.dispose()
+                overlayRef.current = null
+            }
+        }
     }, [
         useParticles,
         useSpin,
