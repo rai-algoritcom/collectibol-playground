@@ -2,7 +2,7 @@ import {
   OrbitControls,
   PerspectiveCamera,
 } from "@react-three/drei";
-import Card from "./Card";
+import Card from "./Card.jsx";
 
 export const Experience = () => {
   return (
