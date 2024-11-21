@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { Experience } from "./components/Experience";
+import { Experience } from "./components/Experience.jsx";
 import { Environment } from "@react-three/drei";
 
 function App() {

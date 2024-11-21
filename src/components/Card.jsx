@@ -1,6 +1,6 @@
 
 import { useTexture } from "@react-three/drei";
-import LayeredMaterialCard from "./Layers/LayeredMaterialCard";
+import LayeredMaterialCard from "./Layers/LayeredMaterialCard.jsx";
 import { useState } from "react";
 import { folder, useControls } from "leva";
 
