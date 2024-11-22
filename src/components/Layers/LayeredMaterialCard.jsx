@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from 'three';
-import { folder, useControls } from "leva";
+import { button, folder, useControls } from "leva";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
 
@@ -8,63 +8,66 @@ import { useTexture } from "@react-three/drei";
 /**
  * Vertex
  */
-import standardVertexShader from '../utils/shaders/vertex/standardShader'
-import glitchVertexShader from "../utils/shaders/vertex/glitchShader";
-import waveVertexShader from "../utils/shaders/vertex/waveShader";
-import breathVertexShader from "../utils/shaders/vertex/breathShader";
-import twisterVertexShader from '../utils/shaders/vertex/twisterShader'
-import pulseVertexShader from '../utils/shaders/vertex/pulseShader';
-import jitterVertexShader from '../utils/shaders/vertex/jitterShader';
+import standardVertexShader from '../utils/shaders/vertex/standardShader.glsl'
+import glitchVertexShader from "../utils/shaders/vertex/glitchShader.glsl";
+import waveVertexShader from "../utils/shaders/vertex/waveShader.glsl";
+import breathVertexShader from "../utils/shaders/vertex/breathShader.glsl";
+import twisterVertexShader from '../utils/shaders/vertex/twisterShader.glsl'
+import pulseVertexShader from '../utils/shaders/vertex/pulseShader.glsl';
+import jitterVertexShader from '../utils/shaders/vertex/jitterShader.glsl';
 
 
 /**
  * Lights Fragment
  */
-import standardFragmentShader from '../utils/shaders/fragments/standardShader';
-import iridescenceFragmentShader from '../utils/shaders/fragments/iridescenceShader';
-import brightnessFragmentShader from '../utils/shaders/fragments/brightnessShader';
+import standardFragmentShader from '../utils/shaders/fragments/standardShader.glsl';
+import iridescenceFragmentShader from '../utils/shaders/fragments/iridescenceShader.glsl';
+import brightnessFragmentShader from '../utils/shaders/fragments/brightnessShader.glsl';
 
 
 /**
  * Fx Fragment
  */
-import cardioFxFragmentShader from "../utils/shaders/fx/cardioShader";
-import squaresFxFragmentShader from "../utils/shaders/fx/squaresShader"
-import circleFxFragmentShader from "../utils/shaders/fx/circleShader"
-import dankFxFragmentShader from "../utils/shaders/fx/dankShader"
-import lightFxFragmentShader from "../utils/shaders/fx/lightShader"
-import etherFxFragmentShader from "../utils/shaders/fx/etherShader"
-import fireFxFragmentShader from "../utils/shaders/fx/fireShader"
-import waveFxFragmentShader from "../utils/shaders/fx/waveShader"
-import smokeFxFragmentShader from "../utils/shaders/fx/smokeShader"
-import rayFxFragmentShader from "../utils/shaders/fx/rayShader"
-import crystalFxFragmentShader from "../utils/shaders/fx/crystalShader"
-import galaxyFxFragmentShader from "../utils/shaders/fx/galaxyShader"
-import liquidFxFragmentShader from "../utils/shaders/fx/liquidShader"
-import asciFxFragmentShader from "../utils/shaders/fx/asciShader"
-import spinFxFragmentShader from "../utils/shaders/fx/spinShader"
-import particlesFxFragmentShader from "../utils/shaders/fx/particlesShader"
+import cardioFxFragmentShader from "../utils/shaders/fx/cardioShader.glsl";
+import squaresFxFragmentShader from "../utils/shaders/fx/squaresShader.glsl"
+import circleFxFragmentShader from "../utils/shaders/fx/circleShader.glsl"
+import dankFxFragmentShader from "../utils/shaders/fx/dankShader.glsl"
+import lightFxFragmentShader from "../utils/shaders/fx/lightShader.glsl"
+import etherFxFragmentShader from "../utils/shaders/fx/etherShader.glsl"
+import fireFxFragmentShader from "../utils/shaders/fx/fireShader.glsl"
+import waveFxFragmentShader from "../utils/shaders/fx/waveShader.glsl"
+import smokeFxFragmentShader from "../utils/shaders/fx/smokeShader.glsl"
+import rayFxFragmentShader from "../utils/shaders/fx/rayShader.glsl"
+import crystalFxFragmentShader from "../utils/shaders/fx/crystalShader.glsl"
+import galaxyFxFragmentShader from "../utils/shaders/fx/galaxyShader.glsl"
+import liquidFxFragmentShader from "../utils/shaders/fx/liquidShader.glsl"
+import asciFxFragmentShader from "../utils/shaders/fx/asciShader.glsl"
+import spinFxFragmentShader from "../utils/shaders/fx/spinShader.glsl"
+import particlesFxFragmentShader from "../utils/shaders/fx/particlesShader.glsl"
 
 
 /**
  * Blenders
  */
 import { 
-    blendNormalTextures, 
-    blendAlbedoTextures, 
-    blendRoughnessTextures, 
-    blendHeightTextures, 
-    blendAlphaTextures 
+    blendNormalTXs, 
+    blendAlbedoTXs, 
+    blendRoughnessTXs, 
+    blendHeightTXs, 
+    blendAlphaTXs 
 } from "../utils";
+import { debounce } from "../utils/utils";
 
 
-export default function LayeredMaterialCard({ textures }) {
+export default function LayeredMaterialCard({ textures, texturePaths }) {
     const { gl } = useThree(); 
 
     const [key, setKey] = useState(0);
 
     const shaderRef = useRef()
     const overlayRef = useRef()
+
+    const [jsonCfg, setJsonCfg] = useState()
 
     const albedoToggles = useControls('Albedo Channels', {
         base_albedo: {
@@ -113,7 +116,7 @@ export default function LayeredMaterialCard({ textures }) {
 
     const heightToggles = useControls('Height Channels', {
         base_height: {
-            value: true,
+            value: false,
             label: 'Base'
         },
         pattern_height: {
@@ -121,11 +124,11 @@ export default function LayeredMaterialCard({ textures }) {
             label: 'Pattern'
         },
         main_interest_height: {
-            value: true,
+            value: false,
             label: 'Main'
         },
         layout_height: {
-            value: true,
+            value: false,
             label: 'Layout'
         },
         grading_height: {
@@ -140,7 +143,7 @@ export default function LayeredMaterialCard({ textures }) {
             label: 'Base'
         },
         main_interest_normal: {
-            value: true,
+            value: false,
             label: 'Main'
         },
         layout_normal: {
@@ -157,37 +160,41 @@ export default function LayeredMaterialCard({ textures }) {
 
     // Blended Textures
     const blendedAlbedoTextures = useMemo(() => {
-        return blendAlbedoTextures(gl, textures, albedoToggles);
+        return blendAlbedoTXs(gl, textures, albedoToggles);
     }, [gl, textures, albedoToggles]);
 
     const blendedAlphaTextures = useMemo(() => {
-        return blendAlphaTextures(gl, textures, alphaToggles);
+        return blendAlphaTXs(gl, textures, alphaToggles);
     }, [gl, textures, alphaToggles]);
 
     const blendedHeightTextures = useMemo(() => {
-        return blendHeightTextures(gl, textures, heightToggles);
+        return blendHeightTXs(gl, textures, heightToggles);
     }, [gl, textures, heightToggles]);
 
     const blendedRoughnessTextures = useMemo(() => {
-        return blendRoughnessTextures(gl, textures, roughnessToggles);
+        return blendRoughnessTXs(gl, textures, roughnessToggles);
     }, [gl, textures, roughnessToggles]);
 
     const blendedNormalTextures = useMemo(() => {
-        return blendNormalTextures(gl, textures, normalToggles);
+        return blendNormalTXs(gl, textures, normalToggles);
+    }, [gl, textures, normalToggles]);
+
+    const blendedNormalTexturesIris = useMemo(() => {
+        return blendNormalTXs(gl, textures, {...normalToggles, base_normal: false });
     }, [gl, textures, normalToggles]);
 
 
     const { roughnessIntensity, roughnessPresence } = useControls('Roughness Config.', {
         roughnessIntensity: {
             label: 'Intensity',
-            value: 1.1,
+            value: 0.7,
             min: 0.0,
             max: 2.0,
             step: 0.1,
         },
         roughnessPresence: {
             label: 'Presence',
-            value: 0.1,
+            value: 0.5,
             min: 0.0,
             max: 1.0,
             step: 0.1,
@@ -195,21 +202,35 @@ export default function LayeredMaterialCard({ textures }) {
     });
 
     const { normalIntensity } = useControls('Normal Config.', {
-        normalIntensity: { label: 'Intensity', value: 2.0, min: 0.1, max: 5.0, step: 0.1 }
+        normalIntensity: { label: 'Intensity', value: 3.85, min: 0.1, max: 5.0, step: 0.01 }
     });
-    
 
-    const { ambientLightColor, ambientLightIntensity } = useControls('Lighting Config.', {
-        ambientLightColor: { value: { r: 0, g: 0, b: 0 }, label: 'Color' }, // Soft gray color
-        ambientLightIntensity: { value: 0.3, min: 0, max: 1, step: 0.01, label: 'Intensity' }
-    });
+
+    const {
+        ambientLightColor,
+        ambientLightIntensity,
+        directionalLightColor,
+        directionalLightIntensity,
+        pointLightColor,
+        pointLightIntensity,
+        pointLightDecay
+    } = useControls('Lighting Config. [Ambient, Directional, Point]', {
+        ambientLightColor: { value: { r: 0, g: 0, b: 0 }, label: 'AL Color' },
+        ambientLightIntensity: { value: 0.03, min: 0, max: 1, step: 0.001, label: 'AL Intensity' },
+        directionalLightColor: { value: { r: 7, g: 7, b: 7 }, label: 'DL Color' },
+        directionalLightIntensity: { value: 0.22, min: 0, max: 1, step: 0.001, label: 'DL Intensity' },
+        pointLightColor: { value: { r: 121, g: 121, b: 121 }, label: 'PL Color' },
+        pointLightIntensity: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL Intensity' },
+        pointLightDecay: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL Decay' },
+    })
+    
 
     const [irisTexturePath, setIrisTexturePath] = useState('/prod/main_interest/ao.jpg')
     const irisTexture = useTexture(irisTexturePath);
 
     const { useIridescence, iridescenceIntensity, iridescenceColor1, iridescenceColor2 } = useControls('Iridescence Fx', {
         useIridescence: { value: false, label: 'Enable' },
-        iridescenceIntensity: { value: 0.0045, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
+        iridescenceIntensity: { value: 0.02, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
         iridescenceColor1: { value: { r: 252, g: 102, b: 226 }, label: 'Color 1' },
         iridescenceColor2: { value: { r: 231, g: 245, b: 81 }, label: 'Color 2' },
         Mask: folder({'Texture': {
@@ -219,7 +240,7 @@ export default function LayeredMaterialCard({ textures }) {
 
     
     const { useBrightness, brightnessIntensity, brightnessColor } = useControls('Brightness Fx', {
-        useBrightness: { value: false, label: 'Enable' },
+        useBrightness: { value: true, label: 'Enable' },
         brightnessIntensity: { value: 0.0045, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
         brightnessColor: { value: { r: 231, g: 245, b: 81 }, label: 'Color' },
     })
@@ -253,12 +274,144 @@ export default function LayeredMaterialCard({ textures }) {
         useParticles: { value: false, label: 'Particles Fx' }
     })
 
+
+
+
+    const handleDownloadJSON = (cfg) => {
+            const configData = JSON.stringify(cfg, null, 2); // Convert config to JSON string
+            const blob = new Blob([configData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'configurations.json';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+    }
+
+    useControls({
+        'Download JSON': button(() => handleDownloadJSON(jsonCfg))
+    })
+
+
     const refreshMesh = () => {
         setKey((prevKey) => prevKey + 1);
     }
 
+
     useEffect(() => {
+
+        const cfg =
+            {
+                textures: texturePaths,
+                albedo_ch: albedoToggles, 
+                alpha_ch: alphaToggles,
+                roughness_ch: roughnessToggles,
+                height_ch: heightToggles, 
+                normal_ch: normalToggles,
+                roughness_intensity: roughnessIntensity,
+                roughness_presence: roughnessPresence,
+                normal_intensity: normalIntensity,
+                lights: {
+                    ambient_light_color: ambientLightColor,
+                    ambient_light_intensity: ambientLightIntensity,
+                    directional_light_color: directionalLightColor,
+                    directional_light_intensity: directionalLightIntensity,
+                    point_light_color: pointLightColor,
+                    point_light_intensity: pointLightIntensity,
+                    point_light_decay: pointLightDecay
+                },
+                iridescence: {
+                    iridescence_intensity: iridescenceIntensity,
+                    use_iridescence: useIridescence,
+                    iridescence_color_1: iridescenceColor1,
+                    iridescence_color_2: iridescenceColor2,
+                    iridescence_mask: irisTexturePath
+                },
+                brightness: {
+                    brightness_intensity: brightnessIntensity,
+                    use_brightness: useIridescence ? false : useBrightness,
+                    brightness_color: brightnessColor,
+                    brightness_mask: irisTexturePath
+                },
+                vertex_fx: {
+                    id: useGlitch 
+                    ? 
+                    'glitch' 
+                    : useWave 
+                    ? 
+                    'wave' 
+                    : useBreath
+                    ? 
+                    'breath'
+                    : useTwister
+                    ?
+                    'twister'
+                    : usePulse
+                    ?
+                    'float'
+                    : useJitter
+                    ? 
+                    'jitter'
+                    : 'none'
+                },
+                fragment_fx: {
+                    id: useCircle 
+                    ?
+                    'circle'
+                    : useSquares 
+                    ?
+                    'fractal'
+                    : useDank
+                    ? 
+                    'dank'
+                    : useShine
+                    ?
+                    'shine'
+                    : useEther
+                    ?
+                    'ether'
+                    : useFire
+                    ?
+                    'fire'
+                    : useWaves
+                    ?
+                    'waves'
+                    : useSmoke 
+                    ?
+                    'smoke'
+                    : useRay 
+                    ?
+                    'ray'
+                    : useCrystal 
+                    ?
+                    'crystal'
+                    : useGalaxy 
+                    ?
+                    'galaxy'
+                    : useLiquid 
+                    ? 
+                    'liquid'
+                    : useAsci 
+                    ?
+                    'asci'
+                    : useSpin 
+                    ?
+                    'spin'
+                    : useParticles 
+                    ? 
+                    'particles'
+                    : useCardio 
+                    ? 
+                    'cardio'
+                    : 'none'
+                }
+            }
+
         refreshMesh(); 
+
+        setJsonCfg(cfg)
 
         return () => {
             if (shaderRef.current) {
@@ -304,13 +457,19 @@ export default function LayeredMaterialCard({ textures }) {
         normalIntensity,
         roughnessIntensity,
         roughnessPresence,
-        ambientLightColor, 
-        ambientLightIntensity,
         blendedAlbedoTextures,
         blendedAlphaTextures,
         blendedHeightTextures,
         blendedRoughnessTextures,
-        blendedNormalTextures
+        blendedNormalTextures,
+        // Lights
+        ambientLightColor,
+        ambientLightIntensity,
+        directionalLightColor,
+        directionalLightIntensity,
+        pointLightColor,
+        pointLightIntensity,
+        pointLightDecay
     ])
 
 
@@ -329,16 +488,6 @@ export default function LayeredMaterialCard({ textures }) {
             <mesh key={`main-${key}`}> 
                 <planeGeometry args={[2, 3, 120, 120]} />
                 {
-                        // <meshPhysicalMaterial 
-                        //     map={blendedAlbedoTextures}
-                        //     alphaMap={blendedAlphaTextures}
-                        //     displacementMap={blendedHeightTextures}
-                        //     roughnessMap={blendedRoughnessTextures}
-                        //     displacementScale={0.05}
-                        //     side={THREE.DoubleSide}
-                        //     transparent={true}
-                        // />
-                        
                         <shaderMaterial
                             ref={shaderRef}
                             needsUpdate={true}
@@ -348,24 +497,43 @@ export default function LayeredMaterialCard({ textures }) {
                                 alphaMap: { value: blendedAlphaTextures },
                                 heightMap: { value: blendedHeightTextures },
                                 roughnessMap: { value: blendedRoughnessTextures },
-                                normalMap: { value: blendedNormalTextures },
+                                normalMap: { value: useIridescence ? blendedNormalTexturesIris : blendedNormalTextures },
                                 iridescenceMask: { value: irisTexture },
+                                
                                 displacementScale: { value: 0.025 },
                                 normalIntensity: { value: normalIntensity }, 
-                                lightDirection: { value: new THREE.Vector3(1, 1, 1).normalize() },
-                                ambientLightColor: { value: ambientLightColor }, 
-                                ambientLightIntensity: { value: ambientLightIntensity },
+
+                                lightDirection: { value: new THREE.Vector3(0, 0, 2).normalize() },
                                 cameraPosition: { value: new THREE.Vector3(0, 0, 5) },
+
+                                /**
+                                 * Lights
+                                 */
+                                // Ambient Light 
+                                ambientLightColor: { value: ambientLightColor },
+                                ambientLightIntensity: { value: ambientLightIntensity },
+                                // Directional Light 
+                                directionalLightColor: { value: directionalLightColor },
+                                directionalLightIntensity: { value: directionalLightIntensity },
+                                // Point Light 
+                                pointLightColor: { value: pointLightColor },
+                                pointLightIntensity: { value: pointLightIntensity },
+                                pointLightPosition: { value: new THREE.Vector3(0, 0, 10) },
+                                pointLightDecay: { value: pointLightDecay },
+
                                 roughnessIntensity: { value: roughnessIntensity },
                                 roughnessPresence: { value: roughnessPresence },
+
                                 useIridescence: { value: useIridescence }, 
                                 iridescenceIntensity: { value: iridescenceIntensity },
                                 iridescenceColor1: { value: iridescenceColor1 }, 
                                 iridescenceColor2: { value: iridescenceColor2 },
+
                                 useBrightness: { value: useBrightness  },
                                 brightnessIntensity: { value: brightnessIntensity },
                                 brightnessColor1: { value: brightnessColor },
                                 brightnessColor2: { value: iridescenceColor1 },
+
                                 uTime: { value: 0.0 },
                                 uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
                             }}

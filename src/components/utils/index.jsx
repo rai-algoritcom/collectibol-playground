@@ -1,13 +1,13 @@
-import { blendAlbedoTextures } from "./blendAlbedoTextures.jsx"
-import { blendAlphaTextures } from "./blendAlphaTextures.jsx"
-import { blendHeightTextures  } from "./blendHeightTextures.jsx"
-import { blendNormalTextures } from "./blendNormalTextures.jsx"
-import { blendRoughnessTextures } from "./blendRoughnessTextures.jsx"
+import { blendAlbedoTXs } from "./blendAlbedoTXs.jsx"
+import { blendAlphaTXs } from "./blendAlphaTXs.jsx"
+import { blendHeightTXs  } from "./blendHeightTXs.jsx"
+import { blendNormalTXs } from "./blendNormalTXs.jsx"
+import { blendRoughnessTXs } from "./blendRoughnessTXs.jsx"
 
 export {
-    blendAlbedoTextures,
-    blendAlphaTextures,
-    blendHeightTextures,
-    blendNormalTextures,
-    blendRoughnessTextures
+    blendAlbedoTXs,
+    blendAlphaTXs,
+    blendHeightTXs,
+    blendNormalTXs,
+    blendRoughnessTXs
 }
