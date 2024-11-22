@@ -137,6 +137,7 @@ export default function Card() {
                     layout: layoutTextures,
                     grading: gradingTextures,
                 }}
+                texturePaths={texturePaths}
             />
     )
 }
