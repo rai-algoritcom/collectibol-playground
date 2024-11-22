@@ -8,42 +8,42 @@ import { useTexture } from "@react-three/drei";
 /**
  * Vertex
  */
-import standardVertexShader from '../utils/shaders/vertex/standardShader.glsl'
-import glitchVertexShader from "../utils/shaders/vertex/glitchShader.glsl";
-import waveVertexShader from "../utils/shaders/vertex/waveShader.glsl";
-import breathVertexShader from "../utils/shaders/vertex/breathShader.glsl";
-import twisterVertexShader from '../utils/shaders/vertex/twisterShader.glsl'
-import pulseVertexShader from '../utils/shaders/vertex/pulseShader.glsl';
-import jitterVertexShader from '../utils/shaders/vertex/jitterShader.glsl';
+import standardVertexShader from '../../shaders/vertex/standardShader.glsl'
+import glitchVertexShader from "../../shaders/vertex/glitchShader.glsl";
+import waveVertexShader from "../../shaders/vertex/waveShader.glsl";
+import breathVertexShader from "../../shaders/vertex/breathShader.glsl";
+import twisterVertexShader from '../../shaders/vertex/twisterShader.glsl'
+import pulseVertexShader from '../../shaders/vertex/pulseShader.glsl';
+import jitterVertexShader from '../../shaders/vertex/jitterShader.glsl';
 
 
 /**
  * Lights Fragment
  */
-import standardFragmentShader from '../utils/shaders/fragments/standardShader.glsl';
-import iridescenceFragmentShader from '../utils/shaders/fragments/iridescenceShader.glsl';
-import brightnessFragmentShader from '../utils/shaders/fragments/brightnessShader.glsl';
+import standardFragmentShader from '../../shaders/fragments/standardShader.glsl';
+import iridescenceFragmentShader from '../../shaders/fragments/iridescenceShader.glsl';
+import brightnessFragmentShader from '../../shaders/fragments/brightnessShader.glsl';
 
 
 /**
  * Fx Fragment
  */
-import cardioFxFragmentShader from "../utils/shaders/fx/cardioShader.glsl";
-import squaresFxFragmentShader from "../utils/shaders/fx/squaresShader.glsl"
-import circleFxFragmentShader from "../utils/shaders/fx/circleShader.glsl"
-import dankFxFragmentShader from "../utils/shaders/fx/dankShader.glsl"
-import lightFxFragmentShader from "../utils/shaders/fx/lightShader.glsl"
-import etherFxFragmentShader from "../utils/shaders/fx/etherShader.glsl"
-import fireFxFragmentShader from "../utils/shaders/fx/fireShader.glsl"
-import waveFxFragmentShader from "../utils/shaders/fx/waveShader.glsl"
-import smokeFxFragmentShader from "../utils/shaders/fx/smokeShader.glsl"
-import rayFxFragmentShader from "../utils/shaders/fx/rayShader.glsl"
-import crystalFxFragmentShader from "../utils/shaders/fx/crystalShader.glsl"
-import galaxyFxFragmentShader from "../utils/shaders/fx/galaxyShader.glsl"
-import liquidFxFragmentShader from "../utils/shaders/fx/liquidShader.glsl"
-import asciFxFragmentShader from "../utils/shaders/fx/asciShader.glsl"
-import spinFxFragmentShader from "../utils/shaders/fx/spinShader.glsl"
-import particlesFxFragmentShader from "../utils/shaders/fx/particlesShader.glsl"
+import cardioFxFragmentShader from "../../shaders/fx/cardioShader.glsl";
+import squaresFxFragmentShader from "../../shaders/fx/squaresShader.glsl"
+import circleFxFragmentShader from "../../shaders/fx/circleShader.glsl"
+import dankFxFragmentShader from "../../shaders/fx/dankShader.glsl"
+import lightFxFragmentShader from "../../shaders/fx/lightShader.glsl"
+import etherFxFragmentShader from "../../shaders/fx/etherShader.glsl"
+import fireFxFragmentShader from "../../shaders/fx/fireShader.glsl"
+import waveFxFragmentShader from "../../shaders/fx/waveShader.glsl"
+import smokeFxFragmentShader from "../../shaders/fx/smokeShader.glsl"
+import rayFxFragmentShader from "../../shaders/fx/rayShader.glsl"
+import crystalFxFragmentShader from "../../shaders/fx/crystalShader.glsl"
+import galaxyFxFragmentShader from "../../shaders/fx/galaxyShader.glsl"
+import liquidFxFragmentShader from "../../shaders/fx/liquidShader.glsl"
+import asciFxFragmentShader from "../../shaders/fx/asciShader.glsl"
+import spinFxFragmentShader from "../../shaders/fx/spinShader.glsl"
+import particlesFxFragmentShader from "../../shaders/fx/particlesShader.glsl"
 
 
 /**
@@ -54,9 +54,11 @@ import {
     blendAlbedoTXs, 
     blendRoughnessTXs, 
     blendHeightTXs, 
-    blendAlphaTXs 
-} from "../utils";
-import { debounce } from "../utils/utils";
+    blendAlphaTXs, 
+} from "../../utils";
+
+import { downloadJSON } from "../../utils/helpers";
+
 
 
 export default function LayeredMaterialCard({ textures, texturePaths }) {
@@ -202,7 +204,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     });
 
     const { normalIntensity } = useControls('Normal Config.', {
-        normalIntensity: { label: 'Intensity', value: 3.85, min: 0.1, max: 5.0, step: 0.01 }
+        normalIntensity: { label: 'Intensity', value: 1.85, min: 0.1, max: 5.0, step: 0.01 }
     });
 
 
@@ -275,24 +277,9 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     })
 
 
-
-
-    const handleDownloadJSON = (cfg) => {
-            const configData = JSON.stringify(cfg, null, 2); // Convert config to JSON string
-            const blob = new Blob([configData], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'configurations.json';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-    }
-
     useControls({
-        'Download JSON': button(() => handleDownloadJSON(jsonCfg))
-    })
+        'Download JSON': button(() => downloadJSON(jsonCfg))
+    }, [jsonCfg])
 
 
     const refreshMesh = () => {
