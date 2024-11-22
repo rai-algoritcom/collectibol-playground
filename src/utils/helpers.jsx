@@ -28,3 +28,17 @@ export const debounce = (func, wait, immediate) => {
     if (callNow) func.apply(context, args);
   };
 }
+
+
+export const downloadJSON = (cfg) => {
+  const configData = JSON.stringify(cfg, null, 2); // Convert config to JSON string
+  const blob = new Blob([configData], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'configurations.json';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
