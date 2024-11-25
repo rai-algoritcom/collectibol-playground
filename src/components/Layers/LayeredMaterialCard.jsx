@@ -49,6 +49,7 @@ import asciFxFragmentShader from "../../shaders/fx/asciShader.glsl"
 import spinFxFragmentShader from "../../shaders/fx/spinShader.glsl"
 import particlesFxFragmentShader from "../../shaders/fx/particlesShader.glsl"
 import blobsFxFragmentShader from "../../shaders/fx/blobsShader.glsl"
+import grassFxFragmentShader from "../../shaders/fx/grassShader.glsl"
 
 
 /**
@@ -276,7 +277,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     })
 
     const alphaMaskTexture = useTexture('/prod/base/alpha.jpg')
-    const { useCardio, useSquares, useCircle, useDank, useShine, useEther, useFire, useWaves, useSmoke, useRay, useCrystal, useGalaxy, useLiquid, useAsci, useSpin, useParticles, useBlobs } = useControls('Animations Fragment (overlay)', {
+    const { useCardio, useSquares, useCircle, useDank, useShine, useEther, useFire, useWaves, useSmoke, useRay, useCrystal, useGalaxy, useLiquid, useAsci, useSpin, useParticles, useBlobs, useGrass } = useControls('Animations Fragment (overlay)', {
         useCardio: { value: false, label: 'Cardio Fx' },
         useSquares: { value: false, label: 'Fractal Fx' },
         useCircle: { value: false, label: 'Circle Fx' },
@@ -293,7 +294,8 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         useAsci: { value: false, label: 'Ascii Fx' },
         useSpin: { value: false, label: 'Spin Fx' },
         useParticles: { value: false, label: '[!] Particles Fx' },
-        useBlobs: { value: false, label: 'Blobs Fx' }
+        useBlobs: { value: false, label: 'Blobs Fx' },
+        useGrass: { value: false, label: 'Grass Fx' }
     })
 
 
@@ -427,6 +429,9 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                     : useBlobs
                     ? 
                     'blobs'
+                    : useGrass
+                    ? 
+                    'grass'
                     : 'none'
                 }
             }
@@ -447,6 +452,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         }
     }, [
         // Fragment FX
+        useGrass,
         useBlobs,
         useParticles,
         useSpin,
@@ -633,7 +639,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                     />
                 }
             </mesh>
-            { (useCardio || useSquares || useCircle || useDank || useShine || useEther || useFire || useWaves || useSmoke || useRay || useCrystal || useGalaxy || useLiquid || useAsci || useSpin || useParticles || useBlobs) && (
+            { (useCardio || useSquares || useCircle || useDank || useShine || useEther || useFire || useWaves || useSmoke || useRay || useCrystal || useGalaxy || useLiquid || useAsci || useSpin || useParticles || useBlobs || useGrass) && (
                 <mesh position={[0, 0, .005]} key={`overlay-${key}`} >
                     <planeGeometry args={[2, 3, 120, 120]} />
                     <shaderMaterial
@@ -717,6 +723,9 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                             : useBlobs
                             ? 
                             blobsFxFragmentShader
+                            : useGrass 
+                            ? 
+                            grassFxFragmentShader
                             : cardioFxFragmentShader
                         }
                         uniforms={{

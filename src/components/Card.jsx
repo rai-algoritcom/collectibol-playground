@@ -19,7 +19,7 @@ export default function Card() {
             albedo: '/textures/pattern/albido2.png',
             height: '/textures/pattern/albido2.png'
         },
-        mainInterest: {
+        main_interest: {
             albedo: '/prod/main_interest/albido.png',
             // ao: '/textures/main_interest/ao.png',
             height: '/prod/main_interest/height.png',
@@ -59,9 +59,9 @@ export default function Card() {
 
     useControls(
         'Main Textures', {
-            'Albedo': { image: texturePaths.mainInterest.albedo, onChange: (v) => updateTexture('mainInterest', 'albedo', v) },
-            'Height': { image: texturePaths.mainInterest.height, onChange: (v) => updateTexture('mainInterest', 'height', v) },
-            'Normal': { image: texturePaths.mainInterest.normal, onChange: (v) => updateTexture('mainInterest', 'normal', v) },
+            'Albedo': { image: texturePaths.main_interest.albedo, onChange: (v) => updateTexture('main_interest', 'albedo', v) },
+            'Height': { image: texturePaths.main_interest.height, onChange: (v) => updateTexture('main_interest', 'height', v) },
+            'Normal': { image: texturePaths.main_interest.normal, onChange: (v) => updateTexture('main_interest', 'normal', v) },
         }
     )
 
@@ -120,7 +120,7 @@ export default function Card() {
 
     const baseTextures = useTexture(texturePaths.base);
     const patternTexture = useTexture(texturePaths.pattern);
-    const mainInterestTextures = useTexture(texturePaths.mainInterest);
+    const mainInterestTextures = useTexture(texturePaths.main_interest);
     const layoutTextures = useTexture(texturePaths.layout);
     const gradingTextures = useTexture(texturePaths.grading);
 
