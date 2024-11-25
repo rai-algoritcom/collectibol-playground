@@ -22,10 +22,11 @@ export function blendAlbedoTXs(renderer, textures, controls) {
     let blendedAlbedo = null
 
     if (base_albedo) blendedAlbedo = base.albedo;
-    if (pattern_albedo) blendedAlbedo = pattern.albedo;
+    if (pattern_albedo) blendedAlbedo = pattern.albedo
     if (main_interest_albedo) blendedAlbedo = main_interest.albedo;
     if (layout_albedo) blendedAlbedo = layout.albedo;
     if (grading_albedo) blendedAlbedo = grading.albedo;
+
 
     if (base_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, base.albedo, renderer);
     if (pattern_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, pattern.albedo, renderer);

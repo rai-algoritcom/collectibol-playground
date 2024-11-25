@@ -9,6 +9,8 @@ import { useTexture } from "@react-three/drei";
  * Vertex
  */
 import standardVertexShader from '../../shaders/vertex/standardShader.glsl'
+import foldingVertexShader from '../../shaders/vertex/foldingShader.glsl'
+
 import glitchVertexShader from "../../shaders/vertex/glitchShader.glsl";
 import waveVertexShader from "../../shaders/vertex/waveShader.glsl";
 import breathVertexShader from "../../shaders/vertex/breathShader.glsl";
@@ -46,6 +48,7 @@ import liquidFxFragmentShader from "../../shaders/fx/liquidShader.glsl"
 import asciFxFragmentShader from "../../shaders/fx/asciShader.glsl"
 import spinFxFragmentShader from "../../shaders/fx/spinShader.glsl"
 import particlesFxFragmentShader from "../../shaders/fx/particlesShader.glsl"
+import blobsFxFragmentShader from "../../shaders/fx/blobsShader.glsl"
 
 
 /**
@@ -249,6 +252,16 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         brightnessColor: { value: { r: 231, g: 245, b: 81 }, label: 'Color' },
     })
 
+
+    const { useFolding, foldIntensity, foldX, foldY, foldRotation } = useControls('Folding Fx', { 
+        useFolding: { value: true, label: 'Enable' },
+        foldIntensity: { value: 0.65, min: 0, max: 2, step: 0.01, label: 'Intensity' },
+        foldX: { value: 0.8, min: -1.5, max: 1.5, step: 0.01, label: 'Position X' },
+        foldY: { value: 1.43, min: -1.5, max: 1.5, step: 0.01, label: 'Position Y' },
+        foldRotation: { value: 0.12, min: -Math.PI, max: Math.PI, step: 0.01, label: 'Rotation Z' }
+    })
+    
+
     const { useGlitch, useWave, useBreath, useTwister, usePulse, useJitter, useNoise, useCloth } = useControls('Animations Vertex', {
         useGlitch: { value: false, label: 'Glitch Fx' },
         useWave: { value: false, label: 'Wave Fx' },
@@ -261,7 +274,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     })
 
     const alphaMaskTexture = useTexture('/prod/base/alpha.jpg')
-    const { useCardio, useSquares, useCircle, useDank, useShine, useEther, useFire, useWaves, useSmoke, useRay, useCrystal, useGalaxy, useLiquid, useAsci, useSpin, useParticles } = useControls('Animations Fragment (overlay)', {
+    const { useCardio, useSquares, useCircle, useDank, useShine, useEther, useFire, useWaves, useSmoke, useRay, useCrystal, useGalaxy, useLiquid, useAsci, useSpin, useParticles, useBlobs } = useControls('Animations Fragment (overlay)', {
         useCardio: { value: false, label: 'Cardio Fx' },
         useSquares: { value: false, label: 'Fractal Fx' },
         useCircle: { value: false, label: 'Circle Fx' },
@@ -271,13 +284,14 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         useFire: { value: false, label: 'Fire Fx' },
         useWaves: { value: false, label: 'Waves Fx' },
         useSmoke: { value: false, label: 'Smoke Fx' },
-        useRay: { value: false, label: 'Ray Fx (!)' },
+        useRay: { value: false, label: '[!] Ray Fx' },
         useCrystal: { value: false, label: 'Crystal Fx' },
         useGalaxy: { value: false, label: 'Galaxy Fx' },
         useLiquid: { value: false, label: 'Liquid Fx' },
         useAsci: { value: false, label: 'Ascii Fx' },
         useSpin: { value: false, label: 'Spin Fx' },
-        useParticles: { value: false, label: 'Particles Fx (!)' }
+        useParticles: { value: false, label: '[!] Particles Fx' },
+        useBlobs: { value: false, label: 'Blobs Fx' }
     })
 
 
@@ -325,6 +339,13 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                     use_brightness: useIridescence ? false : useBrightness,
                     brightness_color: brightnessColor,
                     brightness_mask: irisTexturePath
+                },
+                folding: {
+                    use_folding: useFolding,
+                    folding_intensity: foldIntensity,
+                    folding_x: foldX,   
+                    folding_y: foldY,
+                    folding_rotation: foldRotation
                 },
                 vertex_fx: {
                     id: useGlitch 
@@ -401,6 +422,9 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                     : useCardio 
                     ? 
                     'cardio'
+                    : useBlobs
+                    ? 
+                    'blobs'
                     : 'none'
                 }
             }
@@ -420,6 +444,8 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
             }
         }
     }, [
+        // Fragment FX
+        useBlobs,
         useParticles,
         useSpin,
         useAsci,
@@ -436,6 +462,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         useCircle,
         useSquares,
         useCardio,
+        // Vertex FX
         useCloth,
         useNoise,
         useJitter,
@@ -444,17 +471,21 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         useBreath,
         useWave,
         useGlitch,
+        // Brightness
         irisTexture,
         useBrightness,
         brightnessIntensity,
         brightnessColor,
+        // Iridescene
         useIridescence,
         iridescenceIntensity,
         iridescenceColor1,
         iridescenceColor2,
+        // Rugosity
         normalIntensity,
         roughnessIntensity,
         roughnessPresence,
+        // Blending
         blendedAlbedoTextures,
         blendedAlphaTextures,
         blendedHeightTextures,
@@ -467,17 +498,29 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         directionalLightIntensity,
         pointLightColor,
         pointLightIntensity,
-        pointLightDecay
+        pointLightDecay,
+        // Folding
+        useFolding, 
+        foldIntensity, 
+        foldX, 
+        foldY, 
+        foldRotation
     ])
 
 
     useFrame((state) => {
         if (shaderRef.current) {
             shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
+            shaderRef.current.uniforms.foldIntensity.value = foldIntensity;
+            shaderRef.current.uniforms.foldPosition.value.set(foldX, foldY);
+            shaderRef.current.uniforms.foldRotationZ.value = foldRotation;
         }
 
         if (overlayRef.current) {
             overlayRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
+            overlayRef.current.uniforms.foldIntensity.value = foldIntensity;
+            overlayRef.current.uniforms.foldPosition.value.set(foldX, foldY);
+            overlayRef.current.uniforms.foldRotationZ.value = foldRotation;
         }
     })
 
@@ -503,6 +546,13 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
                                 lightDirection: { value: new THREE.Vector3(0, 0, 2).normalize() },
                                 cameraPosition: { value: new THREE.Vector3(0, 0, 5) },
+
+                                /**
+                                 * Folding
+                                 */
+                                foldIntensity: { value: 0.25 },
+                                foldPosition: { value: new THREE.Vector2(0.0, 0.0) },
+                                foldRotationZ: { value: 0.0 },
 
                                 /**
                                  * Lights
@@ -560,6 +610,9 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 : useCloth
                                 ? 
                                 clothVertexShader
+                                : useFolding
+                                ? 
+                                foldingVertexShader
                                 : standardVertexShader
                                 }
                             fragmentShader={
@@ -577,7 +630,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                     />
                 }
             </mesh>
-            { (useCardio || useSquares || useCircle || useDank || useShine || useEther || useFire || useWaves || useSmoke || useRay || useCrystal || useGalaxy || useLiquid || useAsci || useSpin || useParticles) && (
+            { (useCardio || useSquares || useCircle || useDank || useShine || useEther || useFire || useWaves || useSmoke || useRay || useCrystal || useGalaxy || useLiquid || useAsci || useSpin || useParticles || useBlobs) && (
                 <mesh position={[0, 0, .005]} key={`overlay-${key}`} >
                     <planeGeometry args={[2, 3, 120, 120]} />
                     <shaderMaterial
@@ -607,6 +660,9 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 : useCloth
                                 ? 
                                 clothVertexShader
+                                : useFolding 
+                                ?
+                                foldingVertexShader
                                 : standardVertexShader
                         }
                         fragmentShader={
@@ -655,12 +711,21 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                             : useParticles 
                             ? 
                             particlesFxFragmentShader
+                            : useBlobs
+                            ? 
+                            blobsFxFragmentShader
                             : cardioFxFragmentShader
                         }
                         uniforms={{
                             uTime: { value: 0.0 },
                             uAlphaMask: { value: alphaMaskTexture },
                             uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+                            /**
+                            * Folding
+                            */
+                            foldIntensity: { value: 0.25 },
+                            foldPosition: { value: new THREE.Vector2(0.0, 0.0) },
+                            foldRotationZ: { value: 0.0 },
                         }}
                         side={THREE.DoubleSide}
                         transparent={true}

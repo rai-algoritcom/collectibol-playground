@@ -52,7 +52,7 @@ export default function Card() {
 
     useControls({
         'Pattern Textures': folder({
-            'Albedo': { value: texturePaths.pattern.albedo, onChange: (v) => updateTexture('pattern', 'albedo', v) },
+            'Albedo': { value: texturePaths.pattern.albedo, onChange: (v) => updateTexture('pattern', 'albedo', v) }
             // 'Height': { value: texturePaths.pattern.height, onChange: (v) => updateTexture('pattern', 'height', v) },
         })
     })
