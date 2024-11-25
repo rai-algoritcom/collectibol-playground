@@ -240,16 +240,18 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         iridescenceIntensity: { value: 0.02, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
         iridescenceColor1: { value: { r: 252, g: 102, b: 226 }, label: 'Color 1' },
         iridescenceColor2: { value: { r: 231, g: 245, b: 81 }, label: 'Color 2' },
-        Mask: folder({'Texture': {
-            value: irisTexturePath, onChange: (v) => setIrisTexturePath(v) ,
-        }})
+        Mask: { image: irisTexturePath, onChange: (v) => setIrisTexturePath(v) }
     });
 
     
+    const [brightTexturePath, setBrightTexturePath] = useState('/prod/main_interest/ao.jpg')
+    const brightTexture = useTexture(brightTexturePath)
+
     const { useBrightness, brightnessIntensity, brightnessColor } = useControls('Brightness Fx', {
         useBrightness: { value: true, label: 'Enable' },
         brightnessIntensity: { value: 0.0045, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
         brightnessColor: { value: { r: 231, g: 245, b: 81 }, label: 'Color' },
+        Mask: { image: brightTexturePath, onChange: (v) => setBrightTexturePath(v) }
     })
 
 
@@ -338,7 +340,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                     brightness_intensity: brightnessIntensity,
                     use_brightness: useIridescence ? false : useBrightness,
                     brightness_color: brightnessColor,
-                    brightness_mask: irisTexturePath
+                    brightness_mask: brightTexturePath
                 },
                 folding: {
                     use_folding: useFolding,
@@ -472,11 +474,12 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         useWave,
         useGlitch,
         // Brightness
-        irisTexture,
+        brightTexture,
         useBrightness,
         brightnessIntensity,
         brightnessColor,
         // Iridescene
+        irisTexture,
         useIridescence,
         iridescenceIntensity,
         iridescenceColor1,
@@ -539,7 +542,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 heightMap: { value: blendedHeightTextures },
                                 roughnessMap: { value: blendedRoughnessTextures },
                                 normalMap: { value: useIridescence ? blendedNormalTexturesIris : blendedNormalTextures },
-                                iridescenceMask: { value: irisTexture },
+                                iridescenceMask: { value: useIridescence ? irisTexture : brightTexture },
                                 
                                 displacementScale: { value: 0.025 },
                                 normalIntensity: { value: normalIntensity }, 
