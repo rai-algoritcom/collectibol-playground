@@ -1,7 +1,6 @@
 import blendUVs from "./blendUVs";
 
 
-
 /**
  * Combines all texture maps for the given layers
  * @param {Object} textures - Object containing textures for all layers

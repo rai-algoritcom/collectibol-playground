@@ -15,6 +15,8 @@ import breathVertexShader from "../../shaders/vertex/breathShader.glsl";
 import twisterVertexShader from '../../shaders/vertex/twisterShader.glsl'
 import pulseVertexShader from '../../shaders/vertex/pulseShader.glsl';
 import jitterVertexShader from '../../shaders/vertex/jitterShader.glsl';
+import noiseVertexShader from '../../shaders/vertex/noiseShader.glsl'
+import clothVertexShader from '../../shaders/vertex/clothShader.glsl'
 
 
 /**
@@ -247,13 +249,15 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         brightnessColor: { value: { r: 231, g: 245, b: 81 }, label: 'Color' },
     })
 
-    const { useGlitch, useWave, useBreath, useTwister, usePulse, useJitter } = useControls('Animations Vertex', {
+    const { useGlitch, useWave, useBreath, useTwister, usePulse, useJitter, useNoise, useCloth } = useControls('Animations Vertex', {
         useGlitch: { value: false, label: 'Glitch Fx' },
         useWave: { value: false, label: 'Wave Fx' },
         useBreath: { value: false, label: 'Breathe Fx' },
         useTwister: { value: false, label: 'Twist Fx' },
         usePulse: { value: false, label: 'Float Fx' },
         useJitter: { value: false, label: 'Jitter Fx' },
+        useNoise: { value: false, label: 'Noise Fx' },
+        useCloth: { value: false, label: 'Cloth Fx' }
     })
 
     const alphaMaskTexture = useTexture('/prod/base/alpha.jpg')
@@ -267,13 +271,13 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         useFire: { value: false, label: 'Fire Fx' },
         useWaves: { value: false, label: 'Waves Fx' },
         useSmoke: { value: false, label: 'Smoke Fx' },
-        useRay: { value: false, label: 'Ray Fx' },
+        useRay: { value: false, label: 'Ray Fx (!)' },
         useCrystal: { value: false, label: 'Crystal Fx' },
         useGalaxy: { value: false, label: 'Galaxy Fx' },
         useLiquid: { value: false, label: 'Liquid Fx' },
         useAsci: { value: false, label: 'Ascii Fx' },
         useSpin: { value: false, label: 'Spin Fx' },
-        useParticles: { value: false, label: 'Particles Fx' }
+        useParticles: { value: false, label: 'Particles Fx (!)' }
     })
 
 
@@ -341,6 +345,11 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                     : useJitter
                     ? 
                     'jitter'
+                    : useNoise 
+                    ? 
+                    'noise'
+                    : useCloth
+                    ? 'cloth'
                     : 'none'
                 },
                 fragment_fx: {
@@ -427,6 +436,8 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         useCircle,
         useSquares,
         useCardio,
+        useCloth,
+        useNoise,
         useJitter,
         usePulse,
         useTwister,
@@ -543,6 +554,12 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 : useJitter
                                 ? 
                                 jitterVertexShader
+                                : useNoise 
+                                ? 
+                                noiseVertexShader
+                                : useCloth
+                                ? 
+                                clothVertexShader
                                 : standardVertexShader
                                 }
                             fragmentShader={
@@ -584,6 +601,12 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 : useJitter
                                 ? 
                                 jitterVertexShader
+                                : useNoise
+                                ? 
+                                noiseVertexShader
+                                : useCloth
+                                ? 
+                                clothVertexShader
                                 : standardVertexShader
                         }
                         fragmentShader={
