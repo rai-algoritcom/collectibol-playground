@@ -2,7 +2,7 @@
 import { useTexture } from "@react-three/drei";
 import LayeredMaterialCard from "./Layers/LayeredMaterialCard.jsx";
 import { useState } from "react";
-import { folder, useControls } from "leva";
+import { useControls } from "leva";
 
 
 export default function Card() {
@@ -40,75 +40,73 @@ export default function Card() {
         }
     })
 
-    useControls({
-        'Base Textures': folder({
-            'Alpha': { value: texturePaths.base.alpha, onChange: (v) => updateTexture('base', 'alpha', v) },
-            'Albedo': { value: texturePaths.base.albedo, onChange: (v) => updateTexture('base', 'albedo', v) },
-            'Height': { value: texturePaths.base.height, onChange: (v) => updateTexture('base', 'height', v) },
-            'Normal': { value: texturePaths.base.normal, onChange: (v) => updateTexture('base', 'normal', v) },
-            'Roughness': { value: texturePaths.base.roughness, onChange: (v) => updateTexture('base', 'roughness', v) }
-        })
-    })
-
-    useControls({
-        'Pattern Textures': folder({
-            'Albedo': { value: texturePaths.pattern.albedo, onChange: (v) => updateTexture('pattern', 'albedo', v) }
-            // 'Height': { value: texturePaths.pattern.height, onChange: (v) => updateTexture('pattern', 'height', v) },
-        })
-    })
-
-    useControls({
-        'Main Textures': folder({
-            'Albedo': { value: texturePaths.mainInterest.albedo, onChange: (v) => updateTexture('mainInterest', 'albedo', v) },
-            'Height': { value: texturePaths.mainInterest.height, onChange: (v) => updateTexture('mainInterest', 'height', v) },
-            'Normal': { value: texturePaths.mainInterest.normal, onChange: (v) => updateTexture('mainInterest', 'normal', v) },
-        })
-    })
-
-    useControls({
-        'Layout Textures': folder({
-            'Albedo': { value: texturePaths.layout.albedo, onChange: (v) => updateTexture('layout', 'albedo', v) },
-            'Height': { value: texturePaths.layout.height, onChange: (v) => updateTexture('layout', 'height', v) },
-            'Normal': { value: texturePaths.layout.normal, onChange: (v) => updateTexture('layout', 'normal', v) },
-        })
-    })
-
-    useControls({
-        'Grading Textures': folder({
-            'Alpha': { value: texturePaths.grading.alpha, onChange: (v) => updateTexture('grading', 'alpha', v) },
-            'Albedo': { value: texturePaths.grading.albedo, onChange: (v) => updateTexture('grading', 'albedo', v) },
-            'Height': { value: texturePaths.grading.height, onChange: (v) => updateTexture('grading', 'height', v) },
-            'Normal': { value: texturePaths.grading.normal, onChange: (v) => updateTexture('grading', 'normal', v) },
-            'Roughness': { value: texturePaths.grading.roughness, onChange: (v) => updateTexture('grading', 'roughness', v) }
-        }),
+    useControls(
+        'Base Textures', {
+            'Alpha': { image: texturePaths.base.alpha, onChange: (v) => updateTexture('base', 'alpha', v) },
+            'Albedo': { image: texturePaths.base.albedo, onChange: (v) => updateTexture('base', 'albedo', v) },
+            'Height': { image: texturePaths.base.height, onChange: (v) => updateTexture('base', 'height', v) },
+            'Normal': { image: texturePaths.base.normal, onChange: (v) => updateTexture('base', 'normal', v) },
+            'Roughness': { image: texturePaths.base.roughness, onChange: (v) => updateTexture('base', 'roughness', v) }
     })
 
 
-    useControls({
-        'Grading Level': {
-            value: 'poor',
-            options: {
-                Poor: 'poor',
-                Used: 'used',
-                Good: 'good',
-                'Near Mint': 'near_mint',
-                Mint: 'mint'
-            },
-            onChange: (value) => {
-                    setTexturePaths((prev) => ({
-                        ...prev,
-                        ['grading']: {
-                            ...prev['grading'],
-                            ['albedo']: `/textures/grading/${value}/alpha.png`,
-                            ['height']: `/textures/grading/${value}/height.png`,
-                            ['normal']: `/textures/grading/${value}/normal.png`,
-                            ['alpha']: `/textures/grading/${value}/opacity.png`,
-                            ['roughness']: `/textures/grading/${value}/roughness.png`,
-                        },
-                    }));
+    useControls(
+        'Pattern Textures', {
+            'Albedo': { image: texturePaths.pattern.albedo, onChange: (v) => updateTexture('pattern', 'albedo', v) },
+            // 'Height': { image: texturePaths.pattern.height, onChange: (v) => updateTexture('pattern', 'height', v) },
+    })
+
+
+    useControls(
+        'Main Textures', {
+            'Albedo': { image: texturePaths.mainInterest.albedo, onChange: (v) => updateTexture('mainInterest', 'albedo', v) },
+            'Height': { image: texturePaths.mainInterest.height, onChange: (v) => updateTexture('mainInterest', 'height', v) },
+            'Normal': { image: texturePaths.mainInterest.normal, onChange: (v) => updateTexture('mainInterest', 'normal', v) },
+        }
+    )
+
+
+    useControls(
+        'Layout Textures', {
+            'Albedo': { image: texturePaths.layout.albedo, onChange: (v) => updateTexture('layout', 'albedo', v) },
+            'Height': { image: texturePaths.layout.height, onChange: (v) => updateTexture('layout', 'height', v) },
+            'Normal': { image: texturePaths.layout.normal, onChange: (v) => updateTexture('layout', 'normal', v) },
+        }
+    )
+
+    
+    useControls(
+        'Grading Textures', {
+            'Alpha': { image: texturePaths.grading.alpha, onChange: (v) => updateTexture('grading', 'alpha', v) },
+            'Albedo': { image: texturePaths.grading.albedo, onChange: (v) => updateTexture('grading', 'albedo', v) },
+            'Height': { image: texturePaths.grading.height, onChange: (v) => updateTexture('grading', 'height', v) },
+            'Normal': { image: texturePaths.grading.normal, onChange: (v) => updateTexture('grading', 'normal', v) },
+            'Roughness': { image: texturePaths.grading.roughness, onChange: (v) => updateTexture('grading', 'roughness', v) },
+            'Grading Level': {
+                value: 'poor',
+                options: {
+                    Poor: 'poor',
+                    Used: 'used',
+                    Good: 'good',
+                    'Near Mint': 'near_mint',
+                    Mint: 'mint'
+                },
+                onChange: (value) => {
+                        setTexturePaths((prev) => ({
+                            ...prev,
+                            ['grading']: {
+                                ...prev['grading'],
+                                ['albedo']: `/textures/grading/${value}/alpha.png`,
+                                ['height']: `/textures/grading/${value}/height.png`,
+                                ['normal']: `/textures/grading/${value}/normal.png`,
+                                ['alpha']: `/textures/grading/${value}/opacity.png`,
+                                ['roughness']: `/textures/grading/${value}/roughness.png`,
+                            },
+                        }));
+                }
             }
         }
-    })
+    )
 
     const updateTexture = (category, type, value) => {
         setTexturePaths((prev) => ({
