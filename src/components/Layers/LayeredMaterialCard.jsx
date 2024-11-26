@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from 'three';
-import { button, folder, useControls } from "leva";
+import { button, useControls } from "leva";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
+import gsap from "gsap";
 
 
 /**
@@ -27,7 +28,7 @@ import clothVertexShader from '../../shaders/vertex/clothShader.glsl'
 import standardFragmentShader from '../../shaders/fragments/standardShader.glsl';
 import iridescenceFragmentShader from '../../shaders/fragments/iridescenceShader.glsl';
 import brightnessFragmentShader from '../../shaders/fragments/brightnessShader.glsl';
-
+import transitionFragmentShader from '../../shaders/fragments/transitionShader.glsl';
 
 /**
  * Fx Fragment
@@ -171,6 +172,10 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         return blendAlbedoTXs(gl, textures, albedoToggles);
     }, [gl, textures, albedoToggles]);
 
+    const blendedAlbedo2Textures = useMemo(() => {
+        return blendAlbedoTXs(gl, textures, albedoToggles, true);
+    }, [gl, textures, albedoToggles])
+
     const blendedAlphaTextures = useMemo(() => {
         return blendAlphaTXs(gl, textures, alphaToggles);
     }, [gl, textures, alphaToggles]);
@@ -256,6 +261,16 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     })
 
 
+    const [transTexturePath, setTransTexturePath] = useState('/fx/brush.jpg')
+    const transTexture = useTexture(transTexturePath)
+
+    const { useTransition, transitionSpeed } = useControls('Transition Fx', {
+        useTransition: { value: true, label: 'Enable' },
+        transitionSpeed: { value: 0.8, min: 0, max: 3, label: 'Speed' },
+        Mask: { image: transTexturePath, onChange: (v) => setTransTexturePath(v) }
+    })
+
+
     const { useFolding, foldIntensity, foldX, foldY, foldRotation } = useControls('Folding Fx', { 
         useFolding: { value: true, label: 'Enable' },
         foldIntensity: { value: 0.65, min: 0, max: 2, step: 0.01, label: 'Intensity' },
@@ -309,6 +324,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     }
 
 
+
     useEffect(() => {
 
         const cfg =
@@ -343,6 +359,11 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                     use_brightness: useIridescence ? false : useBrightness,
                     brightness_color: brightnessColor,
                     brightness_mask: brightTexturePath
+                },
+                transition: {
+                    transition_speed: transitionSpeed,
+                    use_transition: useTransition,
+                    transition_mask: transTexturePath
                 },
                 folding: {
                     use_folding: useFolding,
@@ -490,12 +511,17 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         iridescenceIntensity,
         iridescenceColor1,
         iridescenceColor2,
+        // Transition, 
+        transTexture,
+        useTransition, 
+        transitionSpeed,
         // Rugosity
         normalIntensity,
         roughnessIntensity,
         roughnessPresence,
         // Blending
         blendedAlbedoTextures,
+        blendedAlbedo2Textures,
         blendedAlphaTextures,
         blendedHeightTextures,
         blendedRoughnessTextures,
@@ -533,9 +559,29 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         }
     })
 
+
+    const hoverState = (hovered) => {
+        if (hovered) {
+            gsap.to(shaderRef.current.uniforms.uHoverState, {
+                duration: transitionSpeed,
+                value: 1
+            })
+        } else {
+            gsap.to(shaderRef.current.uniforms.uHoverState, {
+                duration: transitionSpeed,
+                value: 0
+            })
+        }
+    }
+
+
     return (
         <>
-            <mesh key={`main-${key}`}> 
+            <mesh 
+                key={`main-${key}`} 
+                onPointerOut={() => hoverState(false) } 
+                onPointerOver={() => hoverState(true) }
+            > 
                 <planeGeometry args={[2, 3, 120, 120]} />
                 {
                         <shaderMaterial
@@ -543,12 +589,17 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                             needsUpdate={true}
                             uniformsNeedUpdate={true}
                             uniforms={{
+              
                                 albedoMap: { value: blendedAlbedoTextures },
+                                albedoMap2: { value: blendedAlbedo2Textures },
                                 alphaMap: { value: blendedAlphaTextures },
                                 heightMap: { value: blendedHeightTextures },
                                 roughnessMap: { value: blendedRoughnessTextures },
                                 normalMap: { value: useIridescence ? blendedNormalTexturesIris : blendedNormalTextures },
                                 iridescenceMask: { value: useIridescence ? irisTexture : brightTexture },
+
+                                uDisp: { value: transTexture },
+                                uHoverState: { value: 0 },
                                 
                                 displacementScale: { value: 0.025 },
                                 normalIntensity: { value: normalIntensity }, 
@@ -631,6 +682,9 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 : useBrightness 
                                 ? 
                                 brightnessFragmentShader 
+                                : useTransition
+                                ?
+                                transitionFragmentShader
                                 : standardFragmentShader
                             }
                             transparent={true}
