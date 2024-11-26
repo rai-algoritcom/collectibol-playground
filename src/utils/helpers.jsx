@@ -1,3 +1,5 @@
+import * as THREE from 'three'
+
 
 export const getRandomPositionAndRotation = () => ({
     position: [
@@ -44,21 +46,46 @@ export const downloadJSON = (cfg) => {
 }
 
 
-export const takeScreenshot = (gl, scene, camera) => {
-    const width = window.innerWidth * 2;  // Adjust resolution
-    const height = window.innerHeight * 2;
+export const takeScreenshot = (gl, scene, camera, mesh) => {
+  const originalPosition = camera.position.clone(); // Save original camera position
+  const originalRotation = camera.rotation.clone(); // Save original camera rotation
 
-    gl.setSize(width, height);
-    gl.setPixelRatio(2);
-    gl.render(scene, camera);
+  // Calculate bounding box of the mesh
+  const boundingBox = new THREE.Box3().setFromObject(mesh);
+  const size = new THREE.Vector3();
+  boundingBox.getSize(size);
 
-    const screenshot = gl.domElement.toDataURL("image/png");
-    const link = document.createElement("a");
-    link.href = screenshot;
-    link.download = "screenshot.png";
-    link.click();
+  // Position camera at a distance that fits the whole mesh
+  const maxDimension = Math.max(size.x, size.y, size.z);
+  const distance = maxDimension * 1.5; // Adjust multiplier for desired framing
 
-    // Restore original size
-    gl.setSize(window.innerWidth, window.innerHeight);
-    gl.setPixelRatio(window.devicePixelRatio);
+  camera.position.set(0, 0, distance); // Center camera at (0, 0, distance)
+  camera.lookAt(0, 0, 0); // Look at the center of the scene
+  camera.updateProjectionMatrix(); // Ensure the camera projection is updated
+
+  // Ensure the scene is updated
+  scene.updateMatrixWorld(true);
+
+  // Take the screenshot
+  const width = window.innerWidth * 2; // Adjust resolution
+  const height = window.innerHeight * 2;
+
+  gl.setSize(width, height);
+  gl.setPixelRatio(2);
+  gl.render(scene, camera);
+
+  const screenshot = gl.domElement.toDataURL("image/png");
+  const link = document.createElement("a");
+  link.href = screenshot;
+  link.download = "screenshot.png";
+  link.click();
+
+  // Restore original camera position and orientation
+  camera.position.copy(originalPosition);
+  camera.rotation.copy(originalRotation);
+  camera.updateProjectionMatrix();
+
+  // Restore original renderer size
+  gl.setSize(window.innerWidth, window.innerHeight);
+  gl.setPixelRatio(window.devicePixelRatio);
 }
