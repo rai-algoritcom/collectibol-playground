@@ -42,3 +42,23 @@ export const downloadJSON = (cfg) => {
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 }
+
+
+export const takeScreenshot = (gl, scene, camera) => {
+    const width = window.innerWidth * 2;  // Adjust resolution
+    const height = window.innerHeight * 2;
+
+    gl.setSize(width, height);
+    gl.setPixelRatio(2);
+    gl.render(scene, camera);
+
+    const screenshot = gl.domElement.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = screenshot;
+    link.download = "screenshot.png";
+    link.click();
+
+    // Restore original size
+    gl.setSize(window.innerWidth, window.innerHeight);
+    gl.setPixelRatio(window.devicePixelRatio);
+}
