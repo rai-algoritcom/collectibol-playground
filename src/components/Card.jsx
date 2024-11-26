@@ -17,6 +17,7 @@ export default function Card() {
         },
         pattern: {
             albedo: '/textures/pattern/albido2.png',
+            albedo2: '/textures/pattern/albido.png',
             height: '/textures/pattern/albido2.png'
         },
         main_interest: {
@@ -53,6 +54,7 @@ export default function Card() {
     useControls(
         'Pattern Textures', {
             'Albedo': { image: texturePaths.pattern.albedo, onChange: (v) => updateTexture('pattern', 'albedo', v) },
+            'Albedo2': { image: texturePaths.pattern.albedo2, onChange: (v) => updateTexture('pattern', 'albedo2', v) },
             // 'Height': { image: texturePaths.pattern.height, onChange: (v) => updateTexture('pattern', 'height', v) },
     })
 
