@@ -75,6 +75,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
     const [key, setKey] = useState(0);
 
+    const planeRef = useRef()
     const shaderRef = useRef()
     const overlayRef = useRef()
 
@@ -338,7 +339,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
 
     useControls({
-        'Take Screenshot': button(() => takeScreenshot(gl, scene, camera))
+        'Take Screenshot': button(() => takeScreenshot(gl, scene, camera, planeRef.current))
     }, [scene])
 
     useControls({
@@ -635,6 +636,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     return (
         <>
             <mesh 
+                ref={planeRef}
                 key={`main-${key}`} 
                 onPointerOut={() => hoverState(false) } 
                 onPointerOver={() => hoverState(true) }
