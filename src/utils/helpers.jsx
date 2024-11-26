@@ -57,7 +57,7 @@ export const takeScreenshot = (gl, scene, camera, mesh) => {
 
   // Position camera at a distance that fits the whole mesh
   const maxDimension = Math.max(size.x, size.y, size.z);
-  const distance = maxDimension * 1.5; // Adjust multiplier for desired framing
+  const distance = maxDimension * 1.25; // Adjust multiplier for desired framing
 
   camera.position.set(0, 0, distance); // Center camera at (0, 0, distance)
   camera.lookAt(0, 0, 0); // Look at the center of the scene
