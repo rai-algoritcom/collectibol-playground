@@ -63,9 +63,6 @@ export const takeScreenshot = (gl, scene, camera, mesh) => {
   camera.lookAt(0, 0, 0); // Look at the center of the scene
   camera.updateProjectionMatrix(); // Ensure the camera projection is updated
 
-  // Ensure the scene is updated
-  scene.updateMatrixWorld(true);
-
   // Take the screenshot
   const width = window.innerWidth * 2; // Adjust resolution
   const height = window.innerHeight * 2;
