@@ -14,6 +14,7 @@ uniform float iridescenceIntensity;// Intensity of the iridescence
 uniform vec3 iridescenceColor1;    // First gradient color
 uniform vec3 iridescenceColor2;    // Second gradient color
 uniform vec3 lightDirection;       // Direction of the light
+uniform bool stripesVisible;
 
 varying vec2 vUv;
 varying vec3 vNormal;
@@ -65,8 +66,25 @@ void main() {
         blendedRefraction += iridescenceColor * iridescenceIntensity;
     }
 
+    vec3 stripeColor = vec3(1.0);
+    vec3 finalColor = vec3(1.0);
+
+    if (stripesVisible) {
+        // === Diagonal Lighting Stripes ===
+        float stripeMovement = uTime * rotationIntensity * 5.0; // Only moves when rotated
+        float stripePattern = abs(sin((uv.x + uv.y) * 20.0 + stripeMovement)); // Thicker stripes
+        float stripeIntensity = smoothstep(0.3, 0.5, stripePattern);          // Adjust thickness
+        stripeColor = vec3(1.5, 1.5, 1.5) * stripeIntensity;   
+        stripeColor *= rotationIntensity;
+
+        finalColor = blendedRefraction + stripeColor;
+    } else {
+        finalColor = blendedRefraction;
+    }
+
+
     // Apply roughness to soften the effect
-    vec3 finalColor = mix(blendedRefraction, blendedRefraction * (1.0 - roughnessValue), 0.5);
+    finalColor = mix(finalColor, finalColor * (1.0 - roughnessValue), 0.5);
 
     // Output final color with alpha transparency
     gl_FragColor = vec4(finalColor, alphaValue);
