@@ -74,7 +74,7 @@ void main() {
         float stripeMovement = uTime * rotationIntensity * 5.0; // Only moves when rotated
         float stripePattern = abs(sin((uv.x + uv.y) * 20.0 + stripeMovement)); // Thicker stripes
         float stripeIntensity = smoothstep(0.3, 0.5, stripePattern);          // Adjust thickness
-        stripeColor = vec3(1.5, 1.5, 1.5) * stripeIntensity;   
+        stripeColor = vec3(1.5, 1.5, 1.5) * stripeIntensity * 0.5;   
         stripeColor *= rotationIntensity;
 
         finalColor = blendedRefraction + stripeColor;
