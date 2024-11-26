@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 
-
 export const getRandomPositionAndRotation = () => ({
     position: [
       (Math.random() - 0.5) * 8, // Random X within [-1, 1]
@@ -46,43 +45,60 @@ export const downloadJSON = (cfg) => {
 }
 
 
+
 export const takeScreenshot = (gl, scene, camera, mesh) => {
   const originalPosition = camera.position.clone(); // Save original camera position
   const originalRotation = camera.rotation.clone(); // Save original camera rotation
+  const originalAspect = camera.aspect; // Save original aspect ratio
+
+  // Ensure the mesh's world matrix is up-to-date
+  mesh.updateMatrixWorld(true);
 
   // Calculate bounding box of the mesh
   const boundingBox = new THREE.Box3().setFromObject(mesh);
   const size = new THREE.Vector3();
   boundingBox.getSize(size);
+  const center = new THREE.Vector3();
+  boundingBox.getCenter(center);
 
-  // Position camera at a distance that fits the whole mesh
+  // Calculate distance required to fit the entire mesh
   const maxDimension = Math.max(size.x, size.y, size.z);
-  const distance = maxDimension * 1.25; // Adjust multiplier for desired framing
+  const marginMultiplier = 1.1; // Adjust this for larger/smaller margins (e.g., 1.1 for 10%)
+  const distance = (maxDimension * marginMultiplier) / (2 * Math.tan((camera.fov * Math.PI) / 360)); // Perspective
 
-  camera.position.set(0, 0, distance); // Center camera at (0, 0, distance)
-  camera.lookAt(0, 0, 0); // Look at the center of the scene
-  camera.updateProjectionMatrix(); // Ensure the camera projection is updated
+  // Adjust camera position to center the mesh with added margins
+  camera.position.set(center.x, center.y, center.z + distance); // Center camera at mesh
+  camera.lookAt(center); // Ensure the camera looks at the center of the mesh
 
-  // Take the screenshot
-  const width = window.innerWidth * 2; // Adjust resolution
+  // Adjust camera aspect ratio for consistency
+  const aspect = window.innerWidth / window.innerHeight;
+  camera.aspect = aspect;
+  camera.updateProjectionMatrix();
+
+  // Adjust renderer to fit window dimensions
+  const width = window.innerWidth * 2; // Increase resolution
   const height = window.innerHeight * 2;
-
   gl.setSize(width, height);
   gl.setPixelRatio(2);
+
+  // Render the scene
   gl.render(scene, camera);
 
+  // Generate the screenshot
   const screenshot = gl.domElement.toDataURL("image/png");
   const link = document.createElement("a");
   link.href = screenshot;
-  link.download = "screenshot.png";
+  link.download = "screenshoot.png";
   link.click();
 
-  // Restore original camera position and orientation
+  // Restore original camera settings
   camera.position.copy(originalPosition);
   camera.rotation.copy(originalRotation);
+  camera.aspect = originalAspect;
   camera.updateProjectionMatrix();
 
-  // Restore original renderer size
+  // Restore renderer size
   gl.setSize(window.innerWidth, window.innerHeight);
   gl.setPixelRatio(window.devicePixelRatio);
-}
+};
+
