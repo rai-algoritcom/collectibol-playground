@@ -265,7 +265,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     const transTexture = useTexture(transTexturePath)
 
     const { useTransition, transitionSpeed } = useControls('Transition Fx', {
-        useTransition: { value: true, label: 'Enable' },
+        useTransition: { value: false, label: 'Enable' },
         transitionSpeed: { value: 0.8, min: 0, max: 3, label: 'Speed' },
         Mask: { image: transTexturePath, onChange: (v) => setTransTexturePath(v) }
     })
@@ -362,7 +362,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                 },
                 transition: {
                     transition_speed: transitionSpeed,
-                    use_transition: useTransition,
+                    use_transition: useIridescence ? false : useBrightness ? false : useTransition,
                     transition_mask: transTexturePath
                 },
                 folding: {
