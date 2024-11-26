@@ -265,8 +265,9 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     const [refractionTexturePath, setRefractionTexturePath] = useState('/fx/pattern.jpg')
     const refractionTexture = useTexture(refractionTexturePath)
 
-    const { useRefraction, refractionIntensity } = useControls('Refraction Fx', {
+    const { useRefraction, refractionIntensity, stripesVisible } = useControls('Refraction Fx', {
         useRefraction: { value: false, label: 'Enable' },
+        stripesVisible: { value: false, label: 'Stripes' },
         refractionIntensity: { value: 1.0, min: 0, max: 1.0, step: 0.001, label: 'Intensity' },
         Mask: { image: refractionTexturePath, onChange: (v) => setRefractionTexturePath(v) }
     })
@@ -374,6 +375,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                 refraction: {
                     refraction_intensity: refractionIntensity,
                     use_refraction: useRefraction,
+                    stripes_visible: stripesVisible,
                     refraction_mask: refractionTexturePath,
                 },
                 transition: {
@@ -530,6 +532,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         // Refraction 
         refractionTexture,
         useRefraction,
+        stripesVisible,
         refractionIntensity,
         // Transition, 
         transTexture,
@@ -623,6 +626,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
                                 gradientMap: { value: refractionTexture  },
                                 refractionIntensity: { value: refractionIntensity },
+                                stripesVisible: { value: stripesVisible },
 
                                 uDisp: { value: transTexture },
                                 uHoverState: { value: 0 },
