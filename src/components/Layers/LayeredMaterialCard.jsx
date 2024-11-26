@@ -65,12 +65,12 @@ import {
     blendAlphaTXs, 
 } from "../../utils";
 
-import { downloadJSON } from "../../utils/helpers";
+import { downloadJSON, takeScreenshot } from "../../utils/helpers";
 
 
 
 export default function LayeredMaterialCard({ textures, texturePaths }) {
-    const { gl } = useThree(); 
+    const { gl, scene, camera } = useThree(); 
 
     const [key, setKey] = useState(0);
 
@@ -327,8 +327,13 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
 
     useControls({
+        'Take Screenshot': button(() => takeScreenshot(gl, scene, camera))
+    }, [scene])
+
+    useControls({
         'Download JSON': button(() => downloadJSON(jsonCfg))
     }, [jsonCfg])
+    
 
 
     const refreshMesh = () => {
