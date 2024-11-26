@@ -66,7 +66,7 @@ import {
 } from "../../utils";
 
 import { downloadJSON, takeScreenshot } from "../../utils/helpers";
-import TroikaTextLayer from "./TroikaTextLayer";
+
 
 
 
@@ -327,13 +327,13 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     })
 
 
-    const { color, fontSize, maxWidth, lineHeight, letterSpacing, content } = useControls('Text Overlay', {
-        color: { value: "#ffffff", label: 'Color' },
-        fontSize: { value: .1, min: 0, max: 1, label: 'Font Size' },
+    const { fontColor, fontSize, maxWidth, lineHeight, letterSpacing, textContent } = useControls('Text Overlay', {
+        fontColor: { value: "#ffffff", label: 'Color' },
+        fontSize: { value: .16, min: 0, max: 1, label: 'Font Size' },
         maxWidth: { value: 1, min: 1, max: 5, label: 'Max Width' },
         lineHeight: { value: 0.75, min: 0.1, max: 10 , label: 'Line Height' },
         letterSpacing: { value: -0.08, min: -0.5, max: 1, label: 'Letter Spacing' },
-        content: { value: 'LOREM IPSUM DOLOR SIT AMET', label: 'Content'}
+        textContent: { value: 'LOREM IPSUM DOLOR SIT AMET', label: 'Content'}
     })
 
 
@@ -405,6 +405,14 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                     folding_x: foldX,   
                     folding_y: foldY,
                     folding_rotation: foldRotation
+                },
+                text_overlay: {
+                    font_color: fontColor,
+                    font_size: fontSize,
+                    max_widt: maxWidth,
+                    line_height: lineHeight, 
+                    letter_spacing: letterSpacing, 
+                    text_content: textContent
                 },
                 vertex_fx: {
                     id: useGlitch 
@@ -578,7 +586,14 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         foldIntensity, 
         foldX, 
         foldY, 
-        foldRotation
+        foldRotation,
+        // Text overlay 
+        fontColor, 
+        fontSize, 
+        maxWidth, 
+        lineHeight, 
+        letterSpacing, 
+        textContent
     ])
 
 
@@ -851,7 +866,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
             )}
 
             <Text
-                color={color}
+                color={fontColor}
                 fontSize={fontSize}
                 maxWidth={maxWidth}
                 lineHeight={lineHeight}
@@ -862,7 +877,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                 anchorY="top"
                 position={[0, -1, .15]}
             >
-                {content}
+                {textContent}
             </Text>
         </>
     )
