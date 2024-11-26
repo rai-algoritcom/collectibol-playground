@@ -29,6 +29,7 @@ import standardFragmentShader from '../../shaders/fragments/standardShader.glsl'
 import iridescenceFragmentShader from '../../shaders/fragments/iridescenceShader.glsl';
 import brightnessFragmentShader from '../../shaders/fragments/brightnessShader.glsl';
 import transitionFragmentShader from '../../shaders/fragments/transitionShader.glsl';
+import refractionFragmentShader from '../../shaders/fragments/refractionShader.glsl'
 
 /**
  * Fx Fragment
@@ -261,6 +262,16 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     })
 
 
+    const [refractionTexturePath, setRefractionTexturePath] = useState('/fx/pattern.jpg')
+    const refractionTexture = useTexture(refractionTexturePath)
+
+    const { useRefraction, refractionIntensity } = useControls('Refraction Fx', {
+        useRefraction: { value: false, label: 'Enable' },
+        refractionIntensity: { value: 1.0, min: 0, max: 1.0, step: 0.001, label: 'Intensity' },
+        Mask: { image: refractionTexturePath, onChange: (v) => setRefractionTexturePath(v) }
+    })
+
+
     const [transTexturePath, setTransTexturePath] = useState('/fx/brush.jpg')
     const transTexture = useTexture(transTexturePath)
 
@@ -356,13 +367,18 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                 },
                 brightness: {
                     brightness_intensity: brightnessIntensity,
-                    use_brightness: useIridescence ? false : useBrightness,
+                    use_brightness: useIridescence ? false : useRefraction ? false : useBrightness,
                     brightness_color: brightnessColor,
                     brightness_mask: brightTexturePath
                 },
+                refraction: {
+                    refraction_intensity: refractionIntensity,
+                    use_refraction: useRefraction,
+                    refraction_mask: refractionTexturePath,
+                },
                 transition: {
                     transition_speed: transitionSpeed,
-                    use_transition: useIridescence ? false : useBrightness ? false : useTransition,
+                    use_transition: useIridescence ? false : useBrightness ? false : useRefraction ? false : useTransition,
                     transition_mask: transTexturePath
                 },
                 folding: {
@@ -511,6 +527,10 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         iridescenceIntensity,
         iridescenceColor1,
         iridescenceColor2,
+        // Refraction 
+        refractionTexture,
+        useRefraction,
+        refractionIntensity,
         // Transition, 
         transTexture,
         useTransition, 
@@ -544,6 +564,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
 
     useFrame((state) => {
+
         if (shaderRef.current) {
             shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
             shaderRef.current.uniforms.foldIntensity.value = foldIntensity;
@@ -561,16 +582,18 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
 
     const hoverState = (hovered) => {
-        if (hovered) {
-            gsap.to(shaderRef.current.uniforms.uHoverState, {
-                duration: transitionSpeed,
-                value: 1
-            })
-        } else {
-            gsap.to(shaderRef.current.uniforms.uHoverState, {
-                duration: transitionSpeed,
-                value: 0
-            })
+        if (shaderRef.current) {
+            if (hovered) {
+                gsap.to(shaderRef.current.uniforms.uHoverState, {
+                    duration: transitionSpeed,
+                    value: 1
+                })
+            } else {
+                gsap.to(shaderRef.current.uniforms.uHoverState, {
+                    duration: transitionSpeed,
+                    value: 0
+                })
+            }
         }
     }
 
@@ -597,6 +620,9 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 roughnessMap: { value: blendedRoughnessTextures },
                                 normalMap: { value: useIridescence ? blendedNormalTexturesIris : blendedNormalTextures },
                                 iridescenceMask: { value: useIridescence ? irisTexture : brightTexture },
+
+                                gradientMap: { value: refractionTexture  },
+                                refractionIntensity: { value: refractionIntensity },
 
                                 uDisp: { value: transTexture },
                                 uHoverState: { value: 0 },
@@ -676,7 +702,10 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 : standardVertexShader
                                 }
                             fragmentShader={
-                                useIridescence 
+                                useRefraction
+                                ? 
+                                refractionFragmentShader
+                                : useIridescence 
                                 ? 
                                 iridescenceFragmentShader 
                                 : useBrightness 
