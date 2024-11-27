@@ -67,7 +67,12 @@ import {
 
 import { downloadJSON, takeScreenshot } from "../../utils/helpers";
 
+import Stats from "three/examples/jsm/libs/stats.module.js";
 
+
+
+const stats = Stats();
+document.body.appendChild(stats.dom);
 
 
 export default function LayeredMaterialCard({ textures, texturePaths }) {
@@ -286,7 +291,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
 
     const { useFolding, foldIntensity, foldX, foldY, foldRotation } = useControls('Folding Fx', { 
-        useFolding: { value: true, label: 'Enable' },
+        useFolding: { value: false, label: 'Enable' },
         foldIntensity: { value: 0.65, min: 0, max: 2, step: 0.01, label: 'Intensity' },
         foldX: { value: 0.8, min: -1.5, max: 1.5, step: 0.01, label: 'Position X' },
         foldY: { value: 1.43, min: -1.5, max: 1.5, step: 0.01, label: 'Position Y' },
@@ -651,6 +656,8 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
 
     useFrame((state) => {
+
+        stats.update();
 
         if (shaderRef.current) {
             shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
