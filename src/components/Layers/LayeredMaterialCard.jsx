@@ -660,7 +660,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
             if (animationTrigger === 'rotation') {
                 const cameraToMesh = new THREE.Vector3();
                 cameraToMesh.subVectors(planeRef.current.getWorldPosition(new THREE.Vector3()), camera.position).normalize();
-                const angle = Math.atan2(cameraToMesh.x, cameraToMesh.z);
+                const angle = Math.atan2(cameraToMesh.y, cameraToMesh.z);
                 overlayRef.current.uniforms.uTime.value = angle * Math.PI 
             } else {
                 overlayRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
