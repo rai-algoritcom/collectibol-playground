@@ -18,7 +18,7 @@ export default function Card() {
         pattern: {
             albedo: '/fx/fluid.jpg',
             albedo2: '/textures/pattern/albido2.png',
-            height: '/textures/pattern/albido2.png'
+            height: '/fx/fluid.jpg'
         },
         main_interest: {
             albedo: '/prod/main_interest/albido.png',
