@@ -338,10 +338,10 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     })
 
 
-    // useControls({
-    //     'Snapshot .jpg': button(() => takeScreenshot(gl, scene, camera, planeRef.current)),
-    //     'Snapshot .png': button(() => takeScreenshot(gl, scene, camera, planeRef.current, true))
-    // }, [scene])
+    useControls({
+        'Snapshot .jpg': button(() => takeScreenshot(gl, scene, camera, planeRef.current)),
+        'Snapshot .png': button(() => takeScreenshot(gl, scene, camera, planeRef.current, true))
+    }, [scene])
 
 
     useControls({
