@@ -246,47 +246,35 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     })
     
 
-    const [irisTexturePath, setIrisTexturePath] = useState('/prod/main_interest/ao.jpg')
-    const irisTexture = useTexture(irisTexturePath);
 
     const { useIridescence, iridescenceIntensity, iridescenceColor1, iridescenceColor2 } = useControls('Iridescence Fx', {
         useIridescence: { value: false, label: 'Enable' },
         iridescenceIntensity: { value: 0.02, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
         iridescenceColor1: { value: { r: 252, g: 102, b: 226 }, label: 'Color 1' },
         iridescenceColor2: { value: { r: 231, g: 245, b: 81 }, label: 'Color 2' },
-        Mask: { image: irisTexturePath, onChange: (v) => setIrisTexturePath(v) }
     });
 
     
-    const [brightTexturePath, setBrightTexturePath] = useState('/prod/main_interest/ao.jpg')
-    const brightTexture = useTexture(brightTexturePath)
 
     const { useBrightness, brightnessIntensity, brightnessColor } = useControls('Brightness Fx', {
-        useBrightness: { value: false, label: 'Enable' },
+        useBrightness: { value: true, label: 'Enable' },
         brightnessIntensity: { value: 0.0045, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
         brightnessColor: { value: { r: 231, g: 245, b: 81 }, label: 'Color' },
-        Mask: { image: brightTexturePath, onChange: (v) => setBrightTexturePath(v) }
     })
 
 
-    const [refractionTexturePath, setRefractionTexturePath] = useState('/fx/pattern.jpg')
-    const refractionTexture = useTexture(refractionTexturePath)
 
     const { useRefraction, refractionIntensity, stripesVisible } = useControls('Refraction Fx', {
         useRefraction: { value: false, label: 'Enable' },
         stripesVisible: { value: false, label: 'Stripes' },
         refractionIntensity: { value: 1.0, min: 0, max: 1.0, step: 0.001, label: 'Intensity' },
-        Mask: { image: refractionTexturePath, onChange: (v) => setRefractionTexturePath(v) }
     })
 
 
-    const [transTexturePath, setTransTexturePath] = useState('/fx/brush.jpg')
-    const transTexture = useTexture(transTexturePath)
 
     const { useTransition, transitionSpeed } = useControls('Transition Fx', {
         useTransition: { value: false, label: 'Enable' },
         transitionSpeed: { value: 0.8, min: 0, max: 3, label: 'Speed' },
-        Mask: { image: transTexturePath, onChange: (v) => setTransTexturePath(v) }
     })
 
 
@@ -310,7 +298,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         useCloth: { value: false, label: 'Cloth Fx' }
     })
 
-    const alphaMaskTexture = useTexture('/prod/base/alpha.jpg')
+
     const { useCardio, useSquares, useCircle, useDank, useShine, useEther, useFire, useWaves, useSmoke, useRay, useCrystal, useGalaxy, useLiquid, useAsci, useSpin, useParticles, useBlobs, useGrass } = useControls('Animations Fragment (overlay)', {
         useCardio: { value: false, label: 'Cardio Fx' },
         useSquares: { value: false, label: 'Fractal Fx' },
@@ -387,25 +375,21 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                     iridescence_intensity: iridescenceIntensity,
                     use_iridescence: useIridescence,
                     iridescence_color_1: iridescenceColor1,
-                    iridescence_color_2: iridescenceColor2,
-                    iridescence_mask: irisTexturePath
+                    iridescence_color_2: iridescenceColor2
                 },
                 brightness: {
                     brightness_intensity: brightnessIntensity,
                     use_brightness: useIridescence ? false : useRefraction ? false : useBrightness,
-                    brightness_color: brightnessColor,
-                    brightness_mask: brightTexturePath
+                    brightness_color: brightnessColor
                 },
                 refraction: {
                     refraction_intensity: refractionIntensity,
                     use_refraction: useRefraction,
-                    stripes_visible: stripesVisible,
-                    refraction_mask: refractionTexturePath,
+                    stripes_visible: stripesVisible
                 },
                 transition: {
                     transition_speed: transitionSpeed,
-                    use_transition: useIridescence ? false : useBrightness ? false : useRefraction ? false : useTransition,
-                    transition_mask: transTexturePath
+                    use_transition: useIridescence ? false : useBrightness ? false : useRefraction ? false : useTransition
                 },
                 folding: {
                     use_folding: useFolding,
@@ -557,10 +541,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                 blendedRoughnessTextures,
                 blendedNormalTextures,
                 blendedNormalTexturesIris,
-                irisTexture,
-                brightTexture,
-                refractionTexture,
-                transTexture,
+                textures.fx
             ].forEach(disposeTexture);
         
             // Additional cleanups for textures if applicable
@@ -601,23 +582,19 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         useWave,
         useGlitch,
         // Brightness
-        brightTexture,
         useBrightness,
         brightnessIntensity,
         brightnessColor,
         // Iridescene
-        irisTexture,
         useIridescence,
         iridescenceIntensity,
         iridescenceColor1,
         iridescenceColor2,
         // Refraction 
-        refractionTexture,
         useRefraction,
         stripesVisible,
         refractionIntensity,
         // Transition, 
-        transTexture,
         useTransition, 
         transitionSpeed,
         // Rugosity
@@ -631,6 +608,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         blendedHeightTextures,
         blendedRoughnessTextures,
         blendedNormalTextures,
+        textures.fx,
         // Lights
         ambientLightColor,
         ambientLightIntensity,
@@ -691,19 +669,6 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         }
     }
 
-
-    if (
-        !(
-            irisTexture && 
-            refractionTexture &&
-            transTexture &&
-            brightTexture
-        )
-    ) {
-        return <></>
-    }
-
-
     return (
         <>
             <mesh 
@@ -728,13 +693,13 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 heightMap: { value: blendedHeightTextures },
                                 roughnessMap: { value: blendedRoughnessTextures },
                                 normalMap: { value: useIridescence ? blendedNormalTexturesIris : blendedNormalTextures },
-                                iridescenceMask: { value: useIridescence ? irisTexture : brightTexture },
+                                iridescenceMask: { value: useIridescence ? textures.fx.iridescence : textures.fx.brightness },
 
-                                gradientMap: { value: refractionTexture  },
+                                gradientMap: { value: textures.fx.refraction  },
                                 refractionIntensity: { value: refractionIntensity },
                                 stripesVisible: { value: stripesVisible },
 
-                                uDisp: { value: transTexture },
+                                uDisp: { value: textures.fx.transition },
                                 uHoverState: { value: 0 },
                                 
                                 displacementScale: { value: 0.025 },
@@ -809,7 +774,8 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 : useFolding
                                 ? 
                                 foldingVertexShader
-                                : standardVertexShader
+                                : 
+                                standardVertexShader
                                 }
                             fragmentShader={
                                 useRefraction
@@ -824,7 +790,8 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 : useTransition
                                 ?
                                 transitionFragmentShader
-                                : standardFragmentShader
+                                : 
+                                standardFragmentShader
                             }
                             transparent={true}
                             side={THREE.DoubleSide}
@@ -832,7 +799,8 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                     />
                 }
             </mesh>
-            { (useCardio || useSquares || useCircle || useDank || useShine || useEther || useFire || useWaves || useSmoke || useRay || useCrystal || useGalaxy || useLiquid || useAsci || useSpin || useParticles || useBlobs || useGrass) && (
+            
+            {(useCardio || useSquares || useCircle || useDank || useShine || useEther || useFire || useWaves || useSmoke || useRay || useCrystal || useGalaxy || useLiquid || useAsci || useSpin || useParticles || useBlobs || useGrass) && (
                 <mesh position={[0, 0, .005]} key={`overlay-${key}`} >
                     <planeGeometry args={[2, 3, 120, 120]} />
                     <shaderMaterial
@@ -923,11 +891,8 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                         }
                         uniforms={{
                             uTime: { value: 0.0 },
-                            uAlphaMask: { value: alphaMaskTexture },
+                            uAlphaMask: { value: textures.base.alpha },
                             uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-                            /**
-                            * Folding
-                            */
                             foldIntensity: { value: 0.25 },
                             foldPosition: { value: new THREE.Vector2(0.0, 0.0) },
                             foldRotationZ: { value: 0.0 },
@@ -940,7 +905,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                 </mesh>
             )}
 
-            <Text
+            {<Text
                 color={fontColor}
                 fontSize={fontSize}
                 maxWidth={maxWidth}
@@ -953,7 +918,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                 position={[0, -1, .15]}
             >
                 {textContent}
-            </Text>
+            </Text>}
         </>
     )
 }
