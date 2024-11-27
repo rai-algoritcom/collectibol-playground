@@ -508,15 +508,57 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
         return () => {
             if (shaderRef.current) {
+                if (shaderRef.current.uniforms) {
+                    // Dispose any texture-based uniforms
+                    Object.values(shaderRef.current.uniforms).forEach((uniform) => {
+                        if (uniform && uniform.value && uniform.value.dispose) {
+                            uniform.value.dispose();
+                        }
+                    });
+                }
                 shaderRef.current.dispose()
                 shaderRef.current = null
             }
             if (overlayRef.current) {
+                if (overlayRef.current.uniforms) {
+                    // Dispose any texture-based uniforms
+                    Object.values(overlayRef.current.uniforms).forEach((uniform) => {
+                        if (uniform && uniform.value && uniform.value.dispose) {
+                            uniform.value.dispose();
+                        }
+                    });
+                }
                 overlayRef.current.dispose()
                 overlayRef.current = null
             }
             if (planeRef.current) {
+                if (planeRef.current.geometry) {
+                    planeRef.current.geometry.dispose(); // Dispose geometry explicitly
+                }
                 planeRef.current = null
+            }
+
+            const disposeTexture = (texture) => {
+                if (texture && texture.dispose) {
+                    texture.dispose();
+                }
+            };
+
+            disposeTexture(blendedAlbedoTextures);
+            disposeTexture(blendedAlbedo2Textures);
+            disposeTexture(blendedAlphaTextures);
+            disposeTexture(blendedHeightTextures);
+            disposeTexture(blendedRoughnessTextures);
+            disposeTexture(blendedNormalTextures);
+            disposeTexture(blendedNormalTexturesIris);
+            disposeTexture(irisTexture);
+            disposeTexture(brightTexture);
+            disposeTexture(refractionTexture);
+            disposeTexture(transTexture);
+        
+            // Additional cleanups for textures if applicable
+            if (textures) {
+                Object.values(textures).forEach(disposeTexture);
             }
         }
     }, [
@@ -645,6 +687,8 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                 key={`main-${key}`} 
                 onPointerOut={() => hoverState(false) } 
                 onPointerOver={() => hoverState(true) }
+                onPointerDown={() => hoverState(true)}
+                onPointerUp={() => hoverState(false)}
             > 
                 <planeGeometry args={[2, 3, 120, 120]} />
                 {
