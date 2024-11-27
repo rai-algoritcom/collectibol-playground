@@ -515,6 +515,9 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                 overlayRef.current.dispose()
                 overlayRef.current = null
             }
+            if (planeRef.current) {
+                planeRef.current = null
+            }
         }
     }, [
         // Fragment FX
