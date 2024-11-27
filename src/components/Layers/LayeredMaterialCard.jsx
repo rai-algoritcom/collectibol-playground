@@ -85,6 +85,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     const overlayRef = useRef()
 
     const [jsonCfg, setJsonCfg] = useState()
+    const [animationTrigger, setAnimationTrigger] = useState('rotation')
 
     const albedoToggles = useControls('Albedo Channels', {
         base_albedo: {
@@ -300,6 +301,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
 
     const { useCardio, useSquares, useCircle, useDank, useShine, useEther, useFire, useWaves, useSmoke, useRay, useCrystal, useGalaxy, useLiquid, useAsci, useSpin, useParticles, useBlobs, useGrass } = useControls('Animations Fragment (overlay)', {
+        'Trigger': { options: { rotation: 'rotation', time: 'time' }, onChange: (v) => setAnimationTrigger(v), value: 'rotation' },
         useCardio: { value: false, label: 'Cardio Fx' },
         useSquares: { value: false, label: 'Fractal Fx' },
         useCircle: { value: false, label: 'Circle Fx' },
@@ -319,6 +321,8 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         useBlobs: { value: false, label: 'Blobs Fx' },
         useGrass: { value: false, label: 'Grass Fx' }
     })
+
+
 
 
     const { fontColor, fontSize, maxWidth, lineHeight, letterSpacing, textContent } = useControls('Text Overlay', {
@@ -433,6 +437,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                     : 'none'
                 },
                 fragment_fx: {
+                    trigger: animationTrigger,
                     id: useCircle 
                     ?
                     'circle'
@@ -553,6 +558,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
             });
         }
     }, [
+        animationTrigger,
         // Fragment FX
         useGrass,
         useBlobs,
@@ -645,10 +651,20 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         }
 
         if (overlayRef.current) {
-            overlayRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
             overlayRef.current.uniforms.foldIntensity.value = foldIntensity;
             overlayRef.current.uniforms.foldPosition.value.set(foldX, foldY);
             overlayRef.current.uniforms.foldRotationZ.value = foldRotation;
+        }
+
+        if (planeRef.current && camera && overlayRef.current && shaderRef.current) {
+            if (animationTrigger === 'rotation') {
+                const cameraToMesh = new THREE.Vector3();
+                cameraToMesh.subVectors(planeRef.current.getWorldPosition(new THREE.Vector3()), camera.position).normalize();
+                const angle = Math.atan2(cameraToMesh.x, cameraToMesh.z);
+                overlayRef.current.uniforms.uTime.value = angle * Math.PI 
+            } else {
+                overlayRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
+            }
         }
     })
 
