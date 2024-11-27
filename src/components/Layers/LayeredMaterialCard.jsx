@@ -351,7 +351,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
 
     const refreshMesh = () => {
-        setKey((prevKey) => prevKey + 1);
+        // setKey((prevKey) => prevKey + 1);
     }
 
 
