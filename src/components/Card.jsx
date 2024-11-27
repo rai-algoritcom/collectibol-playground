@@ -126,7 +126,17 @@ export default function Card() {
     const layoutTextures = useTexture(texturePaths.layout);
     const gradingTextures = useTexture(texturePaths.grading);
 
-
+    if (
+        !(
+            baseTextures &&
+            patternTexture &&
+            mainInterestTextures &&
+            layoutTextures &&
+            gradingTextures
+        )
+    ) {
+        return  <></>
+    }
 
     return (
             <LayeredMaterialCard
