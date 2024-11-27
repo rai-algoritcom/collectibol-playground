@@ -692,6 +692,18 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     }
 
 
+    if (
+        !(
+            irisTexture && 
+            refractionTexture &&
+            transTexture &&
+            brightTexture
+        )
+    ) {
+        return <></>
+    }
+
+
     return (
         <>
             <mesh 
