@@ -640,11 +640,11 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         pointLightIntensity,
         pointLightDecay,
         // Folding
-        useFolding, 
-        foldIntensity, 
-        foldX, 
-        foldY, 
-        foldRotation,
+        // useFolding, 
+        // foldIntensity, 
+        // foldX, 
+        // foldY, 
+        // foldRotation,
         // Text overlay 
         fontColor, 
         fontSize, 
@@ -661,16 +661,16 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
         if (shaderRef.current) {
             shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
-            shaderRef.current.uniforms.foldIntensity.value = foldIntensity;
-            shaderRef.current.uniforms.foldPosition.value.set(foldX, foldY);
-            shaderRef.current.uniforms.foldRotationZ.value = foldRotation;
+            // shaderRef.current.uniforms.foldIntensity.value = foldIntensity;
+            // shaderRef.current.uniforms.foldPosition.value.set(foldX, foldY);
+            // shaderRef.current.uniforms.foldRotationZ.value = foldRotation;
         }
 
         if (overlayRef.current) {
             overlayRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
-            overlayRef.current.uniforms.foldIntensity.value = foldIntensity;
-            overlayRef.current.uniforms.foldPosition.value.set(foldX, foldY);
-            overlayRef.current.uniforms.foldRotationZ.value = foldRotation;
+            // overlayRef.current.uniforms.foldIntensity.value = foldIntensity;
+            // overlayRef.current.uniforms.foldPosition.value.set(foldX, foldY);
+            // overlayRef.current.uniforms.foldRotationZ.value = foldRotation;
         }
     })
 
