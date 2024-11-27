@@ -46,10 +46,19 @@ export const downloadJSON = (cfg) => {
 
 
 
-export const takeScreenshot = (gl, scene, camera, mesh) => {
+export const takeScreenshot = (gl, scene, camera, mesh, transparent = false) => {
   const originalPosition = camera.position.clone(); // Save original camera position
   const originalRotation = camera.rotation.clone(); // Save original camera rotation
   const originalAspect = camera.aspect; // Save original aspect ratio
+
+  // Enable transparency
+  const ogBackground = scene.background
+
+  if (transparent) {
+    gl.setClearColor(0x000000, 0); // Fully transparent
+    gl.clear(); // Clear the frame buffer
+    scene.background = null;   
+  }
 
   // Ensure the mesh's world matrix is up-to-date
   mesh.updateMatrixWorld(true);
@@ -85,11 +94,22 @@ export const takeScreenshot = (gl, scene, camera, mesh) => {
   gl.render(scene, camera);
 
   // Generate the screenshot
-  const screenshot = gl.domElement.toDataURL("image/png");
-  const link = document.createElement("a");
-  link.href = screenshot;
-  link.download = "screenshoot.png";
-  link.click();
+  if (transparent) {
+    const screenshot = gl.domElement.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = screenshot;
+    link.download = "screenshoot.png";
+    link.click();
+
+    scene.background = ogBackground
+
+  } else {
+    const screenshot = gl.domElement.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = screenshot;
+    link.download = "screenshoot.png";
+    link.click();
+  }
 
   // Restore original camera settings
   camera.position.copy(originalPosition);

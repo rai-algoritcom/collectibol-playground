@@ -339,8 +339,10 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
 
     useControls({
-        'Take Screenshot': button(() => takeScreenshot(gl, scene, camera, planeRef.current))
+        'Snapshot .jpg': button(() => takeScreenshot(gl, scene, camera, planeRef.current)),
+        'Snapshot .png': button(() => takeScreenshot(gl, scene, camera, planeRef.current, true))
     }, [scene])
+
 
     useControls({
         'Download JSON': button(() => downloadJSON(jsonCfg))
