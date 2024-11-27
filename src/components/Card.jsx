@@ -38,8 +38,15 @@ export default function Card() {
             normal: '/textures/grading/poor/normal.png',
             alpha: '/textures/grading/poor/opacity.png',
             roughness: '/textures/grading/poor/roughness.png',
+        },
+        fx: {
+            iridescence: '/prod/main_interest/ao.jpg',
+            brightness: '/prod/main_interest/ao.jpg',
+            refraction: '/fx/pattern.jpg',
+            transition: '/fx/brush.jpg'
         }
     })
+
 
     useControls(
         'Base Textures', {
@@ -110,6 +117,17 @@ export default function Card() {
         }
     )
 
+
+    useControls(
+        'FX Textures', {
+            'Iridescence': { image: texturePaths.fx.iridescence, onChange: (v) => updateTexture('fx', 'iridescence', v) }, 
+            'Brightness': { image: texturePaths.fx.brightness, onChange: (v) => updateTexture('fx', 'brightness', v) },
+            'Refraction': { image: texturePaths.fx.refraction, onChange: (v) => updateTexture('fx', 'refraction', v) },
+            'Transition': { image: texturePaths.fx.transition, onChange: (v) => updateTexture('fx', 'transition', v) }
+        }
+    )
+
+
     const updateTexture = (category, type, value) => {
         setTexturePaths((prev) => ({
             ...prev,
@@ -125,6 +143,7 @@ export default function Card() {
     const mainInterestTextures = useTexture(texturePaths.main_interest);
     const layoutTextures = useTexture(texturePaths.layout);
     const gradingTextures = useTexture(texturePaths.grading);
+    const fxTextures = useTexture(texturePaths.fx);
 
     if (
         !(
@@ -132,7 +151,8 @@ export default function Card() {
             patternTexture &&
             mainInterestTextures &&
             layoutTextures &&
-            gradingTextures
+            gradingTextures && 
+            fxTextures
         )
     ) {
         return  <></>
@@ -146,6 +166,7 @@ export default function Card() {
                     main_interest: mainInterestTextures,
                     layout: layoutTextures,
                     grading: gradingTextures,
+                    fx: fxTextures
                 }}
                 texturePaths={texturePaths}
             />
