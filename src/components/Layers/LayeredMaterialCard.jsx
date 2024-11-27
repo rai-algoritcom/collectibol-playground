@@ -257,7 +257,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     
 
     const { useBrightness, brightnessIntensity, brightnessColor } = useControls('Brightness Fx', {
-        useBrightness: { value: true, label: 'Enable' },
+        useBrightness: { value: false, label: 'Enable' },
         brightnessIntensity: { value: 0.0045, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
         brightnessColor: { value: { r: 231, g: 245, b: 81 }, label: 'Color' },
     })

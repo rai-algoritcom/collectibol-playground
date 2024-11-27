@@ -16,8 +16,8 @@ export default function Card() {
             roughness: '/textures/base/roughness.png',
         },
         pattern: {
-            albedo: '/textures/pattern/albido2.png',
-            albedo2: '/textures/pattern/albido.png',
+            albedo: '/fx/fluid.jpg',
+            albedo2: '/textures/pattern/albido2.png',
             height: '/textures/pattern/albido2.png'
         },
         main_interest: {
@@ -60,8 +60,8 @@ export default function Card() {
 
     useControls(
         'Pattern Textures', {
-            'Albedo': { image: texturePaths.pattern.albedo, onChange: (v) => updateTexture('pattern', 'albedo', v) },
-            'Albedo2': { image: texturePaths.pattern.albedo2, onChange: (v) => updateTexture('pattern', 'albedo2', v) },
+            'Albedo I': { image: texturePaths.pattern.albedo, onChange: (v) => updateTexture('pattern', 'albedo', v) },
+            'Albedo II': { image: texturePaths.pattern.albedo2, onChange: (v) => updateTexture('pattern', 'albedo2', v) },
             // 'Height': { image: texturePaths.pattern.height, onChange: (v) => updateTexture('pattern', 'height', v) },
     })
 
@@ -119,7 +119,7 @@ export default function Card() {
 
 
     useControls(
-        'FX Textures', {
+        'Fx Textures', {
             'Iridescence': { image: texturePaths.fx.iridescence, onChange: (v) => updateTexture('fx', 'iridescence', v) }, 
             'Brightness': { image: texturePaths.fx.brightness, onChange: (v) => updateTexture('fx', 'brightness', v) },
             'Refraction': { image: texturePaths.fx.refraction, onChange: (v) => updateTexture('fx', 'refraction', v) },
