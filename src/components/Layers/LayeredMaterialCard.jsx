@@ -538,28 +538,33 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                 planeRef.current = null
             }
 
+            // Dispose Textures
             const disposeTexture = (texture) => {
                 if (texture && texture.dispose) {
                     texture.dispose();
                 }
             };
-
-            disposeTexture(blendedAlbedoTextures);
-            disposeTexture(blendedAlbedo2Textures);
-            disposeTexture(blendedAlphaTextures);
-            disposeTexture(blendedHeightTextures);
-            disposeTexture(blendedRoughnessTextures);
-            disposeTexture(blendedNormalTextures);
-            disposeTexture(blendedNormalTexturesIris);
-            disposeTexture(irisTexture);
-            disposeTexture(brightTexture);
-            disposeTexture(refractionTexture);
-            disposeTexture(transTexture);
+            [
+                blendedAlbedoTextures,
+                blendedAlbedo2Textures,
+                blendedAlphaTextures,
+                blendedHeightTextures,
+                blendedRoughnessTextures,
+                blendedNormalTextures,
+                blendedNormalTexturesIris,
+                irisTexture,
+                brightTexture,
+                refractionTexture,
+                transTexture,
+            ].forEach(disposeTexture);
         
             // Additional cleanups for textures if applicable
-            if (textures) {
-                Object.values(textures).forEach(disposeTexture);
-            }
+            scene.traverse((child) => {
+                if (child.isMesh) {
+                    child.geometry?.dispose();
+                    child.material?.dispose();
+                }
+            });
         }
     }, [
         // Fragment FX
