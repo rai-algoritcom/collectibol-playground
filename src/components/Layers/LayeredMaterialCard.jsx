@@ -723,7 +723,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 heightMap: { value: blendedHeightTextures },
                                 roughnessMap: { value: blendedRoughnessTextures },
                                 normalMap: { value: useIridescence ? blendedNormalTexturesIris : useBrightness ? blendedNormalTexturesIris : blendedNormalTextures },
-                                fxMask: { value: useIridescence ? textures.fx.brightness : useBrightness ? textures.fx.brightness : textures.fx.shine },
+                                fxMask: { value: useIridescence ? textures.fx.irisMask : useBrightness ? textures.fx.brightness : textures.fx.shine },
                                 iridescenceMask: { value: textures.fx.iridescence },
 
                                 gradientMap: { value: textures.fx.refraction  },
