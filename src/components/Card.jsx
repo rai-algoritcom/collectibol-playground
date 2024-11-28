@@ -40,8 +40,9 @@ export default function Card() {
             roughness: '/textures/grading/poor/roughness.png',
         },
         fx: {
-            iridescence: '/fx/LamineCard.png',
-            brightness: '/prod/main_interest/ao.jpg',
+            iridescence: '/fx/iris.jpg',
+            brightness: '/fx/LamineCard.png',
+            shine: '/prod/main_interest/ao.jpg',
             refraction: '/fx/pattern.jpg',
             transition: '/fx/brush.jpg'
         }
@@ -120,8 +121,9 @@ export default function Card() {
 
     useControls(
         'Fx Textures', {
-            'Iridescence': { image: texturePaths.fx.iridescence, onChange: (v) => updateTexture('fx', 'iridescence', v) }, 
-            'Brightness': { image: texturePaths.fx.brightness, onChange: (v) => updateTexture('fx', 'brightness', v) },
+            'Iridescence': { image: texturePaths.fx.iridescence, onChange: (v) => updateTexture('fx', 'iridescence', v) },
+            'Brightness': { image: texturePaths.fx.brightness, onChange: (v) => updateTexture('fx', 'brightness', v) }, 
+            'Shine': { image: texturePaths.fx.shine, onChange: (v) => updateTexture('fx', 'shine', v) },
             'Refraction': { image: texturePaths.fx.refraction, onChange: (v) => updateTexture('fx', 'refraction', v) },
             'Transition': { image: texturePaths.fx.transition, onChange: (v) => updateTexture('fx', 'transition', v) }
         }

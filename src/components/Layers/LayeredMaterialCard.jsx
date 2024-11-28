@@ -28,6 +28,7 @@ import clothVertexShader from '../../shaders/vertex/clothShader.glsl'
 import standardFragmentShader from '../../shaders/fragments/standardShader.glsl';
 import iridescenceFragmentShader from '../../shaders/fragments/iridescenceShader.glsl';
 import brightnessFragmentShader from '../../shaders/fragments/brightnessShader.glsl';
+import shineFragmentShader from '../../shaders/fragments/shineShader.glsl'
 import transitionFragmentShader from '../../shaders/fragments/transitionShader.glsl';
 import refractionFragmentShader from '../../shaders/fragments/refractionShader.glsl'
 
@@ -248,19 +249,19 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     
 
 
-    const { useIridescence, iridescenceIntensity, iridescenceColor1, iridescenceColor2 } = useControls('Iridescence Fx', {
-        useIridescence: { value: true, label: 'Enable' },
-        iridescenceIntensity: { value: 0.005, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
-        iridescenceColor1: { value: { r: 7, g: 7, b: 7 }, label: 'Color 1' },
-        iridescenceColor2: { value: { r: 79, g: 79, b: 79 }, label: 'Color 2' },
+    const { useBrightness, brightnessIntensity, brightnessColor1, brightnessColor2 } = useControls('Brightness Fx', {
+        useBrightness: { value: true, label: 'Enable' },
+        brightnessIntensity: { value: 0.005, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
+        brightnessColor1: { value: { r: 7, g: 7, b: 7 }, label: 'Color 1' },
+        brightnessColor2: { value: { r: 79, g: 79, b: 79 }, label: 'Color 2' },
     });
 
     
 
-    const { useBrightness, brightnessIntensity, brightnessColor } = useControls('Brightness Fx', {
-        useBrightness: { value: false, label: 'Enable' },
-        brightnessIntensity: { value: 0.0045, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
-        brightnessColor: { value: { r: 231, g: 245, b: 81 }, label: 'Color' },
+    const { useShiney, shineyIntensity, shineyColor } = useControls('Shine Fx', {
+        useShiney: { value: false, label: 'Enable' },
+        shineyIntensity: { value: 0.0045, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
+        shineyColor: { value: { r: 231, g: 245, b: 81 }, label: 'Color' },
     })
 
 
@@ -375,16 +376,16 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                     point_light_intensity: pointLightIntensity,
                     point_light_decay: pointLightDecay
                 },
-                iridescence: {
-                    iridescence_intensity: iridescenceIntensity,
-                    use_iridescence: useIridescence,
-                    iridescence_color_1: iridescenceColor1,
-                    iridescence_color_2: iridescenceColor2
-                },
                 brightness: {
                     brightness_intensity: brightnessIntensity,
-                    use_brightness: useIridescence ? false : useRefraction ? false : useBrightness,
-                    brightness_color: brightnessColor
+                    use_brightness: useBrightness,
+                    brightness_color_1: brightnessColor1,
+                    brightness_color_2: brightnessColor2
+                },
+                shine: {
+                    shine_intensity: shineyIntensity,
+                    use_shine: useBrightness ? false : useRefraction ? false : useShiney,
+                    shine_color: shineyColor
                 },
                 refraction: {
                     refraction_intensity: refractionIntensity,
@@ -393,7 +394,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                 },
                 transition: {
                     transition_speed: transitionSpeed,
-                    use_transition: useIridescence ? false : useBrightness ? false : useRefraction ? false : useTransition
+                    use_transition: useBrightness ? false : useShiney ? false : useRefraction ? false : useTransition
                 },
                 folding: {
                     use_folding: useFolding,
@@ -588,14 +589,14 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         useWave,
         useGlitch,
         // Brightness
+        useShiney,
+        shineyIntensity,
+        shineyColor,
+        // Iridescene
         useBrightness,
         brightnessIntensity,
-        brightnessColor,
-        // Iridescene
-        useIridescence,
-        iridescenceIntensity,
-        iridescenceColor1,
-        iridescenceColor2,
+        brightnessColor1,
+        brightnessColor2,
         // Refraction 
         useRefraction,
         stripesVisible,
@@ -708,8 +709,8 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 alphaMap: { value: blendedAlphaTextures },
                                 heightMap: { value: blendedHeightTextures },
                                 roughnessMap: { value: blendedRoughnessTextures },
-                                normalMap: { value: useIridescence ? blendedNormalTexturesIris : blendedNormalTextures },
-                                iridescenceMask: { value: useIridescence ? textures.fx.iridescence : textures.fx.brightness },
+                                normalMap: { value: useBrightness ? blendedNormalTexturesIris : blendedNormalTextures },
+                                iridescenceMask: { value: useBrightness ? textures.fx.brightness : textures.fx.shine },
 
                                 gradientMap: { value: textures.fx.refraction  },
                                 refractionIntensity: { value: refractionIntensity },
@@ -749,15 +750,15 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 roughnessIntensity: { value: roughnessIntensity },
                                 roughnessPresence: { value: roughnessPresence },
 
-                                useIridescence: { value: useIridescence }, 
-                                iridescenceIntensity: { value: iridescenceIntensity },
-                                iridescenceColor1: { value: iridescenceColor1 }, 
-                                iridescenceColor2: { value: iridescenceColor2 },
-
-                                useBrightness: { value: useBrightness  },
+                                useBrightness: { value: useBrightness }, 
                                 brightnessIntensity: { value: brightnessIntensity },
-                                brightnessColor1: { value: brightnessColor },
-                                brightnessColor2: { value: iridescenceColor1 },
+                                brightnessColor1: { value: brightnessColor1 }, 
+                                brightnessColor2: { value: brightnessColor2 },
+
+                                useShine: { value: useShiney  },
+                                shineIntensity: { value: shineyIntensity },
+                                shineColor1: { value: shineyColor },
+                                shineColor2: { value: brightnessColor1 },
 
                                 uTime: { value: 0.0 },
                                 uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
@@ -800,12 +801,12 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 useRefraction
                                 ? 
                                 refractionFragmentShader
-                                : useIridescence 
-                                ? 
-                                iridescenceFragmentShader 
                                 : useBrightness 
                                 ? 
                                 brightnessFragmentShader 
+                                : useShiney 
+                                ? 
+                                shineFragmentShader 
                                 : useTransition
                                 ?
                                 transitionFragmentShader

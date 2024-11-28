@@ -9,10 +9,10 @@ uniform float uTime;               // Animation time
 uniform float roughnessIntensity;  // Controls roughness intensity
 uniform float normalIntensity;     // Controls normal intensity
 uniform float refractionIntensity; // Refraction effect intensity
-uniform bool useIridescence;       // Toggle for iridescence effect
-uniform float iridescenceIntensity;// Intensity of the iridescence
-uniform vec3 iridescenceColor1;    // First gradient color
-uniform vec3 iridescenceColor2;    // Second gradient color
+uniform bool useBrightness;       // Toggle for iridescence effect
+uniform float brightnessIntensity;// Intensity of the iridescence
+uniform vec3 brightnessColor1;    // First gradient color
+uniform vec3 brightnessColor2;    // Second gradient color
 uniform vec3 lightDirection;       // Direction of the light
 uniform bool stripesVisible;
 
@@ -47,12 +47,12 @@ void main() {
     vec3 blendedRefraction = mix(baseColor.rgb, refractionEffect, refractionIntensity);
 
     // === Iridescence Effect ===
-    if (useIridescence) {
+    if (useBrightness) {
         // Fresnel Effect: Based on angle between viewDir and normal
         float fresnel = pow(1.0 - dot(normal, viewDir), 3.0);
 
         // Iridescence color blend based on Fresnel
-        vec3 iridescenceColor = mix(iridescenceColor1, iridescenceColor2, fresnel);
+        vec3 iridescenceColor = mix(brightnessColor1, brightnessColor2, fresnel);
 
         // Blend with light direction to make it dynamic
         float lightInfluence = max(dot(normal, normalize(lightDirection)), 0.0); // Dynamic reaction to light
@@ -63,7 +63,7 @@ void main() {
         iridescenceColor *= maskValue;
 
         // Add iridescence to the refraction-blended color
-        blendedRefraction += iridescenceColor * iridescenceIntensity;
+        blendedRefraction += iridescenceColor * brightnessIntensity;
     }
 
     vec3 stripeColor = vec3(1.0);
