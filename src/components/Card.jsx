@@ -41,7 +41,7 @@ export default function Card() {
         },
         fx: {
             irisMask: '/fx/iris-mask.jpg',
-            iridescence: '/fx/iris.jpg',
+            iridescence: '/fx/iris.png',
             brightness: '/fx/LamineCard.png',
             shine: '/prod/main_interest/ao.jpg',
             refraction: '/fx/pattern.jpg',
