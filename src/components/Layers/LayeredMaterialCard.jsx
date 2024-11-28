@@ -66,7 +66,7 @@ import {
     blendAlphaTXs, 
 } from "../../utils";
 
-import { downloadJSON, takeScreenshot } from "../../utils/helpers";
+import { downloadJSON, normalizeAngle, takeScreenshot } from "../../utils/helpers";
 
 import Stats from "three/examples/jsm/libs/stats.module.js";
 
@@ -653,6 +653,9 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     ])
 
 
+    let lastAngle = 0; // Keep track of the last angle
+
+
     useFrame((state) => {
 
         stats.update();
@@ -673,17 +676,24 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         if (planeRef.current && camera && shaderRef.current) {
             const cameraToMesh = new THREE.Vector3();
             cameraToMesh.subVectors(planeRef.current.getWorldPosition(new THREE.Vector3()), camera.position).normalize();
-            const angle = Math.atan2(cameraToMesh.x, cameraToMesh.z);
+            
+            const angle = Math.atan2(cameraToMesh.x, cameraToMesh.z)
+            const smoothAngle = normalizeAngle(angle, lastAngle)
+            
             if (overlayRef.current) {
                 if (animationTrigger === 'rotation') {
-                    overlayRef.current.uniforms.uTime.value = angle * Math.PI 
+                    overlayRef.current.uniforms.uTime.value = smoothAngle 
                 } else {
                     overlayRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
                 }
             }
-            shaderRef.current.uniforms.uRotation.value = angle * Math.PI * 0.25  
+
+            shaderRef.current.uniforms.uRotation.value = smoothAngle
+            lastAngle = smoothAngle
         }
     })
+
+
 
 
     const hoverState = (hovered) => {

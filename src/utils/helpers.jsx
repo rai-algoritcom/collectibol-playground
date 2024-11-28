@@ -1,5 +1,17 @@
 import * as THREE from 'three'
 
+export function normalizeAngle(newAngle, lastAngle) {
+  let delta = newAngle - lastAngle;
+
+  // Adjust for wraparound: Ensure delta is in range [-π, π]
+  if (delta > Math.PI) delta -= 2 * Math.PI;
+  if (delta < -Math.PI) delta += 2 * Math.PI;
+
+  // Compute the smoothed angle
+  return lastAngle + delta;
+}
+
+
 export const getRandomPositionAndRotation = () => ({
     position: [
       (Math.random() - 0.5) * 8, // Random X within [-1, 1]
