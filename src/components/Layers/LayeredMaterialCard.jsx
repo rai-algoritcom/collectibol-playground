@@ -249,10 +249,10 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
 
     const { useIridescence, iridescenceIntensity, iridescenceColor1, iridescenceColor2 } = useControls('Iridescence Fx', {
-        useIridescence: { value: false, label: 'Enable' },
-        iridescenceIntensity: { value: 0.02, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
-        iridescenceColor1: { value: { r: 252, g: 102, b: 226 }, label: 'Color 1' },
-        iridescenceColor2: { value: { r: 231, g: 245, b: 81 }, label: 'Color 2' },
+        useIridescence: { value: true, label: 'Enable' },
+        iridescenceIntensity: { value: 0.03, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
+        iridescenceColor1: { value: { r: 7, g: 7, b: 7 }, label: 'Color 1' },
+        iridescenceColor2: { value: { r: 79, g: 79, b: 79 }, label: 'Color 2' },
     });
 
     
