@@ -250,7 +250,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
     const { useIridescence, iridescenceIntensity, iridescenceColor1, iridescenceColor2 } = useControls('Iridescence Fx', {
         useIridescence: { value: true, label: 'Enable' },
-        iridescenceIntensity: { value: 0.03, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
+        iridescenceIntensity: { value: 0.005, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
         iridescenceColor1: { value: { r: 7, g: 7, b: 7 }, label: 'Color 1' },
         iridescenceColor2: { value: { r: 79, g: 79, b: 79 }, label: 'Color 2' },
     });
@@ -760,7 +760,10 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 brightnessColor2: { value: iridescenceColor1 },
 
                                 uTime: { value: 0.0 },
-                                uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+                                uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+
+                                environmentIntensity: { value: 1.0 }, // Adjust as needed
+                                environmentColor: { value: new THREE.Color(0xffffff) }, // White light
                             }}
                             vertexShader={
                                 useGlitch 
