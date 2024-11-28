@@ -250,7 +250,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
 
     const { useBrightness, brightnessIntensity, brightnessColor1, brightnessColor2 } = useControls('Brightness Fx', {
-        useBrightness: { value: true, label: 'Enable' },
+        useBrightness: { value: false, label: 'Enable' },
         brightnessIntensity: { value: 0.005, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
         brightnessColor1: { value: { r: 7, g: 7, b: 7 }, label: 'Color 1' },
         brightnessColor2: { value: { r: 79, g: 79, b: 79 }, label: 'Color 2' },
@@ -258,7 +258,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
 
     const { useIridescence, iridescenceIntensity } = useControls('Iridescence Fx', {
-        useIridescence: { value: false, label: 'Enable' },
+        useIridescence: { value: true, label: 'Enable' },
         iridescenceIntensity: { value: 1.0, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
     });
 
