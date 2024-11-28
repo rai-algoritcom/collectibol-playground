@@ -1,7 +1,6 @@
-    varying vec2 vUv;
+varying vec2 vUv;
     varying vec3 vNormal;
     varying vec3 vPosition;
-    varying mat3 vNormalMatrix;
 
     uniform sampler2D albedoMap;
     uniform sampler2D alphaMap;
@@ -17,10 +16,10 @@
     uniform float normalIntensity;
 
     // Iridescence parameters
-    uniform bool useIridescence;       // Toggle for iridescence effect
+    uniform bool useIridescence;        // Toggle for iridescence effect
     uniform float iridescenceIntensity; // Intensity of the iridescence
-    uniform vec3 iridescenceColor1;    // First gradient color
-    uniform vec3 iridescenceColor2;    // Second gradient color
+    uniform vec3 iridescenceColor1;     // First gradient color
+    uniform vec3 iridescenceColor2;     // Second gradient color
 
     void main() {
         // Sample textures
@@ -36,16 +35,20 @@
         // Simulate ambient environment lighting
         vec3 ambientLight = environmentColor * environmentIntensity;
 
+        // Angle-dependent transparency for the iridescence mask
+        float viewAngle = .5 - abs(dot(-normal, viewDir)); // 0.0 when facing, 1.0 when edge-on
+        float smoothFactor = smoothstep(0.0, 1.0, viewAngle); // Smooth transition
+
         // Iridescence
         if (useIridescence) {
             // Fresnel Effect: Based on angle between viewDir and normal
-            float fresnel = pow(1.0 - dot(normal, viewDir), 3.0); // Sharpened Fresnel falloff
+            float fresnel = pow(1.0 - dot(-normal, viewDir), 3.0); // Sharpened Fresnel falloff
 
             // Iridescence color blend based on Fresnel
             vec3 iridescenceColor = mix(iridescenceColor1, iridescenceColor2, fresnel);
 
-            // Apply mask to limit effect
-            iridescenceColor *= maskValue;
+            // Apply mask to limit effect and fade based on view angle
+            iridescenceColor *= maskValue * smoothFactor;
 
             // Add iridescence to base color
             albedoColor.rgb += iridescenceColor * iridescenceIntensity;
@@ -54,6 +57,7 @@
         // Combine base color with ambient lighting
         vec3 finalColor = albedoColor.rgb * ambientLight;
 
-        // Output final fragment color with transparency
+        // Output final fragment color with adjusted transparency
         gl_FragColor = vec4(finalColor, alphaValue);
+    
     }
