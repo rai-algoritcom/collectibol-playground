@@ -1,4 +1,3 @@
-
     varying vec2 vUv;
     varying vec3 vNormal;
     varying vec3 vPosition;
@@ -10,18 +9,18 @@
     uniform sampler2D normalMap;
     uniform sampler2D iridescenceMask;
 
-    uniform vec3 lightDirection;
+    uniform float environmentIntensity; // Intensity of the environment light
+    uniform vec3 environmentColor;      // Color of the environment light
 
-    uniform float roughnessIntensity; // Controls the influence of roughness
-    uniform float roughnessPresence;  // Adjusts the overall roughness effect
+    uniform float roughnessIntensity;   // Controls the influence of roughness
+    uniform float roughnessPresence;    // Adjusts the overall roughness effect
     uniform float normalIntensity;
 
     // Iridescence parameters
-    uniform bool useIridescence; // Toggle for iridescence effect
+    uniform bool useIridescence;       // Toggle for iridescence effect
     uniform float iridescenceIntensity; // Intensity of the iridescence
-    uniform vec3 iridescenceColor1; // First gradient color
-    uniform vec3 iridescenceColor2; // Second gradient color
-
+    uniform vec3 iridescenceColor1;    // First gradient color
+    uniform vec3 iridescenceColor2;    // Second gradient color
 
     void main() {
         // Sample textures
@@ -31,21 +30,19 @@
         vec3 normal = normalize(-vNormal + normalFromMap);
         float maskValue = texture2D(iridescenceMask, vUv).r; // Iridescence mask
 
-        // Light and view directions
-        vec3 lightDir = normalize(lightDirection);
+        // View direction
         vec3 viewDir = normalize(cameraPosition - vPosition);
 
-        // Fresnel Effect: Based on angle between viewDir and normal
-        float fresnel = pow(1.0 - dot(normal, viewDir), 3.0); // Adjust exponent for sharper falloff
+        // Simulate ambient environment lighting
+        vec3 ambientLight = environmentColor * environmentIntensity;
 
-        // Dynamic Iridescence
+        // Iridescence
         if (useIridescence) {
+            // Fresnel Effect: Based on angle between viewDir and normal
+            float fresnel = pow(1.0 - dot(normal, viewDir), 3.0); // Sharpened Fresnel falloff
+
             // Iridescence color blend based on Fresnel
             vec3 iridescenceColor = mix(iridescenceColor1, iridescenceColor2, fresnel);
-
-            // Blend with light direction to make it dynamic
-            float lightInfluence = max(dot(normal, lightDir), 0.0); // Dynamic reaction to light
-            iridescenceColor *= lightInfluence;
 
             // Apply mask to limit effect
             iridescenceColor *= maskValue;
@@ -54,7 +51,9 @@
             albedoColor.rgb += iridescenceColor * iridescenceIntensity;
         }
 
-        // Final output
-        gl_FragColor = vec4(albedoColor.rgb, alphaValue);       
-    }
+        // Combine base color with ambient lighting
+        vec3 finalColor = albedoColor.rgb * ambientLight;
 
+        // Output final fragment color with transparency
+        gl_FragColor = vec4(finalColor, alphaValue);
+    }
