@@ -3,7 +3,7 @@ uniform sampler2D gradientMap;     // Gradient/iridescent texture
 uniform sampler2D alphaMap;        // Alpha map
 uniform sampler2D roughnessMap;    // Roughness map
 uniform sampler2D normalMap;       // Normal map
-uniform sampler2D iridescenceMask; // Iridescence mask
+uniform sampler2D fxMask; // Iridescence mask
 
 uniform float uTime;               // Animation time
 uniform float roughnessIntensity;  // Controls roughness intensity
@@ -59,7 +59,7 @@ void main() {
         iridescenceColor *= lightInfluence;
 
         // Apply mask to limit effect
-        float maskValue = texture2D(iridescenceMask, uv).r; // Iridescence mask
+        float maskValue = texture2D(fxMask, uv).r; // Iridescence mask
         iridescenceColor *= maskValue;
 
         // Add iridescence to the refraction-blended color

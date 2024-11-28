@@ -1,63 +1,60 @@
 varying vec2 vUv;
-    varying vec3 vNormal;
-    varying vec3 vPosition;
+varying vec3 vNormal;
+varying vec3 vPosition;
 
-    uniform sampler2D albedoMap;
-    uniform sampler2D alphaMap;
-    uniform sampler2D roughnessMap;
-    uniform sampler2D normalMap;
-    uniform sampler2D iridescenceMask;
+uniform sampler2D albedoMap;
+uniform sampler2D alphaMap;
+uniform sampler2D roughnessMap;
+uniform sampler2D normalMap;
+uniform sampler2D fxMask;
+uniform sampler2D iridescenceMask; // New colorful texture
 
-    uniform float environmentIntensity; // Intensity of the environment light
-    uniform vec3 environmentColor;      // Color of the environment light
+uniform float environmentIntensity; // Intensity of the environment light
+uniform vec3 environmentColor;      // Color of the environment light
 
-    uniform float roughnessIntensity;   // Controls the influence of roughness
-    uniform float roughnessPresence;    // Adjusts the overall roughness effect
-    uniform float normalIntensity;
+uniform float roughnessIntensity;   // Controls the influence of roughness
+uniform float roughnessPresence;    // Adjusts the overall roughness effect
+uniform float normalIntensity;
 
-    // Iridescence parameters
-    uniform bool useIridescence;        // Toggle for iridescence effect
-    uniform float iridescenceIntensity; // Intensity of the iridescence
-    uniform vec3 iridescenceColor1;     // First gradient color
-    uniform vec3 iridescenceColor2;     // Second gradient color
+uniform bool useIridescence;        // Toggle for iridescence effect
+uniform float iridescenceIntensity; // Intensity of the iridescence
 
-    void main() {
-        // Sample textures
-        vec4 albedoColor = texture2D(albedoMap, vUv);
-        float alphaValue = texture2D(alphaMap, vUv).r;
-        vec3 normalFromMap = texture2D(normalMap, vUv).rgb * 2.0 - 1.0;
-        vec3 normal = normalize(-vNormal + normalFromMap);
-        float maskValue = texture2D(iridescenceMask, vUv).r; // Iridescence mask
+void main() {
+    // Sample base textures
+    vec4 albedoColor = texture2D(albedoMap, vUv);
+    float alphaValue = texture2D(alphaMap, vUv).r;
+    vec3 normalFromMap = texture2D(normalMap, vUv).rgb * 2.0 - 1.0;
+    vec3 normal = normalize(-vNormal + normalFromMap);
 
-        // View direction
-        vec3 viewDir = normalize(cameraPosition - vPosition);
+    // Sample mask textures
+    float fxMaskValue = texture2D(fxMask, vUv).r; // Effect mask value
+    vec4 iridescenceMaskColor = texture2D(iridescenceMask, vUv); // Albedo from iridescenceMask
 
-        // Simulate ambient environment lighting
-        vec3 ambientLight = environmentColor * environmentIntensity;
+    // View direction
+    vec3 viewDir = normalize(cameraPosition - vPosition);
 
-        // Angle-dependent transparency for the iridescence mask
-        float viewAngle = .5 - abs(dot(-normal, viewDir)); // 0.0 when facing, 1.0 when edge-on
-        float smoothFactor = smoothstep(0.0, 1.0, viewAngle); // Smooth transition
+    // Simulate ambient environment lighting
+    vec3 ambientLight = environmentColor * environmentIntensity;
 
-        // Iridescence
-        if (useIridescence) {
-            // Fresnel Effect: Based on angle between viewDir and normal
-            float fresnel = pow(1.0 - dot(-normal, viewDir), 3.0); // Sharpened Fresnel falloff
+    // Angle-dependent transparency for the iridescence effect
+    float viewAngle = 0.5 - abs(dot(-normal, viewDir)); // 0.0 when facing, 1.0 when edge-on
+    float smoothFactor = smoothstep(0.0, 1.0, viewAngle); // Smooth transition
 
-            // Iridescence color blend based on Fresnel
-            vec3 iridescenceColor = mix(iridescenceColor1, iridescenceColor2, fresnel);
+    // Iridescence effect
+    if (useIridescence) {
+        // Blend the iridescenceMask color with fxMask
+        vec3 iridescenceColor = iridescenceMaskColor.rgb * iridescenceMaskColor.a; // Use alpha to modulate
 
-            // Apply mask to limit effect and fade based on view angle
-            iridescenceColor *= maskValue * smoothFactor;
+        // Apply fxMask to control visibility of iridescence effect
+        vec3 fxBlendedColor = iridescenceColor * fxMaskValue * smoothFactor;
 
-            // Add iridescence to base color
-            albedoColor.rgb += iridescenceColor * iridescenceIntensity;
-        }
-
-        // Combine base color with ambient lighting
-        vec3 finalColor = albedoColor.rgb * ambientLight;
-
-        // Output final fragment color with adjusted transparency
-        gl_FragColor = vec4(finalColor, alphaValue);
-    
+        // Add the iridescence to the base color
+        albedoColor.rgb += fxBlendedColor * iridescenceIntensity;
     }
+
+    // Combine base color with ambient lighting
+    vec3 finalColor = albedoColor.rgb * ambientLight;
+
+    // Output final fragment color with adjusted transparency
+    gl_FragColor = vec4(finalColor, alphaValue);
+}

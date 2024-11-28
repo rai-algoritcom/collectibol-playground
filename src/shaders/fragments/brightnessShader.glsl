@@ -6,7 +6,7 @@ varying vec2 vUv;
     uniform sampler2D alphaMap;
     uniform sampler2D roughnessMap;
     uniform sampler2D normalMap;
-    uniform sampler2D iridescenceMask;
+    uniform sampler2D fxMask;
 
     uniform float environmentIntensity; // Intensity of the environment light
     uniform vec3 environmentColor;      // Color of the environment light
@@ -27,7 +27,7 @@ varying vec2 vUv;
         float alphaValue = texture2D(alphaMap, vUv).r;
         vec3 normalFromMap = texture2D(normalMap, vUv).rgb * 2.0 - 1.0;
         vec3 normal = normalize(-vNormal + normalFromMap);
-        float maskValue = texture2D(iridescenceMask, vUv).r; // Iridescence mask
+        float maskValue = texture2D(fxMask, vUv).r; // Iridescence mask
 
         // View direction
         vec3 viewDir = normalize(cameraPosition - vPosition);

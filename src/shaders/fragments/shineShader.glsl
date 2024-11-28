@@ -7,7 +7,7 @@ uniform sampler2D albedoMap;
 uniform sampler2D alphaMap;
 uniform sampler2D roughnessMap;
 uniform sampler2D normalMap;
-uniform sampler2D iridescenceMask;
+uniform sampler2D fxMask;
 
 // Lighting uniforms
 uniform vec3 ambientLightColor;  // Ambient light color
@@ -79,7 +79,7 @@ void main() {
 
     // === Iridescence Effect ===
     if (useShine) {
-        float maskValue = texture2D(iridescenceMask, vUv).r; // Iridescence mask
+        float maskValue = texture2D(fxMask, vUv).r; // Iridescence mask
 
         // Fresnel Effect: Based on angle between viewDir and normal
         float fresnel = pow(1.0 - dot(normal, viewDir), 3.0); // Adjust exponent for sharper falloff
