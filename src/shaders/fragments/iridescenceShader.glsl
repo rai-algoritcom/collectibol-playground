@@ -19,6 +19,8 @@ uniform float normalIntensity;
 uniform bool useIridescence;        // Toggle for iridescence effect
 uniform float iridescenceIntensity; // Intensity of the iridescence
 uniform float uTime;                // Time uniform for rotation
+uniform float uRotation;
+
 
 void main() {
     // Sample base textures
@@ -30,7 +32,7 @@ void main() {
     // Rotate the UV coordinates for iridescenceMask
     vec2 center = vec2(0.5, 0.5); // Center of rotation
     vec2 uvRotated = vUv - center; // Translate UVs to origin
-    float angle = uTime; // Rotation angle based on time
+    float angle = uRotation; // Rotation angle based on time
     float cosAngle = cos(angle);
     float sinAngle = sin(angle);
     mat2 rotationMatrix = mat2(cosAngle, -sinAngle, sinAngle, cosAngle);

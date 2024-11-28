@@ -658,6 +658,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         stats.update();
 
         if (shaderRef.current) {
+            shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
             shaderRef.current.uniforms.foldIntensity.value = foldIntensity;
             shaderRef.current.uniforms.foldPosition.value.set(foldX, foldY);
             shaderRef.current.uniforms.foldRotationZ.value = foldRotation;
@@ -672,7 +673,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         if (planeRef.current && camera && shaderRef.current) {
             const cameraToMesh = new THREE.Vector3();
             cameraToMesh.subVectors(planeRef.current.getWorldPosition(new THREE.Vector3()), camera.position).normalize();
-            const angle = Math.atan2(cameraToMesh.y, cameraToMesh.z);
+            const angle = Math.atan2(cameraToMesh.x, cameraToMesh.z);
             if (overlayRef.current) {
                 if (animationTrigger === 'rotation') {
                     overlayRef.current.uniforms.uTime.value = angle * Math.PI 
@@ -680,7 +681,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                     overlayRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
                 }
             }
-            shaderRef.current.uniforms.uTime.value = angle * Math.PI * 0.25  // state.clock.getElapsedTime()
+            shaderRef.current.uniforms.uRotation.value = angle * Math.PI * 0.25  
         }
     })
 
@@ -780,6 +781,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 shineColor2: { value: brightnessColor1 },
 
                                 uTime: { value: 0.0 },
+                                uRotation: { value: 0.0 },
                                 uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
 
                                 environmentIntensity: { value: 1.0 }, // Adjust as needed
