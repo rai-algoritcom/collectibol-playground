@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from 'three';
 import { button, useControls } from "leva";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Text, useTexture } from "@react-three/drei";
+import { Text } from "@react-three/drei";
 import gsap from "gsap";
 
 
@@ -256,6 +256,12 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         brightnessColor2: { value: { r: 79, g: 79, b: 79 }, label: 'Color 2' },
     });
 
+
+    const { useIridescence, iridescenceIntensity } = useControls('Iridescence Fx', {
+        useIridescence: { value: false, label: 'Enable' },
+        iridescenceIntensity: { value: 1.0, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
+    });
+
     
 
     const { useShiney, shineyIntensity, shineyColor } = useControls('Shine Fx', {
@@ -381,6 +387,10 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                     use_brightness: useBrightness,
                     brightness_color_1: brightnessColor1,
                     brightness_color_2: brightnessColor2
+                },
+                iridescence: {
+                    use_iridescence: useIridescence, 
+                    iridescence_intensity: iridescenceIntensity
                 },
                 shine: {
                     shine_intensity: shineyIntensity,
@@ -588,15 +598,18 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         useBreath,
         useWave,
         useGlitch,
-        // Brightness
+        // Shine
         useShiney,
         shineyIntensity,
         shineyColor,
-        // Iridescene
+        // Brightness
         useBrightness,
         brightnessIntensity,
         brightnessColor1,
         brightnessColor2,
+        // Iridescence
+        useIridescence,
+        iridescenceIntensity,
         // Refraction 
         useRefraction,
         stripesVisible,
@@ -709,8 +722,9 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 alphaMap: { value: blendedAlphaTextures },
                                 heightMap: { value: blendedHeightTextures },
                                 roughnessMap: { value: blendedRoughnessTextures },
-                                normalMap: { value: useBrightness ? blendedNormalTexturesIris : blendedNormalTextures },
-                                iridescenceMask: { value: useBrightness ? textures.fx.brightness : textures.fx.shine },
+                                normalMap: { value: useIridescence ? blendedNormalTexturesIris : useBrightness ? blendedNormalTexturesIris : blendedNormalTextures },
+                                fxMask: { value: useIridescence ? textures.fx.brightness : useBrightness ? textures.fx.brightness : textures.fx.shine },
+                                iridescenceMask: { value: textures.fx.iridescence },
 
                                 gradientMap: { value: textures.fx.refraction  },
                                 refractionIntensity: { value: refractionIntensity },
@@ -749,6 +763,9 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
                                 roughnessIntensity: { value: roughnessIntensity },
                                 roughnessPresence: { value: roughnessPresence },
+
+                                useIridescence: { value: useIridescence }, 
+                                iridescenceIntensity: { value: iridescenceIntensity },
 
                                 useBrightness: { value: useBrightness }, 
                                 brightnessIntensity: { value: brightnessIntensity },
@@ -804,6 +821,9 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 : useBrightness 
                                 ? 
                                 brightnessFragmentShader 
+                                : useIridescence
+                                ?
+                                iridescenceFragmentShader
                                 : useShiney 
                                 ? 
                                 shineFragmentShader 
