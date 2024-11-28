@@ -40,7 +40,7 @@ export default function Card() {
             roughness: '/textures/grading/poor/roughness.png',
         },
         fx: {
-            iridescence: '/prod/main_interest/ao.jpg',
+            iridescence: '/fx/LamineCard.png',
             brightness: '/prod/main_interest/ao.jpg',
             refraction: '/fx/pattern.jpg',
             transition: '/fx/brush.jpg'
