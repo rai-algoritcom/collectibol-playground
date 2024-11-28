@@ -259,7 +259,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
     const { useIridescence, iridescenceIntensity } = useControls('Iridescence Fx', {
         useIridescence: { value: true, label: 'Enable' },
-        iridescenceIntensity: { value: 1.0, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
+        iridescenceIntensity: { value: 2.0, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
     });
 
     
@@ -338,7 +338,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         maxWidth: { value: 1, min: 1, max: 5, label: 'Max Width' },
         lineHeight: { value: 0.75, min: 0.1, max: 10 , label: 'Line Height' },
         letterSpacing: { value: -0.08, min: -0.5, max: 1, label: 'Letter Spacing' },
-        textContent: { value: 'LOREM IPSUM DOLOR SIT AMET', label: 'Content'}
+        textContent: { value: '', label: 'Content'}
     })
 
 
