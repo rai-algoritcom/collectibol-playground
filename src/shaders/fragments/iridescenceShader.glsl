@@ -18,6 +18,7 @@ uniform float normalIntensity;
 
 uniform bool useIridescence;        // Toggle for iridescence effect
 uniform float iridescenceIntensity; // Intensity of the iridescence
+uniform float uTime;                // Time uniform for rotation
 
 void main() {
     // Sample base textures
@@ -26,9 +27,19 @@ void main() {
     vec3 normalFromMap = texture2D(normalMap, vUv).rgb * 2.0 - 1.0;
     vec3 normal = normalize(-vNormal + normalFromMap);
 
+    // Rotate the UV coordinates for iridescenceMask
+    vec2 center = vec2(0.5, 0.5); // Center of rotation
+    vec2 uvRotated = vUv - center; // Translate UVs to origin
+    float angle = uTime; // Rotation angle based on time
+    float cosAngle = cos(angle);
+    float sinAngle = sin(angle);
+    mat2 rotationMatrix = mat2(cosAngle, -sinAngle, sinAngle, cosAngle);
+    uvRotated = rotationMatrix * uvRotated; // Apply rotation
+    uvRotated += center; // Translate UVs back
+
     // Sample mask textures
     float fxMaskValue = texture2D(fxMask, vUv).r; // Effect mask value
-    vec4 iridescenceMaskColor = texture2D(iridescenceMask, vUv); // Albedo from iridescenceMask
+    vec4 iridescenceMaskColor = texture2D(iridescenceMask, uvRotated); // Albedo from rotated iridescenceMask
 
     // View direction
     vec3 viewDir = normalize(cameraPosition - vPosition);

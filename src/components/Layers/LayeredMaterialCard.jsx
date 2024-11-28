@@ -658,7 +658,6 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         stats.update();
 
         if (shaderRef.current) {
-            shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
             shaderRef.current.uniforms.foldIntensity.value = foldIntensity;
             shaderRef.current.uniforms.foldPosition.value.set(foldX, foldY);
             shaderRef.current.uniforms.foldRotationZ.value = foldRotation;
@@ -670,15 +669,18 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
             overlayRef.current.uniforms.foldRotationZ.value = foldRotation;
         }
 
-        if (planeRef.current && camera && overlayRef.current && shaderRef.current) {
-            if (animationTrigger === 'rotation') {
-                const cameraToMesh = new THREE.Vector3();
-                cameraToMesh.subVectors(planeRef.current.getWorldPosition(new THREE.Vector3()), camera.position).normalize();
-                const angle = Math.atan2(cameraToMesh.y, cameraToMesh.z);
-                overlayRef.current.uniforms.uTime.value = angle * Math.PI 
-            } else {
-                overlayRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
+        if (planeRef.current && camera && shaderRef.current) {
+            const cameraToMesh = new THREE.Vector3();
+            cameraToMesh.subVectors(planeRef.current.getWorldPosition(new THREE.Vector3()), camera.position).normalize();
+            const angle = Math.atan2(cameraToMesh.y, cameraToMesh.z);
+            if (overlayRef.current) {
+                if (animationTrigger === 'rotation') {
+                    overlayRef.current.uniforms.uTime.value = angle * Math.PI 
+                } else {
+                    overlayRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
+                }
             }
+            shaderRef.current.uniforms.uTime.value = angle * Math.PI * 0.25  // state.clock.getElapsedTime()
         }
     })
 
