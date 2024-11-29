@@ -695,7 +695,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                 }
             }
 
-            shaderRef.current.uniforms.uRotation.value = smoothAngle
+            shaderRef.current.uniforms.uRotation.value = smoothAngle * 3
             lastAngle = smoothAngle
         }
     })
