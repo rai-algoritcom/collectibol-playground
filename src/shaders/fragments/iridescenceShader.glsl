@@ -21,7 +21,6 @@ uniform float iridescenceIntensity; // Intensity of the iridescence
 uniform float uTime;                // Time uniform for rotation
 uniform float uRotation;
 
-
 void main() {
     // Sample base textures
     vec4 albedoColor = texture2D(albedoMap, vUv);
@@ -41,7 +40,7 @@ void main() {
 
     // Sample mask textures
     float fxMaskValue = texture2D(fxMask, vUv).r; // Effect mask value
-    vec4 iridescenceMaskColor = texture2D(iridescenceMask, uvRotated); // Albedo from rotated iridescenceMask
+    vec4 iridescenceMaskColor = texture2D(iridescenceMask, uvRotated); // Iridescence mask color
 
     // View direction
     vec3 viewDir = normalize(cameraPosition - vPosition);
@@ -52,6 +51,13 @@ void main() {
     // Angle-dependent transparency for the iridescence effect
     float viewAngle = 0.5 - abs(dot(-normal, viewDir)); // 0.0 when facing, 1.0 when edge-on
     float smoothFactor = smoothstep(0.0, 1.0, viewAngle); // Smooth transition
+
+    // Subtle darkening of the base albedo in areas defined by fxMask
+    if (fxMaskValue > 0.0) {
+        // Scale darkening effect by iridescence relevance (smoothFactor)
+        float darkeningFactor = 1.0 - (fxMaskValue * smoothFactor * 0.5); // Reduce darkening intensity
+        albedoColor.rgb *= darkeningFactor; // Apply subtle darkening
+    }
 
     // Iridescence effect
     if (useIridescence) {
