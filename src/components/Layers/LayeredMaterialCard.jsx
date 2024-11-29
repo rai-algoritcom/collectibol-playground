@@ -228,6 +228,10 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         normalIntensity: { label: 'Intensity', value: 1.0, min: 0.1, max: 5.0, step: 0.01 }
     });
 
+    const { displacementScale } = useControls('Displacement Config.', {
+        displacementScale: { label: 'Height Scale', value: 0.025, min: 0.0001, max: 0.5, step: 0.001 }
+    })
+
 
     const {
         ambientLightColor,
@@ -373,6 +377,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                 roughness_intensity: roughnessIntensity,
                 roughness_presence: roughnessPresence,
                 normal_intensity: normalIntensity,
+                displacement_scale: displacementScale,
                 lights: {
                     ambient_light_color: ambientLightColor,
                     ambient_light_intensity: ambientLightIntensity,
@@ -621,6 +626,8 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         normalIntensity,
         roughnessIntensity,
         roughnessPresence,
+        // Height 
+        displacementScale,
         // Blending
         blendedAlbedoTextures,
         blendedAlbedo2Textures,
@@ -688,7 +695,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                 }
             }
 
-            shaderRef.current.uniforms.uRotation.value = smoothAngle * 3
+            shaderRef.current.uniforms.uRotation.value = smoothAngle
             lastAngle = smoothAngle
         }
     })
@@ -746,7 +753,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 uDisp: { value: textures.fx.transition },
                                 uHoverState: { value: 0 },
                                 
-                                displacementScale: { value: 0.025 },
+                                displacementScale: { value: displacementScale },
                                 normalIntensity: { value: normalIntensity }, 
 
                                 lightDirection: { value: new THREE.Vector3(0, 0, 2).normalize() },
