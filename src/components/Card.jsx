@@ -17,7 +17,7 @@ export default function Card() {
         },
         pattern: {
             albedo: '/fx/fluid.jpg',
-            albedo2: '/textures/pattern/albido2.png',
+            albedo2: '/textures/pattern/albido3.jpg',
             height: '/fx/fluid.jpg'
         },
         main_interest: {
@@ -41,7 +41,7 @@ export default function Card() {
         },
         fx: {
             irisMask: '/fx/iris-mask.jpg',
-            iridescence: '/fx/iris2.jpg',
+            iridescence: '/fx/iris.jpg',
             brightness: '/fx/LamineCard.png',
             shine: '/prod/main_interest/ao.jpg',
             refraction: '/fx/pattern.jpg',
