@@ -338,7 +338,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         maxWidth: { value: 1, min: 1, max: 5, label: 'Max Width' },
         lineHeight: { value: 0.75, min: 0.1, max: 10 , label: 'Line Height' },
         letterSpacing: { value: -0.08, min: -0.5, max: 1, label: 'Letter Spacing' },
-        textContent: { value: '', label: 'Content'}
+        textContent: { value: 'LAMINE YAMAL', label: 'Content'}
     })
 
 
@@ -960,6 +960,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
             )}
 
             {<Text
+                material-side={THREE.FrontSide}
                 color={fontColor}
                 fontSize={fontSize}
                 maxWidth={maxWidth}
