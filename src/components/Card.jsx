@@ -16,8 +16,8 @@ export default function Card() {
             roughness: '/textures/base/roughness.png',
         },
         pattern: {
-            albedo: '/fx/fluid.jpg',
-            albedo2: '/textures/pattern/albido3.jpg',
+            albedo2: '/fx/fluid.jpg',
+            albedo: '/textures/pattern/albido3.jpg',
             height: '/fx/fluid.jpg'
         },
         main_interest: {
