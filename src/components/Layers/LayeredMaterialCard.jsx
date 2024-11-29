@@ -229,7 +229,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     });
 
     const { displacementScale } = useControls('Displacement Config.', {
-        displacementScale: { label: 'Height Scale', value: 0.025, min: 0.0001, max: 0.5, step: 0.001 }
+        displacementScale: { label: 'Height Scale', value: 0.025, min: 0.0, max: 0.5, step: 0.0001 }
     })
 
 
