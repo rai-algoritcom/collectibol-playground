@@ -28,6 +28,7 @@ export default function Card() {
         },
         layout: {
             albedo: '/prod/layout/albido2.png',
+            albedo2: '/prod/layout/albido2-skills.png',
             ao: '/prod/layout/ao.png',
             height: '/prod/layout/height.png',
             normal: '/prod/layout/normal.png',
@@ -80,6 +81,7 @@ export default function Card() {
     useControls(
         'Layout Textures', {
             'Albedo': { image: texturePaths.layout.albedo, onChange: (v) => updateTexture('layout', 'albedo', v) },
+            'Albedo II': { image: texturePaths.layout.albedo2, onChange: (v) => updateTexture('layout', 'albedo2', v)  },
             'Height': { image: texturePaths.layout.height, onChange: (v) => updateTexture('layout', 'height', v) },
             'Normal': { image: texturePaths.layout.normal, onChange: (v) => updateTexture('layout', 'normal', v) },
         }
