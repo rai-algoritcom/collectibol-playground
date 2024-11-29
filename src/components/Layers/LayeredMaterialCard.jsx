@@ -203,7 +203,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     }, [gl, textures, normalToggles]);
 
     const blendedNormalTexturesIris = useMemo(() => {
-        return blendNormalTXs(gl, textures, {...normalToggles, base_normal: false });
+        return blendNormalTXs(gl, textures, {...normalToggles, /*base_normal: false*/ });
     }, [gl, textures, normalToggles]);
 
 
@@ -225,7 +225,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
     });
 
     const { normalIntensity } = useControls('Normal Config.', {
-        normalIntensity: { label: 'Intensity', value: 1.85, min: 0.1, max: 5.0, step: 0.01 }
+        normalIntensity: { label: 'Intensity', value: 1.0, min: 0.1, max: 5.0, step: 0.01 }
     });
 
 
