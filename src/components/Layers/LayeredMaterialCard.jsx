@@ -970,7 +970,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                 font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
                 anchorX="center"
                 anchorY="top"
-                position={[0, -1, .15]}
+                position={[0, -1, .1]}
             >
                 {textContent}
             </Text>}
