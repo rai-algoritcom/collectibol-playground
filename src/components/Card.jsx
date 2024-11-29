@@ -10,10 +10,10 @@ export default function Card() {
     const [texturePaths, setTexturePaths] = useState({
         base: {
             alpha: '/prod/base/alpha.jpg',
-            albedo: '/textures/base/albido.png',
-            height: '/textures/base/height.png',
-            normal: '/textures/base/normal.png',
-            roughness: '/textures/base/roughness.png',
+            albedo: '/prod/base/albido.jpg',
+            height: '/prod/base/height.png',
+            normal: '/prod/base/normal.png',
+            roughness: '/prod/base/roughness.jpg',
         },
         pattern: {
             albedo2: '/fx/fluid.jpg',
