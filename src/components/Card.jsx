@@ -27,7 +27,7 @@ export default function Card() {
             normal: '/prod/main_interest/normal.png'
         },
         layout: {
-            albedo: '/prod/layout/albido.png',
+            albedo: '/prod/layout/albido2.png',
             ao: '/prod/layout/ao.png',
             height: '/prod/layout/height.png',
             normal: '/prod/layout/normal.png',
@@ -41,7 +41,7 @@ export default function Card() {
         },
         fx: {
             irisMask: '/fx/iris-mask.jpg',
-            iridescence: '/fx/iris.png',
+            iridescence: '/fx/iris2.jpg',
             brightness: '/fx/LamineCard.png',
             shine: '/prod/main_interest/ao.jpg',
             refraction: '/fx/pattern.jpg',

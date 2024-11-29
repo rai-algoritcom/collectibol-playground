@@ -14,7 +14,6 @@ export const Experience = () => {
         {/* Lights */}
         <ambientLight intensity={5} />
         <directionalLight position={[10, 10, 10]} />
-
         <Card  />
     </>
   );
