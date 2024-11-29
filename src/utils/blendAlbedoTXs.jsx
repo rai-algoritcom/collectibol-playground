@@ -6,7 +6,7 @@ import blendUVs from "./blendUVs";
  * @param {Object} textures - Object containing textures for all layers
  * @returns {Object} Combined texture maps
  */
-export function blendAlbedoTXs(renderer, textures, controls, is2nd = false) {
+export function blendAlbedoTXs(renderer, textures, controls, is2ndPattern = false, is2ndLayout = false) {
     const { base, pattern, main_interest, layout, grading } = textures 
 
     if (!renderer) return null
@@ -22,16 +22,16 @@ export function blendAlbedoTXs(renderer, textures, controls, is2nd = false) {
     let blendedAlbedo = null
 
     if (base_albedo) blendedAlbedo = base.albedo;
-    if (pattern_albedo) blendedAlbedo = is2nd ? pattern.albedo2 : pattern.albedo
+    if (pattern_albedo) blendedAlbedo = is2ndPattern ? pattern.albedo2 : pattern.albedo
     if (main_interest_albedo) blendedAlbedo = main_interest.albedo;
-    if (layout_albedo) blendedAlbedo = layout.albedo;
+    if (layout_albedo) blendedAlbedo = is2ndLayout ? layout.albedo2 : layout.albedo;
     if (grading_albedo) blendedAlbedo = grading.albedo;
 
 
     if (base_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, base.albedo, renderer);
-    if (pattern_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, is2nd ? pattern.albedo2 : pattern.albedo, renderer);
+    if (pattern_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, is2ndPattern ? pattern.albedo2 : pattern.albedo, renderer);
     if (main_interest_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, main_interest.albedo, renderer);
-    if (layout_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, layout.albedo, renderer);
+    if (layout_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, is2ndLayout ? layout.albedo2 : layout.albedo, renderer);
     if (grading_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, grading.albedo, renderer);
 
     return blendedAlbedo
