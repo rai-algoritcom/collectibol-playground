@@ -143,7 +143,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
             label: 'Pattern'
         },
         main_interest_height: {
-            value: false,
+            value: true,
             label: 'Main'
         },
         layout_height: {
@@ -151,7 +151,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
             label: 'Layout'
         },
         grading_height: {
-            value: true,
+            value: false,
             label: 'Grading'
         }
     })
