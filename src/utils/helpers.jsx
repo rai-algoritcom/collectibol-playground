@@ -134,3 +134,4 @@ export const takeScreenshot = (gl, scene, camera, mesh, transparent = false) => 
   gl.setPixelRatio(window.devicePixelRatio);
 };
 
+

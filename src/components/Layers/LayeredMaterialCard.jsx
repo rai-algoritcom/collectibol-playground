@@ -29,7 +29,8 @@ import standardFragmentShader from '../../shaders/fragments/standardShader.glsl'
 import iridescenceFragmentShader from '../../shaders/fragments/iridescenceShader.glsl';
 import brightnessFragmentShader from '../../shaders/fragments/brightnessShader.glsl';
 import shineFragmentShader from '../../shaders/fragments/shineShader.glsl'
-import transitionFragmentShader from '../../shaders/fragments/transitionShader.glsl';
+// import transitionFragmentShader from '../../shaders/fragments/transitionShader.glsl';
+import newTransitionFragmentShader from '../../shaders/fragments/newTransitionShader.glsl'
 import refractionFragmentShader from '../../shaders/fragments/refractionShader.glsl'
 
 /**
@@ -76,7 +77,7 @@ const stats = Stats();
 document.body.appendChild(stats.dom);
 
 
-export default function LayeredMaterialCard({ textures, texturePaths }) {
+export default function LayeredMaterialCard({ textures, texturePaths, layoutColor }) {
     const { gl, scene, camera } = useThree(); 
 
     const [key, setKey] = useState(0);
@@ -110,6 +111,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
             label: 'Grading'
         }
     })
+
 
     const alphaToggles = useControls('Alpha Channels', {
         base_alpha: {
@@ -179,16 +181,16 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
     // Blended Textures
     const blendedAlbedoTextures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles);
-    }, [gl, textures, albedoToggles]);
+        return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor);
+    }, [gl, textures, albedoToggles, layoutColor]);
 
-    const blendedAlbedo2Textures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, true);
-    }, [gl, textures, albedoToggles])
+    // const blendedAlbedo2Textures = useMemo(() => {
+    //     return blendAlbedoTXs(gl, textures, albedoToggles, true, false, layoutColor);
+    // }, [gl, textures, albedoToggles, layoutColor])
 
     const blendedAlbedo3Textures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, false, true);
-    }, [gl, textures, albedoToggles])
+        return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor);
+    }, [gl, textures, albedoToggles, layoutColor])
 
     const blendedAlphaTextures = useMemo(() => {
         return blendAlphaTXs(gl, textures, alphaToggles);
@@ -316,7 +318,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
 
 
     const { useCardio, useSquares, useCircle, useDank, useShine, useEther, useFire, useWaves, useSmoke, useRay, useCrystal, useGalaxy, useLiquid, useAsci, useSpin, useParticles, useBlobs, useGrass } = useControls('Animations Fragment (overlay)', {
-        'Trigger': { options: { rotation: 'rotation', time: 'time' }, onChange: (v) => setAnimationTrigger(v), value: 'rotation' },
+        '*Trigger': { options: { rotation: 'rotation', time: 'time' }, onChange: (v) => setAnimationTrigger(v), value: 'rotation' },
         useCardio: { value: false, label: 'Cardio Fx' },
         useSquares: { value: false, label: 'Fractal Fx' },
         useCircle: { value: false, label: 'Circle Fx' },
@@ -560,7 +562,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
             };
             [
                 blendedAlbedoTextures,
-                blendedAlbedo2Textures,
+                // blendedAlbedo2Textures,
                 blendedAlbedo3Textures,
                 blendedAlphaTextures,
                 blendedHeightTextures,
@@ -635,7 +637,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         displacementScale,
         // Blending
         blendedAlbedoTextures,
-        blendedAlbedo2Textures,
+        // blendedAlbedo2Textures,
         blendedAlbedo3Textures,
         blendedAlphaTextures,
         blendedHeightTextures,
@@ -662,7 +664,9 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
         maxWidth, 
         lineHeight, 
         letterSpacing, 
-        textContent
+        textContent,
+        // Layout col 
+        layoutColor
     ])
 
 
@@ -705,8 +709,6 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
             lastAngle = smoothAngle
         }
     })
-
-
 
 
     const hoverState = (hovered) => {
@@ -856,7 +858,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                                 shineFragmentShader 
                                 : useTransition
                                 ?
-                                transitionFragmentShader
+                                newTransitionFragmentShader // transitionFragmentShader
                                 : 
                                 standardFragmentShader
                             }
@@ -958,7 +960,7 @@ export default function LayeredMaterialCard({ textures, texturePaths }) {
                         }
                         uniforms={{
                             uTime: { value: 0.0 },
-                            uAlphaMask: { value: textures.base.alpha },
+                            uAlphaMask: { value: textures.fx.irisMask /*textures.base.alpha*/ },
                             uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
                             foldIntensity: { value: 0.25 },
                             foldPosition: { value: new THREE.Vector2(0.0, 0.0) },

@@ -13,7 +13,9 @@ export default function blendUVs(
     overlayTexture, 
     renderer,
     blendMode = 0,
+    color
 ) {
+
     const width = baseTexture.image.width;
     const height = baseTexture.image.height;
 
@@ -40,7 +42,9 @@ export default function blendUVs(
         uniforms: {
           baseMap: { value: baseTexture },
           overlayMap: { value: overlayTexture },
-          blendMode: { value: blendMode }
+          blendMode: { value: blendMode },
+          color: { value: color ? [ color.r, color.g, color.b ] : [ 0, 0, 0 ] } ,
+          useColor: { value: color ? true : false }
         },
         vertexShader: `
           varying vec2 vUv;
@@ -53,15 +57,28 @@ export default function blendUVs(
           uniform sampler2D baseMap;
           uniform sampler2D overlayMap;
           uniform int blendMode;
+          
+          uniform vec3 color;
+          uniform bool useColor;
+
           varying vec2 vUv;
   
           void main() {
             vec4 base = texture2D(baseMap, vUv);
             vec4 overlay = texture2D(overlayMap, vUv);
-  
+
+            vec3 coloredOverlay;
             vec4 result;
+
             if (blendMode == 0) { // Normal
-                result = mix(base, overlay, overlay.a);
+
+                if (useColor) {
+                  coloredOverlay = mix(overlay.rgb, color, 1.);
+                  result = mix(base, vec4(coloredOverlay, 1.0), overlay.a);
+                } else {
+                  result = mix(base, overlay, overlay.a);
+                }
+
             } else if (blendMode == 1) { // Multiply
                 result = base * overlay;
             } else { // Additive
