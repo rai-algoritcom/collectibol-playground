@@ -1000,32 +1000,24 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
             >
                 <div style={{ padding: '1rem', width: '360px', height: 'max-content', border: '1px solid transparent'}}>
 
-                    <SkillLabel>
+                    <SkillLabel bgColor={'rgba(143, 50, 0, 0.5)'}>
                         <span>Lamine Yamal, la Revelación</span>
                     </SkillLabel>
-                    <SkillLabel>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="white"
-                                width="24px"
-                                height="24px"
-                            >
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
-                            </svg>
-                            <span>Skill #1</span>
+                    <SkillLabel bgColor={'rgba(0, 0, 0, 0.5)'}>
+                            <img src="/icons/ball.png" style={{ width: '30px', height: '30px'}} />
+                            <span>Rematador estrella</span>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <img src="/icons/energy.png" style={{ width: '20px', height: '20px'}} />
+                                <span>+2</span>
+                            </div>
                     </SkillLabel>
-                    <SkillLabel>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="white"
-                                width="24px"
-                                height="24px"
-                            >
-                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
-                            </svg>
-                            <span>Skill #2</span>
+                    <SkillLabel bgColor={'rgba(0, 0, 0, 0.5)'}>
+                            <img src="/icons/player.png" style={{ width: '40px', height: '40px'}} />
+                            <span>Centrocampista táctico</span>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <img src="/icons/energy.png" style={{ width: '20px', height: '20px'}} />
+                                <span>+1</span>
+                            </div>
                     </SkillLabel>
                
                 </div>
