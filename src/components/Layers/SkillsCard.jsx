@@ -1,10 +1,12 @@
 import { Html } from "@react-three/drei";
 import SkillLabel from "./SkillLabel";
+import { forwardRef } from "react";
 
 
-export default function SkillsCard() {
+const SkillsCard = forwardRef((props, ref) => {
     return (
-        <Html
+        <Html   
+                ref={ref}
                 position={[0, -.8, 0.1]}
                 transform
                 scale={1}
@@ -36,4 +38,6 @@ export default function SkillsCard() {
                 </div>
         </Html>
     )
-}
+})
+
+export default SkillsCard
