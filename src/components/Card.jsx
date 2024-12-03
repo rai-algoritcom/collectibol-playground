@@ -46,7 +46,7 @@ export default function Card() {
             brightness: '/fx/LamineCard.png',
             shine: '/prod/main_interest/ao.jpg',
             refraction: '/fx/pattern.jpg',
-            transition: '/fx/trans1.jpg'
+            transition: '/fx/trans.jpg'
         }
     })
 
