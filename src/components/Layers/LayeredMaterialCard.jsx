@@ -29,7 +29,7 @@ import standardFragmentShader from '../../shaders/fragments/standardShader.glsl'
 import iridescenceFragmentShader from '../../shaders/fragments/iridescenceShader.glsl';
 import brightnessFragmentShader from '../../shaders/fragments/brightnessShader.glsl';
 import shineFragmentShader from '../../shaders/fragments/shineShader.glsl'
-// import transitionFragmentShader from '../../shaders/fragments/transitionShader.glsl';
+import transitionFragmentShader from '../../shaders/fragments/transitionShader.glsl';
 import newTransitionFragmentShader from '../../shaders/fragments/newTransitionShader.glsl'
 import refractionFragmentShader from '../../shaders/fragments/refractionShader.glsl'
 
@@ -526,7 +526,10 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
         setJsonCfg(cfg)
 
         if (skillsRef.current) {
-            // skillsRef.current.style.opacity = 0
+            if (useTransition)
+                skillsRef.current.style.opacity = 0
+            else 
+                skillsRef.current.style.opacity = 1
         }
 
         return () => {
@@ -722,23 +725,23 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                 gsap.to(shaderRef.current.uniforms.uHoverState, {
                     duration: transitionSpeed,
                     value: 1,
-                    delay: 0.5
                 })
                 gsap.to(skillsRef.current, {
                     duration: transitionSpeed ,
                     value: 0,
-                    opacity: 0,
+                    opacity: 1,
+                    delay: 0.5
                 })
             } else  {
                 gsap.to(shaderRef.current.uniforms.uHoverState, {
                     duration: transitionSpeed,
                     value: 0,
+                    delay: 0.5
                 })
                 gsap.to(skillsRef.current, {
                     duration: transitionSpeed ,
                     value: 1,
-                    opacity: 1,
-                    delay: 0.5
+                    opacity: 0,
                 })
             }
         }
@@ -875,7 +878,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                                 shineFragmentShader 
                                 : useTransition
                                 ?
-                                newTransitionFragmentShader // transitionFragmentShader
+                                transitionFragmentShader // newTransitionFragmentShader 
                                 : 
                                 standardFragmentShader
                             }
