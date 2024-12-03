@@ -84,7 +84,7 @@ export default function Card() {
             'Albedo II': { image: texturePaths.layout.albedo2, onChange: (v) => updateTexture('layout', 'albedo2', v)  },
             'Height': { image: texturePaths.layout.height, onChange: (v) => updateTexture('layout', 'height', v) },
             'Normal': { image: texturePaths.layout.normal, onChange: (v) => updateTexture('layout', 'normal', v) },
-            layoutColor: { value: { r: 174, g: 163, b: 255 }, label: '*Color' }
+            layoutColor: { value: { r: 44, g: 44, b: 49 }, label: '*Color' }
         }
     )
 

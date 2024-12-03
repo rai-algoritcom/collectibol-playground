@@ -70,6 +70,7 @@ import {
 import { downloadJSON, normalizeAngle, takeScreenshot } from "../../utils/helpers";
 
 import Stats from "three/examples/jsm/libs/stats.module.js";
+import SkillLabel from "./SkillLabel";
 
 
 
@@ -995,102 +996,40 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                 scale={1}
                 distanceFactor={2}
                 distance
+                side={THREE.FrontSide}
             >
-                <div style={{fontFamily: "'Inter Tight', sans-serif", fontWeight: 'bold', padding: '1rem', width: '360px', height: 'max-content', border: '2px solid transparent'}}>
+                <div style={{ padding: '1rem', width: '360px', height: 'max-content', border: '1px solid transparent'}}>
 
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <div
-                        style={{
-                            width: '350px',
-                            height: '50px',
-                            background: 'rgba(0, 0, 0, 0.5)',
-                            borderRadius: '12px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-evenly',
-                            color: 'white',
-                            padding: '5px',
-                            WebkitFontSmoothing: 'antialiased',
-                            MozOsxFontSmoothing: 'grayscale',
-                            transform: 'translateZ(0)', // Force GPU rendering
-                            willChange: 'transform', // Optimize for transformations
-                            margin: '.25rem',
-                        }}
-                    >
-                        <span style={{ fontSize: '15px' }}>Lamine Yamal, la Revelación</span>
-                    </div>
-                </div> 
-
-
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <div
-                        style={{
-                            width: '350px',
-                            height: '50px',
-                            background: 'rgba(0, 0, 0, 0.5)',
-                            borderRadius: '12px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-evenly',
-                            color: 'white',
-                            padding: '5px',
-                            WebkitFontSmoothing: 'antialiased',
-                            MozOsxFontSmoothing: 'grayscale',
-                            transform: 'translateZ(0)', // Force GPU rendering
-                            willChange: 'transform', // Optimize for transformations
-                            margin: '.25rem'
-                        }}
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="white"
-                            width="24px"
-                            height="24px"
-                        >
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
-                        </svg>
-                        <span style={{ fontSize: '12px' }}>Skill #1</span>
-                    </div>
-                </div> 
-
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <div
-                        style={{
-                            width: '350px',
-                            height: '50px',
-                            background: 'rgba(0, 0, 0, 0.5)',
-                            borderRadius: '12px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-evenly',
-                            color: 'white',
-                            padding: '5px',
-                            WebkitFontSmoothing: 'antialiased',
-                            MozOsxFontSmoothing: 'grayscale',
-                            transform: 'translateZ(0)', // Force GPU rendering
-                            willChange: 'transform', // Optimize for transformations
-                            margin: '.25rem'
-                        }}
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="white"
-                            width="24px"
-                            height="24px"
-                        >
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
-                        </svg>
-                        <span style={{ fontSize: '12px' }}>Skill #2</span>
-                    </div>
-                </div> 
-
+                    <SkillLabel>
+                        <span>Lamine Yamal, la Revelación</span>
+                    </SkillLabel>
+                    <SkillLabel>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="white"
+                                width="24px"
+                                height="24px"
+                            >
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
+                            </svg>
+                            <span>Skill #1</span>
+                    </SkillLabel>
+                    <SkillLabel>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="white"
+                                width="24px"
+                                height="24px"
+                            >
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
+                            </svg>
+                            <span>Skill #2</span>
+                    </SkillLabel>
+               
                 </div>
-                
             </Html>
-
-
             
         </group>
     )
