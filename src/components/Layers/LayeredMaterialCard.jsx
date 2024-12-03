@@ -296,6 +296,14 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
     const { useTransition, transitionSpeed } = useControls('Transition Fx', {
         useTransition: { value: false, label: 'Enable' },
         transitionSpeed: { value: 0.8, min: 0, max: 3, label: 'Speed' },
+        '*Mode': {
+                value: 'min',
+                options: {
+                    Full: 'min',
+                    Skills: 'max'
+                },
+                onChange: (value) => hoverState(value)
+        }
     })
 
 
@@ -721,7 +729,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
 
     const hoverState = (hovered) => {
         if (shaderRef.current && useTransition) {
-            if (hovered) {
+            if (hovered == 'max') {
                 gsap.to(shaderRef.current.uniforms.uHoverState, {
                     duration: transitionSpeed,
                     value: 1,
@@ -752,10 +760,10 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
             <mesh 
                 ref={planeRef}
                 key={`main-${key}`} 
-                onPointerOut={() => hoverState(false) } 
-                onPointerOver={() => hoverState(true) }
-                onPointerDown={() => hoverState(true)}
-                onPointerUp={() => hoverState(false)}
+                // onPointerOut={() => hoverState(false) } 
+                // onPointerOver={() => hoverState(true) }
+                // onPointerDown={() => hoverState(true)}
+                // onPointerUp={() => hoverState(false)}
             > 
                 <planeGeometry args={[2, 3, 120, 120]} />
                 {
