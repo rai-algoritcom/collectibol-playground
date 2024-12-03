@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from 'three';
 import { button, useControls } from "leva";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Text } from "@react-three/drei";
+import { Html, Text } from "@react-three/drei";
 import gsap from "gsap";
 
 
@@ -348,7 +348,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
         maxWidth: { value: 1, min: 1, max: 5, label: 'Max Width' },
         lineHeight: { value: 0.75, min: 0.1, max: 10 , label: 'Line Height' },
         letterSpacing: { value: -0.08, min: -0.5, max: 1, label: 'Letter Spacing' },
-        textContent: { value: 'LAMINE YAMAL', label: 'Content'}
+        textContent: { value: '', label: 'Content'}
     })
 
 
@@ -664,9 +664,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
         maxWidth, 
         lineHeight, 
         letterSpacing, 
-        textContent,
-        // Layout col 
-        layoutColor
+        textContent
     ])
 
 
@@ -728,7 +726,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
     }
 
     return (
-        <>
+        <group>
             <mesh 
                 ref={planeRef}
                 key={`main-${key}`} 
@@ -745,8 +743,8 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                             uniformsNeedUpdate={true}
                             uniforms={{
               
-                                albedoMap: { value: blendedAlbedoTextures },
-                                albedoMap2: { value: blendedAlbedo3Textures /*blendedAlbedo2Textures*/ },
+                                albedoMap2: { value: blendedAlbedoTextures },
+                                albedoMap: { value: blendedAlbedo3Textures /*blendedAlbedo2Textures*/ },
                                 alphaMap: { value: blendedAlphaTextures },
                                 heightMap: { value: blendedHeightTextures },
                                 roughnessMap: { value: blendedRoughnessTextures },
@@ -989,6 +987,120 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
             >
                 {textContent}
             </Text>}
-        </>
+
+
+            <Html
+                position={[0, -.8, 0.1]}
+                transform
+                scale={1}
+                distanceFactor={2}
+                distance
+            >
+                <div style={{padding: '1rem', width: '360px', height: 'max-content', border: '2px solid transparent'}}>
+
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <div
+                        style={{
+                            width: '350px',
+                            height: '50px',
+                            background: 'rgba(0, 0, 0, 0.5)',
+                            borderRadius: '12px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-evenly',
+                            color: 'white',
+                            padding: '5px',
+                            WebkitFontSmoothing: 'antialiased',
+                            MozOsxFontSmoothing: 'grayscale',
+                            transform: 'translateZ(0)', // Force GPU rendering
+                            willChange: 'transform', // Optimize for transformations
+                            margin: '.25rem',
+                        }}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="white"
+                            width="24px"
+                            height="24px"
+                        >
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
+                        </svg>
+                        <span style={{ fontSize: '12px' }}>Skill</span>
+                    </div>
+                </div> 
+
+
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <div
+                        style={{
+                            width: '350px',
+                            height: '50px',
+                            background: 'rgba(0, 0, 0, 0.5)',
+                            borderRadius: '12px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-evenly',
+                            color: 'white',
+                            padding: '5px',
+                            WebkitFontSmoothing: 'antialiased',
+                            MozOsxFontSmoothing: 'grayscale',
+                            transform: 'translateZ(0)', // Force GPU rendering
+                            willChange: 'transform', // Optimize for transformations
+                            margin: '.25rem'
+                        }}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="white"
+                            width="24px"
+                            height="24px"
+                        >
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
+                        </svg>
+                        <span style={{ fontSize: '12px' }}>Skill</span>
+                    </div>
+                </div> 
+
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <div
+                        style={{
+                            width: '350px',
+                            height: '50px',
+                            background: 'rgba(0, 0, 0, 0.5)',
+                            borderRadius: '12px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-evenly',
+                            color: 'white',
+                            padding: '5px',
+                            WebkitFontSmoothing: 'antialiased',
+                            MozOsxFontSmoothing: 'grayscale',
+                            transform: 'translateZ(0)', // Force GPU rendering
+                            willChange: 'transform', // Optimize for transformations
+                            margin: '.25rem'
+                        }}
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="white"
+                            width="24px"
+                            height="24px"
+                        >
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
+                        </svg>
+                        <span style={{ fontSize: '12px' }}>Skill</span>
+                    </div>
+                </div> 
+
+                </div>
+                
+            </Html>
+
+
+            
+        </group>
     )
 }
