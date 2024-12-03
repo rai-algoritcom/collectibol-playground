@@ -13,7 +13,7 @@ const SkillsCard = forwardRef((props, ref) => {
                 distanceFactor={2}
                 distance
             >
-                <div style={{ padding: '1rem', width: '360px', height: 'max-content', border: '1px solid transparent'}}>
+                <div style={{ pointerEvents: 'none', padding: '1rem', width: '360px', height: 'max-content', border: '1px solid transparent'}}>
 
                     <SkillLabel bgColor={'rgba(143, 50, 0, 0.5)'}>
                         <span>Lamine Yamal, la Revelación</span>
