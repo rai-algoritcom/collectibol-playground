@@ -87,6 +87,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
     const planeRef = useRef()
     const shaderRef = useRef()
     const overlayRef = useRef()
+    const skillsRef = useRef()
 
     const [jsonCfg, setJsonCfg] = useState()
     const [animationTrigger, setAnimationTrigger] = useState('rotation')
@@ -524,6 +525,10 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
 
         setJsonCfg(cfg)
 
+        if (skillsRef.current) {
+            skillsRef.current.style.opacity = 0
+        }
+
         return () => {
             if (shaderRef.current) {
                 if (shaderRef.current.uniforms) {
@@ -712,16 +717,30 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
 
 
     const hoverState = (hovered) => {
-        if (shaderRef.current) {
+        if (shaderRef.current && useTransition) {
             if (hovered) {
+                // skillsRef.current.style.visibility = 'hidden'
                 gsap.to(shaderRef.current.uniforms.uHoverState, {
                     duration: transitionSpeed,
                     value: 1
                 })
+                gsap.to(skillsRef.current, {
+                    duration: transitionSpeed ,
+                    value: 0,
+                    opacity: 1,
+                    delay: 0.5
+                })
             } else {
+                // skillsRef.current.style.visibility = 'visible'
                 gsap.to(shaderRef.current.uniforms.uHoverState, {
                     duration: transitionSpeed,
-                    value: 0
+                    value: 0,
+                    delay: 0.5
+                })
+                gsap.to(skillsRef.current, {
+                    duration: transitionSpeed ,
+                    value: 1,
+                    opacity: 0
                 })
             }
         }
@@ -745,8 +764,8 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                             uniformsNeedUpdate={true}
                             uniforms={{
               
-                                albedoMap2: { value: blendedAlbedoTextures },
-                                albedoMap: { value: blendedAlbedo3Textures /*blendedAlbedo2Textures*/ },
+                                albedoMap: { value: blendedAlbedoTextures },
+                                albedoMap2: { value: blendedAlbedo3Textures /*blendedAlbedo2Textures*/ },
                                 alphaMap: { value: blendedAlphaTextures },
                                 heightMap: { value: blendedHeightTextures },
                                 roughnessMap: { value: blendedRoughnessTextures },
@@ -960,7 +979,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                         }
                         uniforms={{
                             uTime: { value: 0.0 },
-                            uAlphaMask: { value: textures.fx.irisMask /*textures.base.alpha*/ },
+                            uAlphaMask: { value: /*textures.fx.irisMask*/ textures.base.alpha },
                             uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
                             foldIntensity: { value: 0.25 },
                             foldPosition: { value: new THREE.Vector2(0.0, 0.0) },
@@ -991,7 +1010,8 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
             </Text>}
 
             
-            <SkillsCard />
+            <SkillsCard ref={skillsRef} />
+            
 
             <FooterCard />
 
