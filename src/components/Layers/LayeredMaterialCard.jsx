@@ -304,7 +304,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                 },
                 onChange: (value) => hoverState(value)
         }
-    })
+    }, [shaderRef.current])
 
 
     const { useFolding, foldIntensity, foldX, foldY, foldRotation } = useControls('Folding Fx', { 
@@ -533,12 +533,10 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
 
         setJsonCfg(cfg)
 
-        if (skillsRef.current) {
-            if (useTransition)
-                skillsRef.current.style.opacity = 0
-            else 
-                skillsRef.current.style.opacity = 1
+        if (!useTransition && skillsRef.current) {
+            skillsRef.current.style.opacity = 1
         }
+
 
         return () => {
             if (shaderRef.current) {
@@ -682,7 +680,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
         maxWidth, 
         lineHeight, 
         letterSpacing, 
-        textContent
+        textContent,
     ])
 
 
