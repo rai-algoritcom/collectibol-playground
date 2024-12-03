@@ -526,7 +526,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
         setJsonCfg(cfg)
 
         if (skillsRef.current) {
-            skillsRef.current.style.opacity = 0
+            // skillsRef.current.style.opacity = 0
         }
 
         return () => {
@@ -719,28 +719,26 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
     const hoverState = (hovered) => {
         if (shaderRef.current && useTransition) {
             if (hovered) {
-                // skillsRef.current.style.visibility = 'hidden'
                 gsap.to(shaderRef.current.uniforms.uHoverState, {
                     duration: transitionSpeed,
-                    value: 1
+                    value: 1,
+                    delay: 0.5
                 })
                 gsap.to(skillsRef.current, {
                     duration: transitionSpeed ,
                     value: 0,
-                    opacity: 1,
-                    delay: 0.5
+                    opacity: 0,
                 })
-            } else {
-                // skillsRef.current.style.visibility = 'visible'
+            } else  {
                 gsap.to(shaderRef.current.uniforms.uHoverState, {
                     duration: transitionSpeed,
                     value: 0,
-                    delay: 0.5
                 })
                 gsap.to(skillsRef.current, {
                     duration: transitionSpeed ,
                     value: 1,
-                    opacity: 0
+                    opacity: 1,
+                    delay: 0.5
                 })
             }
         }
@@ -764,8 +762,8 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                             uniformsNeedUpdate={true}
                             uniforms={{
               
-                                albedoMap: { value: blendedAlbedoTextures },
-                                albedoMap2: { value: blendedAlbedo3Textures /*blendedAlbedo2Textures*/ },
+                                albedoMap2: { value: blendedAlbedoTextures },
+                                albedoMap: { value: blendedAlbedo3Textures /*blendedAlbedo2Textures*/ },
                                 alphaMap: { value: blendedAlphaTextures },
                                 heightMap: { value: blendedHeightTextures },
                                 roughnessMap: { value: blendedRoughnessTextures },
