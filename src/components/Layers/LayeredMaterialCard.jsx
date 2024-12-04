@@ -114,7 +114,24 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
         },
         grading_albedo: {
             value: true,
-            label: 'Grading'
+            label: 'Grading v0'
+        },
+        // Grading V2
+        grading_v2_doblez_albedo: {
+            value: false, 
+            label: '(G) Doblez'
+        },
+        grading_v2_exterior_albedo: {
+            value: false, 
+            label: '(G) Exterior'
+        },
+        grading_v2_manchas_albedo: {
+            value: false, 
+            label: '(G) Manchas'
+        },
+        grading_v2_rascado_albedo: {
+            value: false, 
+            label: '(G) Rascado'
         }
     })
 
@@ -126,7 +143,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
         },
         grading_alpha: {
             value: true,
-            label: 'Grading'
+            label: 'Grading v0'
         }
     })
 
@@ -137,7 +154,20 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
         },
         grading_roughness: {
             value: true,
-            label: 'Grading'
+            label: 'Grading v0'
+        },
+        // Grading V2 
+        grading_v2_doblez_roughness: {
+            value: false,
+            label: '(G) Doblez'
+        },
+        grading_v2_exterior_roughness: {
+            value: false, 
+            label: '(G) Exterior'
+        },
+        grading_v2_rascado_roughness: {
+            value: false, 
+            label: '(G) Rascado'
         }
     })
 
@@ -180,6 +210,23 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
         grading_normal: {
             value: true,
             label: 'Grading'
+        },
+        // Grading v2 
+        grading_v2_doblez_normal: {
+            value: false, 
+            label: '(G) Doblez'
+        },
+        grading_v2_exterior_normal: {
+            value: false, 
+            label: '(G) Exterior'
+        },
+        grading_v2_rascado_normal: {
+            value: false,
+            label: '(G) Rascado'
+        },
+        grading_v2_scratches_normal: {
+            value: false, 
+            label: '(G) Scratches'
         }
     })
 
@@ -316,7 +363,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                         setBlendMode(0)
                     } else if (value == 'max') {
                         setBlendMode(0)
-                    } else {
+                    } else {
                         setBlendMode(1)
                     }
                     changeCardMode(value)
