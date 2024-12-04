@@ -30,7 +30,7 @@ import iridescenceFragmentShader from '../../shaders/fragments/iridescenceShader
 import brightnessFragmentShader from '../../shaders/fragments/brightnessShader.glsl';
 import shineFragmentShader from '../../shaders/fragments/shineShader.glsl'
 import transitionFragmentShader from '../../shaders/fragments/transitionShader.glsl';
-import newTransitionFragmentShader from '../../shaders/fragments/newTransitionShader.glsl'
+// import newTransitionFragmentShader from '../../shaders/fragments/newTransitionShader.glsl'
 import refractionFragmentShader from '../../shaders/fragments/refractionShader.glsl'
 
 /**
@@ -88,6 +88,9 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
     const shaderRef = useRef()
     const overlayRef = useRef()
     const skillsRef = useRef()
+    const footerRef = useRef()
+
+    const [blendMode, setBlendMode] = useState(0)
 
     const [jsonCfg, setJsonCfg] = useState()
     const [animationTrigger, setAnimationTrigger] = useState('rotation')
@@ -199,6 +202,10 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
         return blendAlphaTXs(gl, textures, alphaToggles);
     }, [gl, textures, alphaToggles]);
 
+    const blendedAlpha2Textures = useMemo(() => {
+        return blendAlphaTXs(gl, textures, alphaToggles, true)
+    }, [gl, textures, alphaToggles])
+
     const blendedHeightTextures = useMemo(() => {
         return blendHeightTXs(gl, textures, heightToggles);
     }, [gl, textures, heightToggles]);
@@ -292,17 +299,28 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
     })
 
 
-
+    
     const { useTransition, transitionSpeed } = useControls('Transition Fx', {
         useTransition: { value: false, label: 'Enable' },
         transitionSpeed: { value: 0.8, min: 0, max: 3, label: 'Speed' },
-        '*Mode': {
-                value: 'min',
+        'mode': {
+                value: 'full',
                 options: {
-                    Full: 'min',
-                    Skills: 'max'
+                    Full: 'full',
+                    Skills: 'max',
+                    Min: 'min'
                 },
-                onChange: (value) => hoverState(value)
+                label: '*Mode',
+                onChange: (value) => { 
+                    if (value == 'full') {
+                        setBlendMode(0)
+                    } else if (value == 'max') {
+                        setBlendMode(0)
+                    } else {
+                        setBlendMode(1)
+                    }
+                    changeCardMode(value)
+                }
         }
     }, [shaderRef.current])
 
@@ -581,6 +599,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                 // blendedAlbedo2Textures,
                 blendedAlbedo3Textures,
                 blendedAlphaTextures,
+                blendedAlpha2Textures,
                 blendedHeightTextures,
                 blendedRoughnessTextures,
                 blendedNormalTextures,
@@ -656,6 +675,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
         // blendedAlbedo2Textures,
         blendedAlbedo3Textures,
         blendedAlphaTextures,
+        blendedAlpha2Textures,
         blendedHeightTextures,
         blendedRoughnessTextures,
         blendedNormalTextures,
@@ -681,6 +701,8 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
         lineHeight, 
         letterSpacing, 
         textContent,
+        // 
+        blendMode
     ])
 
 
@@ -725,20 +747,28 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
     })
 
 
-    const hoverState = (hovered) => {
-        if (shaderRef.current && useTransition) {
-            if (hovered == 'max') {
+    const changeCardMode = (mode) => {
+        if (shaderRef.current && footerRef.current && useTransition) {
+            if (mode == 'max') {
                 gsap.to(shaderRef.current.uniforms.uHoverState, {
                     duration: transitionSpeed,
                     value: 1,
                 })
                 gsap.to(skillsRef.current, {
                     duration: transitionSpeed ,
-                    value: 0,
                     opacity: 1,
                     delay: 0.5
                 })
-            } else  {
+            } else if (mode == 'min') { 
+                gsap.to(skillsRef.current, {
+                    duration: transitionSpeed,
+                    opacity: 0,
+                })
+                gsap.to(shaderRef.current.uniforms.uHoverState, {
+                    duration: transitionSpeed,
+                    value: 1,
+                })
+            } else if (mode == 'full')  {
                 gsap.to(shaderRef.current.uniforms.uHoverState, {
                     duration: transitionSpeed,
                     value: 0,
@@ -746,7 +776,6 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                 })
                 gsap.to(skillsRef.current, {
                     duration: transitionSpeed ,
-                    value: 1,
                     opacity: 0,
                 })
             }
@@ -758,10 +787,6 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
             <mesh 
                 ref={planeRef}
                 key={`main-${key}`} 
-                // onPointerOut={() => hoverState(false) } 
-                // onPointerOver={() => hoverState(true) }
-                // onPointerDown={() => hoverState(true)}
-                // onPointerUp={() => hoverState(false)}
             > 
                 <planeGeometry args={[2, 3, 120, 120]} />
                 {
@@ -770,9 +795,11 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                             needsUpdate={true}
                             uniformsNeedUpdate={true}
                             uniforms={{
-              
+
+                                blendMode: { value: blendMode },
                                 albedoMap2: { value: blendedAlbedoTextures },
                                 albedoMap: { value: blendedAlbedo3Textures /*blendedAlbedo2Textures*/ },
+                                alphaMap2: { value: blendedAlpha2Textures },
                                 alphaMap: { value: blendedAlphaTextures },
                                 heightMap: { value: blendedHeightTextures },
                                 roughnessMap: { value: blendedRoughnessTextures },
@@ -1017,11 +1044,12 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
             </Text>}
 
             
-            <SkillsCard ref={skillsRef} />
+            <SkillsCard 
+                ref={skillsRef} 
+            />
             
 
-            <FooterCard />
-
+            <FooterCard blendMode={blendMode} ref={footerRef} />
       
         </group>
     )

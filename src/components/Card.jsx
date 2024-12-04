@@ -10,6 +10,7 @@ export default function Card() {
     const [texturePaths, setTexturePaths] = useState({
         base: {
             alpha: '/prod/base/alpha.jpg',
+            alpha2: '/prod/base/alpha2.jpg',
             albedo: '/prod/base/albido.jpg',
             height: '/prod/base/height.png',
             normal: '/prod/base/normal.png',
@@ -54,6 +55,7 @@ export default function Card() {
     useControls(
         'Base Textures', {
             'Alpha': { image: texturePaths.base.alpha, onChange: (v) => updateTexture('base', 'alpha', v) },
+            'Alpha II': { image: texturePaths.base.alpha2, onChange: (v) => updateTexture('base', 'alpha2', v)  },
             'Albedo': { image: texturePaths.base.albedo, onChange: (v) => updateTexture('base', 'albedo', v) },
             'Height': { image: texturePaths.base.height, onChange: (v) => updateTexture('base', 'height', v) },
             'Normal': { image: texturePaths.base.normal, onChange: (v) => updateTexture('base', 'normal', v) },
