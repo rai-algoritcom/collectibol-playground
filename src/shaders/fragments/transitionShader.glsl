@@ -7,10 +7,12 @@ uniform sampler2D uDisp;
 uniform sampler2D albedoMap; // First albedo texture
 uniform sampler2D albedoMap2; // Second albedo texture
 uniform sampler2D alphaMap;
+uniform sampler2D alphaMap2;
 uniform sampler2D roughnessMap;
 uniform sampler2D normalMap;
 
 uniform float uHoverState; // Hover blend state (0.0 to 1.0)
+uniform int blendMode;
 
 // Light properties
 uniform vec3 ambientLightColor;  // Ambient light color
@@ -40,6 +42,10 @@ void main() {
 
     // Sample alpha and roughness
     float alphaValue = texture2D(alphaMap, vUv).r;
+    float alphaValue2 = texture2D(alphaMap2, vUv).r;
+
+    float blendedAlpha = mix(alphaValue2, alphaValue, pct);
+
     float roughnessValue = texture2D(roughnessMap, vUv).r * roughnessIntensity;
 
     // Normalize interpolated normal
@@ -83,5 +89,9 @@ void main() {
     vec3 finalLighting = clamp(roughnessEffect * blendedAlbedo.rgb, 0.0, 1.0);
 
     // Output with alpha transparency
-    gl_FragColor = vec4(finalLighting, blendedAlbedo.a * alphaValue);
+    if (blendMode == 1) {
+        gl_FragColor = vec4(finalLighting, blendedAlbedo.a * blendedAlpha);
+    } else {
+        gl_FragColor = vec4(finalLighting, blendedAlbedo.a * alphaValue);
+    }
 }

@@ -8,7 +8,7 @@ import blendUVs from './blendUVs.jsx';
  * @param {Object} textures - Object containing textures for all layers
  * @returns {Object} Combined texture maps
  */
-export function blendAlphaTXs(renderer, textures, controls) {
+export function blendAlphaTXs(renderer, textures, controls, is2ndLayout = false) {
     const { base, grading } = textures 
 
     if (!renderer) return null
@@ -21,10 +21,10 @@ export function blendAlphaTXs(renderer, textures, controls) {
     let blendedAlpha = null
 
     if (grading_alpha) blendedAlpha = grading.alpha;
-    if (base_alpha) blendedAlpha = base.alpha;
+    if (base_alpha) blendedAlpha = is2ndLayout ? base.alpha2 : base.alpha;
 
-    if (grading_alpha && blendedAlpha) blendedAlpha = blendUVs(blendedAlpha, grading.alpha, renderer);
-    if (base_alpha && blendedAlpha) blendedAlpha = blendUVs(blendedAlpha, base.alpha, renderer);
+    if (grading_alpha && blendedAlpha && !is2ndLayout) blendedAlpha = blendUVs(blendedAlpha, grading.alpha, renderer);
+    if (base_alpha && blendedAlpha) blendedAlpha = blendUVs(blendedAlpha, is2ndLayout ? base.alpha2 : base.alpha, renderer);
 
     return blendedAlpha
 }

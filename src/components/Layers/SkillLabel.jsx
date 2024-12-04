@@ -1,6 +1,11 @@
-export default function SkillLabel({ children, bgColor }) {
+import { forwardRef } from "react"
+
+
+const SkillLabel = forwardRef(({ children, bgColor }, ref) => {
+
+
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div ref={ref} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <div
                         style={{
                             fontFamily: "'Inter Tight', sans-serif", 
@@ -28,4 +33,6 @@ export default function SkillLabel({ children, bgColor }) {
                     </div>
         </div> 
     )
-}
+})
+
+export default SkillLabel

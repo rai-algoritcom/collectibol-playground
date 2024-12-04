@@ -1,9 +1,54 @@
 import { Html } from "@react-three/drei";
 import SkillLabel from "./SkillLabel";
-import { forwardRef } from "react";
+import { forwardRef, useEffect } from "react";
 
 
-const SkillsCard = forwardRef((props, ref) => {
+const SkillsCard = forwardRef(({ labelRef1, labelRef2, labelRef3 }, ref) => {
+
+
+    useEffect(() => {
+
+        // if (labelRef1.current && labelRef2.current && labelRef3.current) {
+        //     labelRef1.current.style.opacity = 0
+        //     labelRef2.current.style.opacity = 0
+        //     labelRef3.current.style.opacity = 0
+        // }
+ 
+        /*if (mode === 'max') {
+            gsap.to(labelRef1.current, {
+                duration: 0.5 ,
+                opacity: 1,
+                delay: 0
+            })
+            gsap.to(labelRef2.current, {
+                duration: 0.5 ,
+                opacity: 1,
+                delay: 1
+            })
+            gsap.to(labelRef3.current, {
+                duration: 0.5,
+                opacity: 1,
+                delay: 2
+            })
+        } else {
+            gsap.to(labelRef1.current, {
+                duration: 0.5 ,
+                opacity: 0,
+                delay: 0
+            })
+            gsap.to(labelRef2.current, {
+                duration: 0.5 ,
+                opacity: 0,
+                delay: 1
+            })
+            gsap.to(labelRef3.current, {
+                duration: 0.5,
+                opacity: 0,
+                delay: 2
+            })
+        }*/
+    }, [ref])
+
     return (
         <Html   
                 ref={ref}
@@ -15,10 +60,10 @@ const SkillsCard = forwardRef((props, ref) => {
             >
                 <div style={{ pointerEvents: 'none', padding: '1rem', width: '360px', height: 'max-content', border: '1px solid transparent'}}>
 
-                    <SkillLabel bgColor={'rgba(143, 50, 0, 0.5)'}>
+                    <SkillLabel ref={labelRef1} bgColor={'rgba(143, 50, 0, 0.5)'} >
                         <span>Lamine Yamal, la Revelación</span>
                     </SkillLabel>
-                    <SkillLabel bgColor={'rgba(0, 0, 0, 0.5)'}>
+                    <SkillLabel ref={labelRef2} bgColor={'rgba(0, 0, 0, 0.5)'} >
                             <img src="/icons/ball.png" style={{ width: '30px', height: '30px'}} />
                             <span>Rematador estrella</span>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -26,7 +71,7 @@ const SkillsCard = forwardRef((props, ref) => {
                                 <span>+2</span>
                             </div>
                     </SkillLabel>
-                    <SkillLabel bgColor={'rgba(0, 0, 0, 0.5)'}>
+                    <SkillLabel ref={labelRef3} bgColor={'rgba(0, 0, 0, 0.5)'} >
                             <img src="/icons/player.png" style={{ width: '40px', height: '40px'}} />
                             <span>Centrocampista táctico</span>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
