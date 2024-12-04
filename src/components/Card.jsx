@@ -41,6 +41,29 @@ export default function Card() {
             alpha: '/textures/grading/poor/opacity.png',
             roughness: '/textures/grading/poor/roughness.png',
         },
+        gradingV2: {
+            doblez: {
+                albedo: '/prod/grading/poor/doblez_albedo.png',
+                normal: '/prod/grading/poor/doblez_normal.png',
+                roughness: '/prod/grading/poor/doblez_roughness.png'
+            },
+            exterior: {
+                albedo: '/prod/grading/poor/exterior_albedo.png',
+                normal: '/prod/grading/poor/exterior_normal.png',
+                roughness: '/prod/grading/poor/exterior_roughness.png'
+            },
+            manchas: {
+                albedo: '/prod/grading/poor/manchas_albedo.png'
+            },
+            rascado: {
+                albedo: '/prod/grading/poor/rascado_albedo.png',
+                normal: '/prod/grading/poor/rascado_normal.png',
+                roughness: '/prod/grading/poor/rascado_roughness.png'
+            },
+            scratches: {
+                normal: '/prod/grading/poor/scratches_normal.png'
+            }
+        },
         fx: {
             irisMask: '/fx/iris-mask.jpg',
             iridescence: '/fx/iris4.jpg',
@@ -90,9 +113,46 @@ export default function Card() {
         }
     )
 
+
+    useControls(
+        'Doblez (Grading Textures v2)', {
+            'Albedo': { image: texturePaths.gradingV2.doblez.albedo },
+            'Normal': { image: texturePaths.gradingV2.doblez.normal  },
+            'Roughness': { image: texturePaths.gradingV2.doblez.roughness }
+        },
+    )
+
+    useControls(
+        'Exterior (Grading Textures v2)', {
+            'Albedo': { imabe: texturePaths.gradingV2.exterior.albedo },
+            'Normal': { image: texturePaths.gradingV2.exterior.normal },
+            'Roughness': { image: texturePaths.gradingV2.exterior.roughness }
+        }
+    )
+
+    useControls(
+        'Manchas (Grading Textures v2)', {
+            'Albedo': { image: texturePaths.gradingV2.manchas.albedo },
+        }
+    )
+
+    useControls(
+        'Rascado (Grading Textures v2)', {
+            'Albedo': { image: texturePaths.gradingV2.rascado.albedo },
+            'Normal': { image: texturePaths.gradingV2.rascado.normal },
+            'Roughness': { image: texturePaths.gradingV2.rascado.roughness }
+        }
+    )
+
+    useControls(
+        'Scratches (Grading Textures v2)', {
+            'Normal': { image: texturePaths.gradingV2.scratches.normal },
+        }
+    )
+
     
     useControls(
-        'Grading Textures', {
+        'Grading Textures v0', {
             'Alpha': { image: texturePaths.grading.alpha, onChange: (v) => updateTexture('grading', 'alpha', v) },
             'Albedo': { image: texturePaths.grading.albedo, onChange: (v) => updateTexture('grading', 'albedo', v) },
             'Height': { image: texturePaths.grading.height, onChange: (v) => updateTexture('grading', 'height', v) },
