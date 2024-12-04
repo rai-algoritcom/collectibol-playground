@@ -6,7 +6,7 @@ const FooterCard = forwardRef(({ blendMode }, ref) => {
     return (
         <Html
             ref={ref}
-            position={[0, blendMode ? -0.38 : -1.35, 0.005]}
+            position={[0, blendMode ? -0.36 : -1.35, 0.005]}
             transform
             scale={1}
             distanceFactor={2}
