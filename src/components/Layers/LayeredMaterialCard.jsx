@@ -750,6 +750,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
     const changeCardMode = (mode) => {
         if (shaderRef.current && footerRef.current && useTransition) {
             if (mode == 'max') {
+
                 gsap.to(shaderRef.current.uniforms.uHoverState, {
                     duration: transitionSpeed,
                     value: 1,
@@ -759,7 +760,14 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                     opacity: 1,
                     delay: 0.5
                 })
+                
             } else if (mode == 'min') { 
+
+                gsap.to(footerRef.current, {
+                    opacity: 0,
+                    duration: 0
+                })
+                
                 gsap.to(skillsRef.current, {
                     duration: transitionSpeed,
                     opacity: 0,
@@ -767,8 +775,15 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                 gsap.to(shaderRef.current.uniforms.uHoverState, {
                     duration: transitionSpeed,
                     value: 1,
+                }).then(() => {
+                    gsap.to(footerRef.current, {
+                        opacity: 1,
+                        duration: transitionSpeed
+                    })
                 })
+
             } else if (mode == 'full')  {
+
                 gsap.to(shaderRef.current.uniforms.uHoverState, {
                     duration: transitionSpeed,
                     value: 0,
