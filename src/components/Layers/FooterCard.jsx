@@ -1,18 +1,7 @@
 import { Html } from "@react-three/drei";
-import { forwardRef, useEffect } from "react";
-import gsap from 'gsap'
+import { forwardRef } from "react";
 
 const FooterCard = forwardRef(({ blendMode }, ref) => {
-
-    // useEffect(() => {
-    //     if (ref.current) {
-    //         gsap.to(ref.current.parent.position, {
-    //             y: blendMode ? -0.35 : -1.35, // Target y-position based on blendMode
-    //             duration: 1, // Animation duration
-    //             ease: 'power2.inOut', // Easing function
-    //         });
-    //     }
-    // }, [blendMode, ref]);
 
     return (
         <Html
