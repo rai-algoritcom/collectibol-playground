@@ -7,23 +7,42 @@ import blendUVs from './blendUVs.jsx';
  * @param {Object} textures - Object containing textures for all layers
  * @returns {Object} Combined texture maps
  */
-export function blendRoughnessTXs(renderer, textures, controls) {
-    const { base, grading } = textures 
+export function blendRoughnessTXs(renderer, textures, controls, gradingRoughnessProps) {
+    const { base, grading, gradingv2 } = textures 
 
     if (!renderer) return null
 
     const {
+        doblez, rascado
+    } = gradingRoughnessProps
+
+    const {
+        gradingDoblez, 
+        gradingExterior, 
+        gradingRascado
+    } = gradingv2
+
+    const {
         base_roughness,
-        grading_roughness
+        // grading_roughness
+        grading_v2_doblez_roughness,
+        grading_v2_exterior_roughness,
+        grading_v2_rascado_roughness
     } = controls
 
     let blendedRoughness = null
 
+    // if (grading_roughness) blendedRoughness = grading.roughness;
+    if (grading_v2_doblez_roughness) blendedRoughness = gradingDoblez.roughness;
+    if (grading_v2_exterior_roughness) blendedRoughness = gradingExterior.roughness;
+    if (grading_v2_rascado_roughness) blendedRoughness = gradingRascado.roughness;
     if (base_roughness) blendedRoughness = base.roughness;
-    if (grading_roughness) blendedRoughness = grading.roughness;
 
     if (base_roughness && blendedRoughness) blendedRoughness = blendUVs(blendedRoughness, base.roughness, renderer);
-    if (grading_roughness && blendedRoughness) blendedRoughness = blendUVs(blendedRoughness, grading.roughness, renderer);
+    // if (grading_roughness && blendedRoughness) blendedRoughness = blendUVs(blendedRoughness, grading.roughness, renderer);
+    if (grading_v2_doblez_roughness && blendedRoughness) blendedRoughness = blendUVs(blendedRoughness, gradingDoblez.roughness, renderer, 0, true, doblez.pos, doblez.rot);
+    if (grading_v2_exterior_roughness && blendedRoughness) blendedRoughness = blendUVs(blendedRoughness, gradingExterior.roughness, renderer);
+    if (grading_v2_rascado_roughness && blendedRoughness) blendedRoughness = blendUVs(blendedRoughness, gradingRascado.roughness, renderer, 0, true, rascado.pos, rascado.rot);
 
     return blendedRoughness
 }
