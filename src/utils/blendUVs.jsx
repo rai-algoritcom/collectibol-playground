@@ -13,7 +13,10 @@ export default function blendUVs(
     overlayTexture, 
     renderer,
     blendMode = 0,
-    color
+    useGrading = false,
+    positionOffset = new THREE.Vector2(0, 0),
+    rotation = 0,
+    color = undefined,
 ) {
 
     const width = baseTexture.image.width;
@@ -35,34 +38,46 @@ export default function blendUVs(
     });
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    
   
     const quad = new THREE.Mesh(
-      new THREE.PlaneGeometry(2, 2),
+      new THREE.PlaneGeometry(2, 2), // Mesh with 2x3 aspect ratio
       new THREE.ShaderMaterial({
         uniforms: {
           baseMap: { value: baseTexture },
           overlayMap: { value: overlayTexture },
           blendMode: { value: blendMode },
-          color: { value: color ? [ color.r, color.g, color.b ] : [ 0, 0, 0 ] } ,
-          useColor: { value: color ? true : false }
+          color: { value: color ? [ color.r, color.g, color.b ] : [ 0, 0, 0 ] },
+          useColor: { value: color ? true : false },
+          useGrading: { value: useGrading },
+          positionOffset: { value: positionOffset },
+          rotation: { value: rotation },
+          overlayAspectRatio: { value: 1 }, // Example: aspect ratio of overlay texture
+          meshAspectRatio: { value: 1 },   // Aspect ratio of the mesh
         },
-        vertexShader: `
+        vertexShader:  /* glsl */`
           varying vec2 vUv;
           void main() {
             vUv = uv;
             gl_Position = vec4(position, 1.0);
           }
         `,
-        fragmentShader: `
+        fragmentShader: /*glsl*/ `
           uniform sampler2D baseMap;
           uniform sampler2D overlayMap;
           uniform int blendMode;
-          
+    
+          uniform vec2 positionOffset;
+          uniform float rotation;
+          uniform float overlayAspectRatio;
+          uniform float meshAspectRatio;
+    
           uniform vec3 color;
           uniform bool useColor;
-
+          uniform bool useGrading;
+    
           varying vec2 vUv;
-  
+    
           void main() {
             vec4 base = texture2D(baseMap, vUv);
             vec4 overlay = texture2D(overlayMap, vUv);
@@ -70,6 +85,37 @@ export default function blendUVs(
             vec3 coloredOverlay;
             vec4 result;
 
+            vec2 uv = vUv;
+
+            if (useGrading) {
+              // Transform UVs for overlay map
+              vec2 centeredUV = uv * 0.55 - 0.25; 
+              
+              // Handle aspect ratio adjustment (maintain overlay texture's aspect)
+              float aspectScale = overlayAspectRatio / meshAspectRatio;
+              centeredUV.x *= aspectScale;
+
+              // Apply rotation
+              float cosAngle = cos(rotation);
+              float sinAngle = sin(rotation);
+              mat2 rotationMatrix = mat2(cosAngle, -sinAngle, sinAngle, cosAngle);
+              centeredUV = rotationMatrix * centeredUV;
+
+              // Apply position offset
+              centeredUV += positionOffset;
+
+              // Translate back to UV space
+              uv = centeredUV + 0.5;
+
+              // Sample overlay texture
+              overlay = texture2D(overlayMap, uv);
+
+              if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
+                overlay = vec4(0.0); // Clip parts outside the texture
+              }
+            }
+
+       
             if (blendMode == 0) { // Normal
 
                 if (useColor) {
@@ -85,7 +131,7 @@ export default function blendUVs(
                 result = base + overlay;
             }
             gl_FragColor = result;
-          }
+        }
         `,
       })
     );

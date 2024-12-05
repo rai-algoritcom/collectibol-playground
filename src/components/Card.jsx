@@ -211,8 +211,16 @@ export default function Card() {
     const patternTexture = useTexture(texturePaths.pattern);
     const mainInterestTextures = useTexture(texturePaths.main_interest);
     const layoutTextures = useTexture(texturePaths.layout);
-    const gradingTextures = useTexture(texturePaths.grading);
     const fxTextures = useTexture(texturePaths.fx);
+    // v0
+    const gradingTextures = useTexture(texturePaths.grading); 
+    // v1 
+    const gradingDoblez = useTexture(texturePaths.gradingV2.doblez)
+    const gradingExterior = useTexture(texturePaths.gradingV2.exterior) 
+    const gradingManchas = useTexture(texturePaths.gradingV2.manchas)
+    const gradingRascado = useTexture(texturePaths.gradingV2.rascado)
+    const gradingScratches = useTexture(texturePaths.gradingV2.scratches)
+
 
     if (
         !(
@@ -235,6 +243,13 @@ export default function Card() {
                     main_interest: mainInterestTextures,
                     layout: layoutTextures,
                     grading: gradingTextures,
+                    gradingv2: {
+                        gradingDoblez, 
+                        gradingExterior, 
+                        gradingManchas, 
+                        gradingRascado, 
+                        gradingScratches
+                    },
                     fx: fxTextures
                 }}
                 texturePaths={texturePaths}

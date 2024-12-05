@@ -67,7 +67,7 @@ import {
     blendAlphaTXs, 
 } from "../../utils";
 
-import { downloadJSON, normalizeAngle, takeScreenshot } from "../../utils/helpers";
+import { downloadJSON, getRandomPositionAndRotation, normalizeAngle, takeScreenshot } from "../../utils/helpers";
 
 import Stats from "three/examples/jsm/libs/stats.module.js";
 import FooterCard from "./FooterCard";
@@ -113,24 +113,24 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
             label: 'Layout'
         },
         grading_albedo: {
-            value: true,
+            value: false,
             label: 'Grading v0'
         },
         // Grading V2
         grading_v2_doblez_albedo: {
-            value: false, 
+            value: true, 
             label: '(G) Doblez'
         },
         grading_v2_exterior_albedo: {
-            value: false, 
+            value: true, 
             label: '(G) Exterior'
         },
         grading_v2_manchas_albedo: {
-            value: false, 
+            value: true, 
             label: '(G) Manchas'
         },
         grading_v2_rascado_albedo: {
-            value: false, 
+            value: true, 
             label: '(G) Rascado'
         }
     })
@@ -153,20 +153,20 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
             label: 'Base'
         },
         grading_roughness: {
-            value: true,
+            value: false,
             label: 'Grading v0'
         },
         // Grading V2 
         grading_v2_doblez_roughness: {
-            value: false,
+            value: true,
             label: '(G) Doblez'
         },
         grading_v2_exterior_roughness: {
-            value: false, 
+            value: true, 
             label: '(G) Exterior'
         },
         grading_v2_rascado_roughness: {
-            value: false, 
+            value: true, 
             label: '(G) Rascado'
         }
     })
@@ -208,33 +208,62 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
             label: 'Layout'
         },
         grading_normal: {
-            value: true,
+            value: false,
             label: 'Grading'
         },
         // Grading v2 
         grading_v2_doblez_normal: {
-            value: false, 
+            value: true, 
             label: '(G) Doblez'
         },
         grading_v2_exterior_normal: {
-            value: false, 
+            value: true, 
             label: '(G) Exterior'
         },
         grading_v2_rascado_normal: {
-            value: false,
+            value: true,
             label: '(G) Rascado'
         },
         grading_v2_scratches_normal: {
-            value: false, 
+            value: true, 
             label: '(G) Scratches'
         }
     })
 
 
+    /**
+     * Randomize offset and rotation for 'Grading v2': 
+     * - 'Doblez' [x, x, x]
+     * - 'Manchas' [x]
+     * - 'Rascado' [x, x, x]
+     * - 'Scratches' [x]
+     */
+
+    const doblezRand = getRandomPositionAndRotation()
+    const rascadoRand = getRandomPositionAndRotation()
+    const scratchesRand = getRandomPositionAndRotation()
+    const manchasRand = getRandomPositionAndRotation()
+
+    const gradingRoughnessProps = {
+        doblez: doblezRand,
+        rascado: rascadoRand,
+    }
+    
+    const gradingNormalsProps = {
+        scratches: scratchesRand,
+        doblez: doblezRand,
+        rascado: rascadoRand
+    }
+
+    const gradingAlbedoProps = {
+        manchas: manchasRand,
+        doblez: doblezRand,
+        rascado: rascadoRand
+    }
 
     // Blended Textures
     const blendedAlbedoTextures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor);
+        return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps);
     }, [gl, textures, albedoToggles, layoutColor]);
 
     // const blendedAlbedo2Textures = useMemo(() => {
@@ -242,7 +271,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
     // }, [gl, textures, albedoToggles, layoutColor])
 
     const blendedAlbedo3Textures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor);
+        return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor, gradingAlbedoProps);
     }, [gl, textures, albedoToggles, layoutColor])
 
     const blendedAlphaTextures = useMemo(() => {
@@ -258,16 +287,13 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
     }, [gl, textures, heightToggles]);
 
     const blendedRoughnessTextures = useMemo(() => {
-        return blendRoughnessTXs(gl, textures, roughnessToggles);
+        return blendRoughnessTXs(gl, textures, roughnessToggles, gradingRoughnessProps);
     }, [gl, textures, roughnessToggles]);
 
     const blendedNormalTextures = useMemo(() => {
-        return blendNormalTXs(gl, textures, normalToggles);
+        return blendNormalTXs(gl, textures, normalToggles, gradingNormalsProps);
     }, [gl, textures, normalToggles]);
 
-    const blendedNormalTexturesIris = useMemo(() => {
-        return blendNormalTXs(gl, textures, {...normalToggles, /*base_normal: false*/ });
-    }, [gl, textures, normalToggles]);
 
 
     const { roughnessIntensity, roughnessPresence } = useControls('Roughness Config.', {
@@ -650,7 +676,6 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                 blendedHeightTextures,
                 blendedRoughnessTextures,
                 blendedNormalTextures,
-                blendedNormalTexturesIris,
                 textures.fx
             ].forEach(disposeTexture);
         
@@ -857,17 +882,18 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                             needsUpdate={true}
                             uniformsNeedUpdate={true}
                             uniforms={{
-
-                                blendMode: { value: blendMode },
                                 albedoMap2: { value: blendedAlbedoTextures },
                                 albedoMap: { value: blendedAlbedo3Textures /*blendedAlbedo2Textures*/ },
                                 alphaMap2: { value: blendedAlpha2Textures },
                                 alphaMap: { value: blendedAlphaTextures },
                                 heightMap: { value: blendedHeightTextures },
                                 roughnessMap: { value: blendedRoughnessTextures },
-                                normalMap: { value: useIridescence ? blendedNormalTexturesIris : useBrightness ? blendedNormalTexturesIris : blendedNormalTextures },
+                                normalMap: { value: blendedNormalTextures },
                                 fxMask: { value: useIridescence ? textures.fx.irisMask : useBrightness ? textures.fx.brightness : textures.fx.shine },
                                 iridescenceMask: { value: textures.fx.iridescence },
+
+                                // Transition
+                                blendMode: { value: blendMode },
 
                                 gradientMap: { value: textures.fx.refraction  },
                                 refractionIntensity: { value: refractionIntensity },
@@ -926,6 +952,11 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
 
                                 environmentIntensity: { value: 1.0 }, // Adjust as needed
                                 environmentColor: { value: new THREE.Color(0xffffff) }, // White light
+
+                                // Grading Randomness 
+                                rotation: { value: 0.0 },
+                                scale: { value: new THREE.Vector2(1, 1) },
+                                offset: { value: new THREE.Vector2(0, 0)}
                             }}
                             vertexShader={
                                 useGlitch 
