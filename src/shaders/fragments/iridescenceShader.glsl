@@ -3,7 +3,9 @@ varying vec3 vNormal;
 varying vec3 vPosition;
 
 uniform sampler2D albedoMap;
+uniform sampler2D albedoMap2;
 uniform sampler2D alphaMap;
+uniform sampler2D alphaMap2;
 uniform sampler2D roughnessMap;
 uniform sampler2D normalMap;
 uniform sampler2D fxMask;
@@ -21,12 +23,31 @@ uniform float iridescenceIntensity; // Intensity of the iridescence
 uniform float uTime;                // Time uniform for rotation
 uniform float uRotation;
 
+uniform int blendMode;
+uniform sampler2D uDisp;
+uniform float uHoverState;
+uniform bool useTransition;
+
+
 void main() {
     // Sample base textures
     vec4 albedoColor = texture2D(albedoMap, vUv);
+
     float alphaValue = texture2D(alphaMap, vUv).r;
+    float alphaValue2 = texture2D(alphaMap2, vUv).r;
+    float blendedAlpha = alphaValue;
+
     vec3 normalFromMap = texture2D(normalMap, vUv).rgb * 2.0 - 1.0;
     vec3 normal = normalize(-vNormal + normalFromMap);
+
+    if (useTransition) {
+        vec4 albedo1 = texture2D(albedoMap, vUv);
+        vec4 albedo2 = texture2D(albedoMap2, vUv);
+        vec4 disp = texture2D(uDisp, vUv);
+        float pct = clamp((disp.r - uHoverState) * 20.0, 0., 1.);
+        albedoColor = mix(albedo1, albedo2, pct);
+        blendedAlpha = mix(alphaValue2, alphaValue, pct);
+    }
 
     // Rotate the UV coordinates for iridescenceMask
     vec2 center = vec2(0.5, 0.5); // Center of rotation
@@ -75,5 +96,9 @@ void main() {
     vec3 finalColor = albedoColor.rgb * ambientLight;
 
     // Output final fragment color with adjusted transparency
-    gl_FragColor = vec4(finalColor, alphaValue);
+    if (blendMode == 1) {
+        gl_FragColor = vec4(finalColor, albedoColor.a * blendedAlpha);
+    } else {
+        gl_FragColor = vec4(finalColor, alphaValue);
+    }
 }
