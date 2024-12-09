@@ -911,6 +911,8 @@ export default function LayeredMaterialCard({
                                 shineColor1: { value: shineyColor },
                                 shineColor2: { value: brightnessColor1 },
 
+                                useTransition: { value: useTransition },
+
                                 uTime: { value: 0.0 },
                                 uRotation: { value: 0.0 },
                                 uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
@@ -967,9 +969,9 @@ export default function LayeredMaterialCard({
                                 : useShiney 
                                 ? 
                                 shineFragmentShader 
-                                : useTransition
+                                /*: useTransition
                                 ?
-                                transitionFragmentShader // newTransitionFragmentShader 
+                                transitionFragmentShader*/ // newTransitionFragmentShader 
                                 : 
                                 standardFragmentShader
                             }
