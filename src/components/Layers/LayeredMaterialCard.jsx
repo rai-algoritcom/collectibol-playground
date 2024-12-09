@@ -135,7 +135,6 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
         }
     })
 
-
     const alphaToggles = useControls('Alpha Channels', {
         base_alpha: {
             value: true,
@@ -233,10 +232,10 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
 
     /**
      * Randomize offset and rotation for 'Grading v2': 
-     * - 'Doblez' [x, x, x]
-     * - 'Manchas' [x]
-     * - 'Rascado' [x, x, x]
-     * - 'Scratches' [x]
+     * - 'Doblez' 
+     * - 'Manchas' 
+     * - 'Rascado' 
+     * - 'Scratches' 
      */
 
     const doblezRand = getRandomPositionAndRotation()
@@ -244,35 +243,126 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
     const scratchesRand = getRandomPositionAndRotation()
     const manchasRand = getRandomPositionAndRotation()
 
+    const { posDoblez, rotDoblez } = useControls('Doblez Config.', {
+        posDoblez: {
+            value: doblezRand.pos,
+            min: -0.1,
+            max: 0.1,
+            step: 0.001,
+            label: 'Position'
+        },
+        rotDoblez: {
+            value: doblezRand.rot, 
+            min: 0, 
+            max: Math.PI * 3,
+            label: 'Rotation'
+        }
+    })
+
+    const { posManchas, rotManchas } = useControls('Manchas Config.', {
+        posManchas: {
+            value: manchasRand.pos,
+            min: -0.1,
+            max: 0.1,
+            step: 0.001,
+            label: 'Position'
+        },
+        rotManchas: {
+            value: manchasRand.rot,
+            min: 0,
+            max: Math.PI * 3,
+            label: 'Rotation'
+        }
+    })
+
+    const { posRascado, rotRascado } = useControls('Rascado Config.', {
+        posRascado: {
+            value: rascadoRand.pos,
+            min: -0.1,
+            max: 0.1,
+            step: 0.001,
+            label: 'Position'
+        },
+        rotRascado: {
+            value: rascadoRand.rot,
+            min: 0,
+            max: Math.PI * 3, 
+            label: 'Rotation'
+        }
+    })
+
+    const { posScratches, rotScratches } = useControls('Scratches Config.', {
+        posScratches: {
+            value: scratchesRand.pos,
+            min: -0.1,
+            max: 0.1,
+            step: 0.001,
+            label: 'Position'
+        },
+        rotScratches: {
+            value: scratchesRand.rot,
+            min: 0,
+            max: Math.PI * 3,
+            label: 'Rotation'
+        }
+    })
+
+
     const gradingRoughnessProps = {
-        doblez: doblezRand,
-        rascado: rascadoRand,
+        doblez: {
+            pos: posDoblez,
+            rot: rotDoblez,
+        },
+        rascado: {
+            pos: posRascado,
+            rot: rotRascado
+        },
     }
     
     const gradingNormalsProps = {
-        scratches: scratchesRand,
-        doblez: doblezRand,
-        rascado: rascadoRand
+        scratches: {
+            pos: posScratches,
+            rot: rotScratches
+        },
+        doblez: {
+            pos: posDoblez, 
+            rot: rotDoblez
+        },
+        rascado: {
+            pos: posRascado,
+            rot: rotRascado
+        }
     }
 
     const gradingAlbedoProps = {
-        manchas: manchasRand,
-        doblez: doblezRand,
-        rascado: rascadoRand
+        manchas: {
+            pos: posManchas,
+            rot: rotManchas
+        },
+        doblez: {
+            pos: posDoblez, 
+            rot: rotDoblez
+        },
+        rascado: {
+            pos: posRascado,
+            rot: rotRascado
+        }
     }
 
     // Blended Textures
     const blendedAlbedoTextures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps);
-    }, [gl, textures, albedoToggles, layoutColor]);
+        return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps
+        );
+    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez]);
 
     // const blendedAlbedo2Textures = useMemo(() => {
     //     return blendAlbedoTXs(gl, textures, albedoToggles, true, false, layoutColor);
     // }, [gl, textures, albedoToggles, layoutColor])
 
     const blendedAlbedo3Textures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor, gradingAlbedoProps);
-    }, [gl, textures, albedoToggles, layoutColor])
+        return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor, gradingAlbedoProps
+        );
+    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez])
 
     const blendedAlphaTextures = useMemo(() => {
         return blendAlphaTXs(gl, textures, alphaToggles);
@@ -288,11 +378,11 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
 
     const blendedRoughnessTextures = useMemo(() => {
         return blendRoughnessTXs(gl, textures, roughnessToggles, gradingRoughnessProps);
-    }, [gl, textures, roughnessToggles]);
+    }, [gl, textures, roughnessToggles, posRascado, rotRascado, posDoblez, rotDoblez ]);
 
     const blendedNormalTextures = useMemo(() => {
         return blendNormalTXs(gl, textures, normalToggles, gradingNormalsProps);
-    }, [gl, textures, normalToggles]);
+    }, [gl, textures, normalToggles, posRascado, rotRascado, posDoblez, rotDoblez, posScratches, rotScratches ]);
 
 
 
@@ -774,7 +864,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
         letterSpacing, 
         textContent,
         // 
-        blendMode
+        blendMode,
     ])
 
 
