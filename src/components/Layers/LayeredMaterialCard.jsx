@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import * as THREE from 'three';
-import { button, useControls } from "leva";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Text } from "@react-three/drei";
+import { button, useControls } from "leva";
+import * as THREE from 'three';
 import gsap from "gsap";
 
 
@@ -82,7 +81,17 @@ const stats = Stats();
 document.body.appendChild(stats.dom);
 
 
-export default function LayeredMaterialCard({ textures, texturePaths, layoutColor }) {
+export default function LayeredMaterialCard({ 
+    textures, 
+    texturePaths, 
+    layoutColor,
+    //Toggles 
+    albedoToggles, 
+    normalToggles, 
+    roughnessToggles, 
+    alphaToggles, 
+    heightToggles
+}) {
     const { gl, scene, camera } = useThree(); 
 
     const [key, setKey] = useState(0);
@@ -98,7 +107,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
     const [jsonCfg, setJsonCfg] = useState()
     const [animationTrigger, setAnimationTrigger] = useState('rotation')
 
-    const albedoToggles = useControls('Albedo Channels', {
+    /*const albedoToggles = useControls('Albedo Channels', {
         base_albedo: {
             value: true,
             label: 'Base'
@@ -230,7 +239,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
             value: true, 
             label: '(G) Scratches'
         }
-    })
+    })*/
 
 
     /**
@@ -537,14 +546,14 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
 
 
 
-    const { fontColor, fontSize, maxWidth, lineHeight, letterSpacing, textContent } = useControls('Text Overlay', {
-        fontColor: { value: "#ffffff", label: 'Color' },
-        fontSize: { value: .16, min: 0, max: 1, label: 'Font Size' },
-        maxWidth: { value: 1, min: 1, max: 5, label: 'Max Width' },
-        lineHeight: { value: 0.75, min: 0.1, max: 10 , label: 'Line Height' },
-        letterSpacing: { value: -0.08, min: -0.5, max: 1, label: 'Letter Spacing' },
-        textContent: { value: '', label: 'Content'}
-    })
+    // const { fontColor, fontSize, maxWidth, lineHeight, letterSpacing, textContent } = useControls('Text Overlay', {
+    //     fontColor: { value: "#ffffff", label: 'Color' },
+    //     fontSize: { value: .16, min: 0, max: 1, label: 'Font Size' },
+    //     maxWidth: { value: 1, min: 1, max: 5, label: 'Max Width' },
+    //     lineHeight: { value: 0.75, min: 0.1, max: 10 , label: 'Line Height' },
+    //     letterSpacing: { value: -0.08, min: -0.5, max: 1, label: 'Letter Spacing' },
+    //     textContent: { value: '', label: 'Content'}
+    // })
 
 
     useControls({
@@ -619,14 +628,14 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                     folding_y: foldY,
                     folding_rotation: foldRotation
                 },
-                text_overlay: {
-                    font_color: fontColor,
-                    font_size: fontSize,
-                    max_widt: maxWidth,
-                    line_height: lineHeight, 
-                    letter_spacing: letterSpacing, 
-                    text_content: textContent
-                },
+                // text_overlay: {
+                //     font_color: fontColor,
+                //     font_size: fontSize,
+                //     max_widt: maxWidth,
+                //     line_height: lineHeight, 
+                //     letter_spacing: letterSpacing, 
+                //     text_content: textContent
+                // },
                 vertex_fx: {
                     id: useGlitch 
                     ? 
@@ -860,12 +869,12 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
         foldY, 
         foldRotation,
         // Text overlay 
-        fontColor, 
-        fontSize, 
-        maxWidth, 
-        lineHeight, 
-        letterSpacing, 
-        textContent,
+        // fontColor, 
+        // fontSize, 
+        // maxWidth, 
+        // lineHeight, 
+        // letterSpacing, 
+        // textContent,
         // 
         blendMode,
     ])
@@ -1213,7 +1222,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                 </mesh>
             )}
 
-            {<Text
+            {/* {<Text
                 material-side={THREE.FrontSide}
                 color={fontColor}
                 fontSize={fontSize}
@@ -1227,7 +1236,7 @@ export default function LayeredMaterialCard({ textures, texturePaths, layoutColo
                 position={[0, -1, .1]}
             >
                 {textContent}
-            </Text>}
+            </Text>} */}
 
             
             <SkillsCard 

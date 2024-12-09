@@ -75,84 +75,216 @@ export default function Card() {
     })
 
 
-    useControls(
-        'Base Textures', {
+    const { base_alpha, base_albedo, base_height, base_normal, base_roughness } = useControls(
+        'Base Textures + Channels', {
             'Alpha': { image: texturePaths.base.alpha, onChange: (v) => updateTexture('base', 'alpha', v) },
             'Alpha II': { image: texturePaths.base.alpha2, onChange: (v) => updateTexture('base', 'alpha2', v)  },
             'Albedo': { image: texturePaths.base.albedo, onChange: (v) => updateTexture('base', 'albedo', v) },
             'Height': { image: texturePaths.base.height, onChange: (v) => updateTexture('base', 'height', v) },
             'Normal': { image: texturePaths.base.normal, onChange: (v) => updateTexture('base', 'normal', v) },
-            'Roughness': { image: texturePaths.base.roughness, onChange: (v) => updateTexture('base', 'roughness', v) }
+            'Roughness': { image: texturePaths.base.roughness, onChange: (v) => updateTexture('base', 'roughness', v) }, 
+            base_alpha: {
+                value: true,
+                label: 'Alpha ch.'
+            },
+            base_albedo: {
+                value: true, 
+                label: 'Albedo ch.'
+            },
+            base_height: {
+                value: false,
+                label: 'Height ch.'
+            },
+            base_normal: {
+                value: true,
+                label: 'Normal ch.'
+            },
+            base_roughness: {
+                value: true,
+                label: 'Roughness ch.'
+            }
     })
 
 
-    useControls(
-        'Pattern Textures', {
+    const { pattern_albedo } = useControls(
+        'Pattern Textures + Channels', {
             'Albedo I': { image: texturePaths.pattern.albedo, onChange: (v) => updateTexture('pattern', 'albedo', v) },
             'Albedo II': { image: texturePaths.pattern.albedo2, onChange: (v) => updateTexture('pattern', 'albedo2', v) },
             // 'Height': { image: texturePaths.pattern.height, onChange: (v) => updateTexture('pattern', 'height', v) },
+            pattern_albedo: {
+                value: true,
+                label: 'Albedo ch.'
+            }
     })
 
 
-    useControls(
-        'Main Textures', {
+    const { main_interest_albedo, main_interest_height, main_interest_normal } = useControls(
+        'Main Textures + Channels', {
             'Albedo': { image: texturePaths.main_interest.albedo, onChange: (v) => updateTexture('main_interest', 'albedo', v) },
             'Height': { image: texturePaths.main_interest.height, onChange: (v) => updateTexture('main_interest', 'height', v) },
             'Normal': { image: texturePaths.main_interest.normal, onChange: (v) => updateTexture('main_interest', 'normal', v) },
+            main_interest_albedo: {
+                value: true,
+                label: 'Albedo ch.'
+            },
+            main_interest_height: {
+                value: true,
+                label: 'Height ch.'
+            },
+            main_interest_normal: {
+                value: false,
+                label: 'Normal ch.'
+            }
         }
     )
 
 
-    const { layoutColor } = useControls(
-        'Layout Textures', {
+    const { layout_albedo, layout_height, layout_normal, layoutColor } = useControls(
+        'Layout Textures + Channels', {
             'Albedo': { image: texturePaths.layout.albedo, onChange: (v) => updateTexture('layout', 'albedo', v) },
             'Albedo II': { image: texturePaths.layout.albedo2, onChange: (v) => updateTexture('layout', 'albedo2', v)  },
             'Height': { image: texturePaths.layout.height, onChange: (v) => updateTexture('layout', 'height', v) },
             'Normal': { image: texturePaths.layout.normal, onChange: (v) => updateTexture('layout', 'normal', v) },
-            layoutColor: { value: { r: 44, g: 44, b: 49 }, label: '*Color' }
+            layoutColor: { value: { r: 44, g: 44, b: 49 }, label: '*Color' },
+            layout_albedo: {
+                value: true,
+                label: 'Albedo ch.'
+            },
+            layout_height: {
+                value: false,
+                label: 'Height ch.'
+            },
+            layout_normal: {
+                value: false,
+                label: 'Normal ch.'
+            }
         }
     )
 
 
-    useControls(
+    const { grading_v2_doblez_albedo, grading_v2_doblez_normal, grading_v2_doblez_roughness } = useControls(
         'Doblez (Grading Textures v2)', {
             'Albedo': { image: texturePaths.gradingV2.doblez.albedo },
             'Normal': { image: texturePaths.gradingV2.doblez.normal  },
-            'Roughness': { image: texturePaths.gradingV2.doblez.roughness }
+            'Roughness': { image: texturePaths.gradingV2.doblez.roughness },
+            grading_v2_doblez_albedo: {
+                value: true,
+                label: 'Albedo ch.'
+            },
+            grading_v2_doblez_normal: {
+                value: true,
+                label: 'Normal ch.'
+            },
+            grading_v2_doblez_roughness: {
+                value: true,
+                label: 'Roughness ch.'
+            }
         },
     )
 
-    useControls(
+    const { grading_v2_exterior_albedo, grading_v2_exterior_normal, grading_v2_exterior_roughness } = useControls(
         'Exterior (Grading Textures v2)', {
-            'Albedo': { imabe: texturePaths.gradingV2.exterior.albedo },
+            'Albedo': { image: texturePaths.gradingV2.exterior.albedo },
             'Normal': { image: texturePaths.gradingV2.exterior.normal },
-            'Roughness': { image: texturePaths.gradingV2.exterior.roughness }
+            'Roughness': { image: texturePaths.gradingV2.exterior.roughness },
+            grading_v2_exterior_albedo: {
+                value: true,
+                label: 'Albedo ch.'
+            },
+            grading_v2_exterior_normal: {
+                value: true,
+                label: 'Normal ch.'
+            },
+            grading_v2_exterior_roughness: {
+                value: true,
+                label: 'Roughness ch.'
+            }
         }
     )
 
-    useControls(
+    const { grading_v2_manchas_albedo } = useControls(
         'Manchas (Grading Textures v2)', {
             'Albedo': { image: texturePaths.gradingV2.manchas.albedo },
+            grading_v2_manchas_albedo: {
+                value: true,
+                label: 'Albedo ch.'
+            }
         }
     )
 
-    useControls(
+    const { grading_v2_rascado_albedo, grading_v2_rascado_normal, grading_v2_rascado_roughness } = useControls(
         'Rascado (Grading Textures v2)', {
             'Albedo': { image: texturePaths.gradingV2.rascado.albedo },
             'Normal': { image: texturePaths.gradingV2.rascado.normal },
-            'Roughness': { image: texturePaths.gradingV2.rascado.roughness }
+            'Roughness': { image: texturePaths.gradingV2.rascado.roughness },
+            grading_v2_rascado_albedo: {
+                value: true,
+                label: 'Albedo ch.'
+            },
+            grading_v2_rascado_normal: {
+                value: true,
+                label: 'Normal ch.'
+            },
+            grading_v2_rascado_roughness: {
+                value: true,
+                label: 'Roughness ch.'
+            }
         }
     )
 
-    useControls(
+    const { grading_v2_scratches_normal } = useControls(
         'Scratches (Grading Textures v2)', {
             'Normal': { image: texturePaths.gradingV2.scratches.normal },
+            grading_v2_scratches_normal: {
+                value: true,
+                label: 'Normal ch.'
+            }
         }
     )
+
+
+    const albedoToggles = {
+        base_albedo,
+        pattern_albedo,
+        main_interest_albedo,
+        layout_albedo,
+        grading_v2_doblez_albedo,
+        grading_v2_exterior_albedo,
+        grading_v2_manchas_albedo,
+        grading_v2_rascado_albedo,
+    }
+
+
+    const alphaToggles = {
+        base_alpha
+    }
+
+    const roughnessToggles = {
+        base_roughness,
+        grading_v2_doblez_roughness,
+        grading_v2_exterior_roughness,
+        grading_v2_rascado_roughness,
+    }
+
+    const heightToggles = {
+        base_height,
+        main_interest_height, 
+        layout_height,
+    }
+
+    const normalToggles = {
+        base_normal,
+        main_interest_normal,
+        layout_normal,
+        grading_v2_doblez_normal,
+        grading_v2_exterior_normal,
+        grading_v2_rascado_normal,
+        grading_v2_scratches_normal,
+    }
 
     
     useControls(
-        'Grading Textures v0', {
+        'Grading Textures (vO - Deprecated)', {
             'Alpha': { image: texturePaths.grading.alpha, onChange: (v) => updateTexture('grading', 'alpha', v) },
             'Albedo': { image: texturePaths.grading.albedo, onChange: (v) => updateTexture('grading', 'albedo', v) },
             'Height': { image: texturePaths.grading.height, onChange: (v) => updateTexture('grading', 'height', v) },
@@ -254,6 +386,12 @@ export default function Card() {
                 }}
                 texturePaths={texturePaths}
                 layoutColor={layoutColor}
+                // Toggles
+                albedoToggles={albedoToggles}
+                normalToggles={normalToggles}
+                roughnessToggles={roughnessToggles}
+                alphaToggles={alphaToggles}
+                heightToggles={heightToggles} 
             />
     )
 }
