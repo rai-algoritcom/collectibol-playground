@@ -66,7 +66,7 @@ export function blendAlbedoTXs(
     if (main_interest_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, main_interest.albedo, renderer);
     if (layout_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, is2ndLayout ? layout.albedo2 : layout.albedo, renderer, 0, false, new THREE.Vector2(0,0), 0, threeColor);
     // if (grading_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, grading.albedo, renderer);
-    if (grading_v2_doblez_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, gradingDoblez.albedo, renderer, 0,  true, doblez.pos, doblez.rot);;
+    if (grading_v2_doblez_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, gradingDoblez.albedo, renderer, 0,  true, doblez.pos, doblez.rot);
     if (grading_v2_exterior_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, gradingExterior.albedo, renderer);
     if (grading_v2_manchas_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, gradingManchas.albedo, renderer, 0, true, manchas.pos, manchas.rot);
     if (grading_v2_rascado_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, gradingRascado.albedo, renderer, 0, true, rascado.pos, rascado.rot);
