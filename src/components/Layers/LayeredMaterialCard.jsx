@@ -9,51 +9,54 @@ import gsap from "gsap";
 /**
  * Vertex
  */
-import standardVertexShader from '../../shaders/vertex/standardShader.glsl'
-import foldingVertexShader from '../../shaders/vertex/foldingShader.glsl'
-
-import glitchVertexShader from "../../shaders/vertex/glitchShader.glsl";
-import waveVertexShader from "../../shaders/vertex/waveShader.glsl";
-import breathVertexShader from "../../shaders/vertex/breathShader.glsl";
-import twisterVertexShader from '../../shaders/vertex/twisterShader.glsl'
-import pulseVertexShader from '../../shaders/vertex/pulseShader.glsl';
-import jitterVertexShader from '../../shaders/vertex/jitterShader.glsl';
-import noiseVertexShader from '../../shaders/vertex/noiseShader.glsl'
-import clothVertexShader from '../../shaders/vertex/clothShader.glsl'
-
+import {
+    standardVertexShader,
+    foldingVertexShader,
+    glitchVertexShader,
+    waveVertexShader,
+    breathVertexShader,
+    twisterVertexShader,
+    pulseVertexShader,
+    jitterVertexShader,
+    noiseVertexShader,
+    clothVertexShader
+} from '../../shaders/vertex/index'
 
 /**
- * Lights Fragment
+ * Fragment
  */
-import standardFragmentShader from '../../shaders/fragments/standardShader.glsl';
-import iridescenceFragmentShader from '../../shaders/fragments/iridescenceShader.glsl';
-import brightnessFragmentShader from '../../shaders/fragments/brightnessShader.glsl';
-import shineFragmentShader from '../../shaders/fragments/shineShader.glsl'
-import transitionFragmentShader from '../../shaders/fragments/transitionShader.glsl';
-// import newTransitionFragmentShader from '../../shaders/fragments/newTransitionShader.glsl'
-import refractionFragmentShader from '../../shaders/fragments/refractionShader.glsl'
+import {
+    standardFragmentShader,
+    iridescenceFragmentShader,
+    brightnessFragmentShader,
+    shineFragmentShader,
+    transitionFragmentShader,
+    refractionFragmentShader
+} from '../../shaders/fragments/index'
 
 /**
  * Fx Fragment
  */
-import cardioFxFragmentShader from "../../shaders/fx/cardioShader.glsl";
-import squaresFxFragmentShader from "../../shaders/fx/squaresShader.glsl"
-import circleFxFragmentShader from "../../shaders/fx/circleShader.glsl"
-import dankFxFragmentShader from "../../shaders/fx/dankShader.glsl"
-import lightFxFragmentShader from "../../shaders/fx/lightShader.glsl"
-import etherFxFragmentShader from "../../shaders/fx/etherShader.glsl"
-import fireFxFragmentShader from "../../shaders/fx/fireShader.glsl"
-import waveFxFragmentShader from "../../shaders/fx/waveShader.glsl"
-import smokeFxFragmentShader from "../../shaders/fx/smokeShader.glsl"
-import rayFxFragmentShader from "../../shaders/fx/rayShader.glsl"
-import crystalFxFragmentShader from "../../shaders/fx/crystalShader.glsl"
-import galaxyFxFragmentShader from "../../shaders/fx/galaxyShader.glsl"
-import liquidFxFragmentShader from "../../shaders/fx/liquidShader.glsl"
-import asciFxFragmentShader from "../../shaders/fx/asciShader.glsl"
-import spinFxFragmentShader from "../../shaders/fx/spinShader.glsl"
-import particlesFxFragmentShader from "../../shaders/fx/particlesShader.glsl"
-import blobsFxFragmentShader from "../../shaders/fx/blobsShader.glsl"
-import grassFxFragmentShader from "../../shaders/fx/grassShader.glsl"
+import {
+    cardioFxFragmentShader,
+    squaresFxFragmentShader,
+    circleFxFragmentShader,
+    dankFxFragmentShader,
+    lightFxFragmentShader,
+    etherFxFragmentShader,
+    fireFxFragmentShader,
+    waveFxFragmentShader,
+    smokeFxFragmentShader,
+    rayFxFragmentShader,
+    crystalFxFragmentShader,
+    galaxyFxFragmentShader,
+    liquidFxFragmentShader,
+    asciFxFragmentShader,
+    spinFxFragmentShader,
+    particlesFxFragmentShader,
+    blobsFxFragmentShader,
+    grassFxFragmentShader
+} from "../../shaders/fx/index";
 
 
 /**
