@@ -264,7 +264,7 @@ export default function LayeredMaterialCard({
     const { roughnessIntensity, roughnessPresence } = useControls('Roughness Config.', {
         roughnessIntensity: {
             label: 'Intensity',
-            value: 0.7,
+            value: 1.4,
             min: 0.0,
             max: 2.0,
             step: 0.1,
@@ -279,11 +279,11 @@ export default function LayeredMaterialCard({
     });
 
     const { normalIntensity } = useControls('Normal Config.', {
-        normalIntensity: { label: 'Intensity', value: 1.0, min: 0.1, max: 5.0, step: 0.01 }
+        normalIntensity: { label: 'Intensity', value: 5.0, min: 0.1, max: 5.0, step: 0.01 }
     });
 
     const { displacementScale } = useControls('Displacement Config.', {
-        displacementScale: { label: 'Height Scale', value: 0.025, min: 0.0, max: 0.5, step: 0.0001 }
+        displacementScale: { label: 'Height Scale', value: 0.01, min: 0.0, max: 0.5, step: 0.0001 }
     })
 
 
@@ -298,8 +298,8 @@ export default function LayeredMaterialCard({
     } = useControls('Lighting Config. [Ambient, Directional, Point]', {
         ambientLightColor: { value: { r: 0, g: 0, b: 0 }, label: 'AL Color' },
         ambientLightIntensity: { value: 0.03, min: 0, max: 1, step: 0.001, label: 'AL Intensity' },
-        directionalLightColor: { value: { r: 7, g: 7, b: 7 }, label: 'DL Color' },
-        directionalLightIntensity: { value: 0.22, min: 0, max: 1, step: 0.001, label: 'DL Intensity' },
+        directionalLightColor: { value: { r: 23, g: 21, b: 21 }, label: 'DL Color' },
+        directionalLightIntensity: { value: 0.1, min: 0, max: 1, step: 0.001, label: 'DL Intensity' },
         pointLightColor: { value: { r: 121, g: 121, b: 121 }, label: 'PL Color' },
         pointLightIntensity: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL Intensity' },
         pointLightDecay: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL Decay' },
@@ -316,7 +316,7 @@ export default function LayeredMaterialCard({
 
 
     const { useIridescence, iridescenceIntensity } = useControls('Iridescence Fx', {
-        useIridescence: { value: true, label: 'Enable' },
+        useIridescence: { value: false, label: 'Enable' },
         iridescenceIntensity: { value: 0.99, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
     });
 
@@ -339,7 +339,7 @@ export default function LayeredMaterialCard({
 
     
     const { useTransition, transitionSpeed } = useControls('Transition Fx', {
-        useTransition: { value: false, label: 'Enable' },
+        useTransition: { value: true, label: 'Enable' },
         transitionSpeed: { value: 0.8, min: 0, max: 3, label: 'Speed' },
         'mode': {
                 value: 'full',

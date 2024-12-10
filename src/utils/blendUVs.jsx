@@ -128,7 +128,7 @@ export default function blendUVs(
             } else if (blendMode == 1) { // Multiply
                 result = base * overlay;
             } else { // Additive
-                result = base + overlay;
+                result = clamp(base + overlay, 0.0, 1.0);
             }
             gl_FragColor = result;
         }
