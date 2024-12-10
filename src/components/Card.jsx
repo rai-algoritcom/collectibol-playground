@@ -100,7 +100,7 @@ export default function Card() {
                 label: 'Normal ch.'
             },
             base_roughness: {
-                value: true,
+                value: false,
                 label: 'Roughness ch.'
             }
     })
@@ -206,7 +206,7 @@ export default function Card() {
         'Manchas (Grading Textures v2)', {
             'Albedo': { image: texturePaths.gradingV2.manchas.albedo },
             grading_v2_manchas_albedo: {
-                value: true,
+                value: false,
                 label: 'Albedo ch.'
             }
         }

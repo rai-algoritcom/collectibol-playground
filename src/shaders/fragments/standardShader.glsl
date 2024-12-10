@@ -46,7 +46,7 @@ void main() {
 
     // Normalize interpolated normal
     vec3 normalFromMap = (texture2D(normalMap, vUv).rgb * 2.0 - 1.0) * normalIntensity;
-    vec3 normal = normalize(vNormal + normalFromMap);
+    vec3 normal = normalize(-vNormal + normalFromMap);
 
 
     if (useTransition) {
