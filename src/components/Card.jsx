@@ -58,7 +58,7 @@ export default function Card() {
             rascado: {
                 albedo: '/prod/grading/poor/rascado_albedo.png',
                 normal: '/prod/grading/poor/rascado_normal.png',
-                roughness: '/prod/grading/poor/rascado_roughness2.png'
+                roughness: '/prod/grading/poor/rascado_roughness.png'
             },
             scratches: {
                 normal: '/prod/grading/poor/scratches_normal.png'

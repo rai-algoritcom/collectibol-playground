@@ -1,6 +1,12 @@
+varying vec2 vUv;
+varying vec3 vNormal;
+varying vec3 vPosition;
+
 uniform sampler2D albedoMap;       // Base texture
+uniform sampler2D albedoMap2;
 uniform sampler2D gradientMap;     // Gradient/iridescent texture
 uniform sampler2D alphaMap;        // Alpha map
+uniform sampler2D alphaMap2;
 uniform sampler2D roughnessMap;    // Roughness map
 uniform sampler2D normalMap;       // Normal map
 uniform sampler2D fxMask; // Iridescence mask
@@ -16,9 +22,12 @@ uniform vec3 brightnessColor2;    // Second gradient color
 uniform vec3 lightDirection;       // Direction of the light
 uniform bool stripesVisible;
 
-varying vec2 vUv;
-varying vec3 vNormal;
-varying vec3 vPosition;
+uniform int blendMode; 
+uniform sampler2D uDisp;
+uniform float uHoverState;
+uniform bool useTransition;
+
+
 
 void main() {
     vec2 uv = vUv;
@@ -31,12 +40,28 @@ void main() {
     // Sample textures
     vec4 baseColor = texture2D(albedoMap, uv);
     vec4 gradColor = texture2D(gradientMap, uv);
+
     float alphaValue = texture2D(alphaMap, uv).r;
+    float alphaValue2 = texture2D(alphaMap2, vUv).r;
+    float blendedAlpha = alphaValue;
+
     float roughnessValue = texture2D(roughnessMap, uv).r * roughnessIntensity;
 
     // Normalize interpolated normal
     vec3 normalFromMap = (texture2D(normalMap, uv).rgb * 2.0 - 1.0) * normalIntensity;
     vec3 normal = normalize(vNormal + normalFromMap);
+
+
+    if (useTransition) {
+        vec4 albedo1 = texture2D(albedoMap, vUv);
+        vec4 albedo2 = texture2D(albedoMap2, vUv);
+        vec4 disp = texture2D(uDisp, vUv); 
+        float pct = clamp((disp.r - uHoverState) * 20.0, 0., 1.);
+        baseColor = mix(albedo1, albedo2, pct);
+        blendedAlpha = mix(alphaValue2, alphaValue, pct);
+    }
+
+
 
     // === Soft Light & Color Dodge ===
     vec3 softLight = mix(baseColor.rgb, baseColor.rgb * gradColor.rgb * rotationIntensity, 0.5);
@@ -87,5 +112,9 @@ void main() {
     finalColor = mix(finalColor, finalColor * (1.0 - roughnessValue), 0.5);
 
     // Output final color with alpha transparency
-    gl_FragColor = vec4(finalColor, alphaValue);
+    if (blendMode == 1) {
+        gl_FragColor = vec4(finalColor, baseColor.a * blendedAlpha);
+    } else {
+        gl_FragColor = vec4(finalColor, alphaValue);
+    }
 }
