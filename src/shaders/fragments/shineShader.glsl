@@ -4,7 +4,9 @@ varying vec3 vPosition;
 varying mat3 vNormalMatrix;
 
 uniform sampler2D albedoMap;
+uniform sampler2D albedoMap2;
 uniform sampler2D alphaMap;
+uniform sampler2D alphaMap2;
 uniform sampler2D roughnessMap;
 uniform sampler2D normalMap;
 uniform sampler2D fxMask;
@@ -31,16 +33,36 @@ uniform float shineIntensity; // Intensity of the iridescence
 uniform vec3 shineColor1; // First gradient color
 uniform vec3 shineColor2; // Second gradient color
 
+uniform int blendMode; 
+uniform sampler2D uDisp;
+uniform float uHoverState; 
+uniform bool useTransition;
+
 
 void main() {
     // Sample textures
     vec4 albedoColor = texture2D(albedoMap, vUv);
+
     float alphaValue = texture2D(alphaMap, vUv).r;
+    float alphaValue2 = texture2D(alphaMap2, vUv).r;
+    float blendedAlpha = alphaValue;
+
     float roughnessValue = texture2D(roughnessMap, vUv).r * roughnessIntensity;
 
     // Normalize interpolated normal
     vec3 normalFromMap = (texture2D(normalMap, vUv).rgb * 2.0 - 1.0) * normalIntensity;
     vec3 normal = normalize(vNormal + normalFromMap);
+
+
+    if (useTransition) {    
+        vec4 albedo1 = texture2D(albedoMap, vUv);
+        vec4 albedo2 = texture2D(albedoMap2, vUv);
+        vec4 disp = texture2D(uDisp, vUv);
+        float pct = clamp((disp.r - uHoverState) * 20.0, 0., 1.);
+        albedoColor = mix(albedo1, albedo2, pct);
+        blendedAlpha = mix(alphaValue2, alphaValue, pct);
+    }
+
 
     // View direction
     vec3 viewDir = normalize(cameraPosition - vPosition);
@@ -102,6 +124,10 @@ void main() {
     vec3 finalLighting = clamp(roughnessEffect * albedoColor.rgb, 0.0, 1.0);
 
     // Output with alpha transparency
-    gl_FragColor = vec4(finalLighting, alphaValue);
+    if (blendMode == 1) {
+        gl_FragColor = vec4(finalLighting, albedoColor.a * blendedAlpha);
+    } else {
+        gl_FragColor = vec4(finalLighting, alphaValue);
+    }
 }
 
