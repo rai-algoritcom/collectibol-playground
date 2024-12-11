@@ -14,7 +14,7 @@ export default function Card() {
             albedo: '/prod/base/albido.jpg',
             height: '/prod/base/height.png',
             normal: '/prod/base/normal.png',
-            roughness: '/fx/debug-roughness.png' // '/prod/base/roughness.jpg',
+            roughness: '/prod/base/roughness.jpg',
         },
         pattern: {
             albedo2: '/fx/fluid.jpg',
@@ -43,25 +43,26 @@ export default function Card() {
         },
         gradingV2: {
             doblez: {
-                albedo: '/prod/grading/poor/doblez_albedo.png',
-                normal: '/prod/grading/poor/doblez_normal.png',
-                roughness: '/prod/grading/poor/doblez_roughness.png'
+                albedo: '/prod/grading/poor2/doblez_albedo.png',
+                normal: '/prod/grading/poor2/doblez_normal.png',
+                roughness: '/prod/grading/poor2/doblez_roughness.png'
             },
             exterior: {
-                albedo: '/prod/grading/poor/exterior_albedo.png',
-                normal: '/prod/grading/poor/exterior_normal.png',
-                roughness: '/prod/grading/poor/exterior_roughness.png'
+                albedo: '/prod/grading/poor2/exterior_albedo.png',
+                // normal: '/prod/grading/poor/exterior_normal.png',
+                roughness: '/prod/grading/poor2/exterior_roughness.png'
             },
             manchas: {
-                albedo: '/prod/grading/poor/manchas_albedo.png'
+                albedo: '/prod/grading/poor2/manchas_albedo.png'
             },
             rascado: {
-                albedo: '/prod/grading/poor/rascado_albedo.png',
-                normal: '/prod/grading/poor/rascado_normal.png',
-                roughness: '/prod/grading/poor/rascado_roughness.png'
+                albedo: '/prod/grading/poor2/rascado_albedo.png',
+                normal: '/prod/grading/poor2/rascado_normal.png',
+                roughness: '/prod/grading/poor2/rascado_roughness.png'
             },
             scratches: {
-                normal: '/prod/grading/poor/scratches_normal.png'
+                normal: '/prod/grading/poor2/scratches_normal.png',
+                roughness: '/prod/grading/poor2/scratches_roughness.png'
             }
         },
         fx: {
@@ -100,7 +101,7 @@ export default function Card() {
                 label: 'Normal ch.'
             },
             base_roughness: {
-                value: true,
+                value: false,
                 label: 'Roughness ch.'
             }
     })
@@ -182,7 +183,7 @@ export default function Card() {
         },
     )
 
-    const { grading_v2_exterior_albedo, grading_v2_exterior_normal, grading_v2_exterior_roughness } = useControls(
+    const { grading_v2_exterior_albedo, grading_v2_exterior_roughness } = useControls(
         'Exterior (Grading Textures v2)', {
             'Albedo': { image: texturePaths.gradingV2.exterior.albedo },
             'Normal': { image: texturePaths.gradingV2.exterior.normal },
@@ -190,10 +191,6 @@ export default function Card() {
             grading_v2_exterior_albedo: {
                 value: true,
                 label: 'Albedo ch.'
-            },
-            grading_v2_exterior_normal: {
-                value: true,
-                label: 'Normal ch.'
             },
             grading_v2_exterior_roughness: {
                 value: true,
@@ -206,7 +203,7 @@ export default function Card() {
         'Manchas (Grading Textures v2)', {
             'Albedo': { image: texturePaths.gradingV2.manchas.albedo },
             grading_v2_manchas_albedo: {
-                value: false,
+                value: true,
                 label: 'Albedo ch.'
             }
         }
@@ -232,12 +229,16 @@ export default function Card() {
         }
     )
 
-    const { grading_v2_scratches_normal } = useControls(
+    const { grading_v2_scratches_normal, grading_v2_scratches_roughness } = useControls(
         'Scratches (Grading Textures v2)', {
             'Normal': { image: texturePaths.gradingV2.scratches.normal },
             grading_v2_scratches_normal: {
                 value: true,
                 label: 'Normal ch.'
+            },
+            grading_v2_scratches_roughness: {
+                value: true,
+                label: 'Roughness ch.'
             }
         }
     )
@@ -264,6 +265,7 @@ export default function Card() {
         grading_v2_doblez_roughness,
         grading_v2_exterior_roughness,
         grading_v2_rascado_roughness,
+        grading_v2_scratches_roughness
     }
 
     const heightToggles = {
@@ -277,7 +279,6 @@ export default function Card() {
         main_interest_normal,
         layout_normal,
         grading_v2_doblez_normal,
-        grading_v2_exterior_normal,
         grading_v2_rascado_normal,
         grading_v2_scratches_normal,
     }

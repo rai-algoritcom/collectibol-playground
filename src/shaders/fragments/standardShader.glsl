@@ -87,7 +87,7 @@ void main() {
                       (0.6 * diffusePoint + 0.4 * specularPoint); // Blend diffuse & specular
 
     // Combine lighting contributions
-    vec3 lighting = directionalLight;
+    vec3 lighting = ambientLight + directionalLight + pointLight;
 
     // Soften roughness by blending lighting with a roughness-adjusted diffuse
     vec3 roughnessEffect = mix(lighting, lighting * (1.0 - roughnessValue), roughnessPresence);

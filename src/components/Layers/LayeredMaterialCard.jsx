@@ -194,6 +194,10 @@ export default function LayeredMaterialCard({
             pos: posRascado,
             rot: rotRascado
         },
+        scratches: {
+            pos: posScratches,
+            rot: rotScratches
+        }
     }
     
     const gradingNormalsProps = {
@@ -264,14 +268,14 @@ export default function LayeredMaterialCard({
     const { roughnessIntensity, roughnessPresence } = useControls('Roughness Config.', {
         roughnessIntensity: {
             label: 'Intensity',
-            value: 1.4,
+            value: 1.1,
             min: 0.0,
             max: 2.0,
             step: 0.1,
         },
         roughnessPresence: {
             label: 'Presence',
-            value: 0.5,
+            value: 0.1,
             min: 0.0,
             max: 1.0,
             step: 0.1,
@@ -297,8 +301,8 @@ export default function LayeredMaterialCard({
         pointLightDecay
     } = useControls('Lighting Config. [Ambient, Directional, Point]', {
         ambientLightColor: { value: { r: 0, g: 0, b: 0 }, label: 'AL Color' },
-        ambientLightIntensity: { value: 0.03, min: 0, max: 1, step: 0.001, label: 'AL Intensity' },
-        directionalLightColor: { value: { r: 23, g: 21, b: 21 }, label: 'DL Color' },
+        ambientLightIntensity: { value: 0.00, min: 0, max: 1, step: 0.001, label: 'AL Intensity' },
+        directionalLightColor: { value: { r: 16, g: 16, b: 16 }, label: 'DL Color' },
         directionalLightIntensity: { value: 0.1, min: 0, max: 1, step: 0.001, label: 'DL Intensity' },
         pointLightColor: { value: { r: 121, g: 121, b: 121 }, label: 'PL Color' },
         pointLightIntensity: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL Intensity' },
