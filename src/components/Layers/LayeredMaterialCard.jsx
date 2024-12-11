@@ -320,8 +320,8 @@ export default function LayeredMaterialCard({
 
 
     const { useIridescence, iridescenceIntensity } = useControls('Iridescence Fx', {
-        useIridescence: { value: false, label: 'Enable' },
-        iridescenceIntensity: { value: 0.99, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
+        useIridescence: { value: true, label: 'Enable' },
+        iridescenceIntensity: { value: 0.45, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
     });
 
     

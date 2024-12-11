@@ -157,7 +157,7 @@ export default function blendUVs(
 
             } else { // Additive
               result = base * overlay;
-                result = clamp(base + overlay, 0.0, 1.0);
+              result = clamp(base + overlay, 0.0, 1.0);
             }
             gl_FragColor = result;
         }
