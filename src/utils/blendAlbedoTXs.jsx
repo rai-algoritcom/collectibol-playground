@@ -18,13 +18,14 @@ export function blendAlbedoTXs(
 ) {
     const { base, pattern, main_interest, layout, gradingv2 } = textures 
 
-    const { manchas, doblez, rascado } = gradingAlbedoProps
+    const { manchas, doblez, rascado, scratches } = gradingAlbedoProps
 
     const { 
         gradingDoblez,
         gradingExterior, 
         gradingManchas, 
-        gradingRascado
+        gradingRascado,
+        gradingScratches
     } = gradingv2
 
     const { r, g, b } = layoutColor
@@ -45,7 +46,8 @@ export function blendAlbedoTXs(
         grading_v2_doblez_albedo,
         grading_v2_exterior_albedo,
         grading_v2_manchas_albedo,
-        grading_v2_rascado_albedo
+        grading_v2_rascado_albedo,
+        grading_v2_scratches_albedo
     } = controls
 
     let blendedAlbedo = null
@@ -58,6 +60,7 @@ export function blendAlbedoTXs(
     if (grading_v2_exterior_albedo) blendedAlbedo = gradingExterior.albedo;
     if (grading_v2_manchas_albedo) blendedAlbedo = gradingManchas.albedo;
     if (grading_v2_rascado_albedo) blendedAlbedo = gradingRascado.albedo;
+    if (grading_v2_scratches_albedo) blendedAlbedo = gradingScratches.albedo;
     if (base_albedo) blendedAlbedo = base.albedo;
 
 
@@ -70,6 +73,7 @@ export function blendAlbedoTXs(
     if (grading_v2_exterior_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, gradingExterior.albedo, renderer);
     if (grading_v2_manchas_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, gradingManchas.albedo, renderer, 0, true, manchas.pos, manchas.rot);
     if (grading_v2_rascado_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, gradingRascado.albedo, renderer, 0, true, rascado.pos, rascado.rot);
+    if (grading_v2_scratches_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, gradingScratches.albedo, renderer, 0, true, scratches.pos, scratches.rot);
     
 
     return blendedAlbedo

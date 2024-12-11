@@ -104,7 +104,7 @@ export default function blendUVs(
 
             if (useGrading) {
               // Transform UVs for overlay map
-              vec2 centeredUV = uv * 0.55 - 0.25; 
+              vec2 centeredUV = uv * 0.25 - 0.25; 
               
               // Handle aspect ratio adjustment (maintain overlay texture's aspect)
               float aspectScale = overlayAspectRatio / meshAspectRatio;
@@ -131,7 +131,7 @@ export default function blendUVs(
             }
 
        
-            if (blendMode == 0) { // Normal
+            if (blendMode == 0) { // Basic [x Albedo, etc.]
 
                 if (useColor) {
                   coloredOverlay = mix(overlay.rgb, color, 1.);
@@ -155,7 +155,7 @@ export default function blendUVs(
               result = vec4(packedNormal, 1.0);
 
 
-            } else { // Additive
+            } else { // Additive [x Roughness]
               result = base * overlay;
               result = clamp(base + overlay, 0.0, 1.0);
             }

@@ -227,13 +227,17 @@ export default function LayeredMaterialCard({
         rascado: {
             pos: posRascado,
             rot: rotRascado
-        }
+        },
+        scratches: {
+            pos: posScratches,
+            rot: rotScratches
+        },
     }
 
     // Blended Textures
     const blendedAlbedoTextures = useMemo(() => {
         return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps);
-    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez]);
+    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches]);
 
     // const blendedAlbedo2Textures = useMemo(() => {
     //     return blendAlbedoTXs(gl, textures, albedoToggles, true, false, layoutColor);
@@ -257,7 +261,7 @@ export default function LayeredMaterialCard({
 
     const blendedRoughnessTextures = useMemo(() => {
         return blendRoughnessTXs(gl, textures, roughnessToggles, gradingRoughnessProps);
-    }, [gl, textures, roughnessToggles, posRascado, rotRascado, posDoblez, rotDoblez ]);
+    }, [gl, textures, roughnessToggles, posRascado, rotRascado, posDoblez, rotDoblez, posScratches, rotScratches ]);
 
     const blendedNormalTextures = useMemo(() => {
         return blendNormalTXs(gl, textures, normalToggles, gradingNormalsProps);
@@ -275,7 +279,7 @@ export default function LayeredMaterialCard({
         },
         roughnessPresence: {
             label: 'Presence',
-            value: 0.1,
+            value: 0.55,
             min: 0.0,
             max: 1.0,
             step: 0.1,
@@ -302,7 +306,7 @@ export default function LayeredMaterialCard({
     } = useControls('Lighting Config. [Ambient, Directional, Point]', {
         ambientLightColor: { value: { r: 0, g: 0, b: 0 }, label: 'AL Color' },
         ambientLightIntensity: { value: 0.00, min: 0, max: 1, step: 0.001, label: 'AL Intensity' },
-        directionalLightColor: { value: { r: 16, g: 16, b: 16 }, label: 'DL Color' },
+        directionalLightColor: { value: { r: 13, g: 13, b: 13 }, label: 'DL Color' },
         directionalLightIntensity: { value: 0.1, min: 0, max: 1, step: 0.001, label: 'DL Intensity' },
         pointLightColor: { value: { r: 121, g: 121, b: 121 }, label: 'PL Color' },
         pointLightIntensity: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL Intensity' },
@@ -321,7 +325,7 @@ export default function LayeredMaterialCard({
 
     const { useIridescence, iridescenceIntensity } = useControls('Iridescence Fx', {
         useIridescence: { value: true, label: 'Enable' },
-        iridescenceIntensity: { value: 1.4, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
+        iridescenceIntensity: { value: 0.6, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
     });
 
     
