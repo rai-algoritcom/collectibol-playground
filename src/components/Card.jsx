@@ -186,7 +186,6 @@ export default function Card() {
     const { grading_v2_exterior_albedo, grading_v2_exterior_roughness } = useControls(
         'Exterior (Grading Textures v2)', {
             'Albedo': { image: texturePaths.gradingV2.exterior.albedo },
-            'Normal': { image: texturePaths.gradingV2.exterior.normal },
             'Roughness': { image: texturePaths.gradingV2.exterior.roughness },
             grading_v2_exterior_albedo: {
                 value: true,
@@ -232,6 +231,7 @@ export default function Card() {
     const { grading_v2_scratches_normal, grading_v2_scratches_roughness } = useControls(
         'Scratches (Grading Textures v2)', {
             'Normal': { image: texturePaths.gradingV2.scratches.normal },
+            'Roughness': { image: texturePaths.gradingV2.scratches.roughness },
             grading_v2_scratches_normal: {
                 value: true,
                 label: 'Normal ch.'
