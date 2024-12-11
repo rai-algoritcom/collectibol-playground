@@ -68,7 +68,8 @@ export default function Card() {
         fx: {
             irisMask: '/fx/iris-mask.jpg',
             iridescence: '/fx/iris4.jpg',
-            brightness: '/fx/LamineCard.png',
+            brightnessMask: '/fx/LamineCard.png',
+            brightness: '/fx/brightness.jpg',
             shine: '/prod/main_interest/ao.jpg',
             refraction: '/fx/pattern.jpg',
             transition: '/fx/trans.jpg'
@@ -322,10 +323,11 @@ export default function Card() {
         'Fx Textures', {
             'Iridescence': { image: texturePaths.fx.iridescence, onChange: (v) => updateTexture('fx', 'iridescence', v) },
             'Iris Mask': { image: texturePaths.fx.irisMask, onChange: (v) => updateTexture('fx', 'irisMask', v) },
-            'Brightness Mask': { image: texturePaths.fx.brightness, onChange: (v) => updateTexture('fx', 'brightness', v) }, 
+            'Brightness Mask': { image: texturePaths.fx.brightnessMask, onChange: (v) => updateTexture('fx', 'brightness', v) }, 
             'Shine Mask': { image: texturePaths.fx.shine, onChange: (v) => updateTexture('fx', 'shine', v) },
             'Refraction': { image: texturePaths.fx.refraction, onChange: (v) => updateTexture('fx', 'refraction', v) },
-            'Transition': { image: texturePaths.fx.transition, onChange: (v) => updateTexture('fx', 'transition', v) }
+            'Transition': { image: texturePaths.fx.transition, onChange: (v) => updateTexture('fx', 'transition', v) },
+            'Brightness': { image: texturePaths.fx.brightness, onChange: (v) => updateTexture('fx', 'brightness', v) },
         }
     )
 

@@ -321,7 +321,7 @@ export default function LayeredMaterialCard({
 
     const { useIridescence, iridescenceIntensity } = useControls('Iridescence Fx', {
         useIridescence: { value: true, label: 'Enable' },
-        iridescenceIntensity: { value: 0.45, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
+        iridescenceIntensity: { value: 1.4, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
     });
 
     
@@ -858,8 +858,8 @@ export default function LayeredMaterialCard({
                                 heightMap: { value: blendedHeightTextures },
                                 roughnessMap: { value: blendedRoughnessTextures },
                                 normalMap: { value: blendedNormalTextures },
-                                fxMask: { value: useIridescence ? textures.fx.irisMask : useBrightness ? textures.fx.brightness : textures.fx.shine },
-                                iridescenceMask: { value: textures.fx.iridescence },
+                                fxMask: { value: useIridescence ? textures.fx.irisMask : useBrightness ? textures.fx.brightnessMask : textures.fx.shine },
+                                iridescenceMask: { value: useIridescence ? textures.fx.iridescence : textures.fx.brightness },
 
                                 // Transition
                                 blendMode: { value: blendMode },

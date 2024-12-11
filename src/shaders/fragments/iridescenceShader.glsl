@@ -106,7 +106,7 @@ void main() {
         float fxMaskValue = texture2D(fxMask, vUv).r;
 
         // Angle-dependent iridescence intensity
-        float viewAngle = abs(dot(normal, viewDir));
+        float viewAngle = 1.0 - abs(dot(normal, viewDir));
         float smoothFactor = smoothstep(0.0, 1.0, viewAngle);
 
         // Apply iridescence effect
