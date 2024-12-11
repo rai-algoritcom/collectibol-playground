@@ -165,9 +165,9 @@ export default function Card() {
 
     const { grading_v2_doblez_albedo, grading_v2_doblez_normal, grading_v2_doblez_roughness } = useControls(
         'Doblez (Grading Textures v2)', {
-            'Albedo': { image: texturePaths.gradingV2.doblez.albedo },
-            'Normal': { image: texturePaths.gradingV2.doblez.normal  },
-            'Roughness': { image: texturePaths.gradingV2.doblez.roughness },
+            'Albedo': { image: texturePaths.gradingV2.doblez.albedo, onChange: (v) => updateGradingTexture('gradingV2', 'doblez', 'albedo', v) } ,
+            'Normal': { image: texturePaths.gradingV2.doblez.normal, onChange: (v) => updateGradingTexture('gradingV2', 'doblez', 'normal', v)   },
+            'Roughness': { image: texturePaths.gradingV2.doblez.roughness, onChange: (v) => updateGradingTexture('gradingV2', 'doblez', 'roughness', v)  },
             grading_v2_doblez_albedo: {
                 value: true,
                 label: 'Albedo ch.'
@@ -185,8 +185,8 @@ export default function Card() {
 
     const { grading_v2_exterior_albedo, grading_v2_exterior_roughness } = useControls(
         'Exterior (Grading Textures v2)', {
-            'Albedo': { image: texturePaths.gradingV2.exterior.albedo },
-            'Roughness': { image: texturePaths.gradingV2.exterior.roughness },
+            'Albedo': { image: texturePaths.gradingV2.exterior.albedo, onChange: (v) => updateGradingTexture('gradingV2', 'exterior', 'albedo', v)  },
+            'Roughness': { image: texturePaths.gradingV2.exterior.roughness, onChange: (v) => updateGradingTexture('gradingV2', 'exterior', 'roughness', v)  },
             grading_v2_exterior_albedo: {
                 value: true,
                 label: 'Albedo ch.'
@@ -200,7 +200,7 @@ export default function Card() {
 
     const { grading_v2_manchas_albedo } = useControls(
         'Manchas (Grading Textures v2)', {
-            'Albedo': { image: texturePaths.gradingV2.manchas.albedo },
+            'Albedo': { image: texturePaths.gradingV2.manchas.albedo, onChange: (v) => updateGradingTexture('gradingV2', 'manchas', 'albedo', v)  },
             grading_v2_manchas_albedo: {
                 value: true,
                 label: 'Albedo ch.'
@@ -210,9 +210,9 @@ export default function Card() {
 
     const { grading_v2_rascado_albedo, grading_v2_rascado_normal, grading_v2_rascado_roughness } = useControls(
         'Rascado (Grading Textures v2)', {
-            'Albedo': { image: texturePaths.gradingV2.rascado.albedo },
-            'Normal': { image: texturePaths.gradingV2.rascado.normal },
-            'Roughness': { image: texturePaths.gradingV2.rascado.roughness },
+            'Albedo': { image: texturePaths.gradingV2.rascado.albedo, onChange: (v) => updateGradingTexture('gradingV2', 'rascado', 'albedo', v)  },
+            'Normal': { image: texturePaths.gradingV2.rascado.normal, onChange: (v) => updateGradingTexture('gradingV2', 'rascado', 'normal', v) },
+            'Roughness': { image: texturePaths.gradingV2.rascado.roughness, onChange: (v) => updateGradingTexture('gradingV2', 'rascado', 'roughness', v) },
             grading_v2_rascado_albedo: {
                 value: true,
                 label: 'Albedo ch.'
@@ -230,8 +230,8 @@ export default function Card() {
 
     const { grading_v2_scratches_normal, grading_v2_scratches_roughness } = useControls(
         'Scratches (Grading Textures v2)', {
-            'Normal': { image: texturePaths.gradingV2.scratches.normal },
-            'Roughness': { image: texturePaths.gradingV2.scratches.roughness },
+            'Normal': { image: texturePaths.gradingV2.scratches.normal, onChange: (v) => updateGradingTexture('gradingV2', 'scratches', 'normal', v) },
+            'Roughness': { image: texturePaths.gradingV2.scratches.roughness, onChange: (v) => updateGradingTexture('gradingV2', 'scratches', 'roughness', v) },
             grading_v2_scratches_normal: {
                 value: true,
                 label: 'Normal ch.'
@@ -339,6 +339,19 @@ export default function Card() {
             },
         }));
     };
+
+    
+    const updateGradingTexture = (category, subcaregory, type, value) => {
+        setTexturePaths((prev) => ({
+            ...prev,
+            [category]: {
+                ...prev[category],
+                [type]: value,
+            },
+        }));
+    };
+
+
 
     const baseTextures = useTexture(texturePaths.base);
     const patternTexture = useTexture(texturePaths.pattern);
