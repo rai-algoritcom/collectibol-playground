@@ -14,7 +14,7 @@ export default function Card() {
             albedo: '/prod/base/albido.jpg',
             height: '/prod/base/height.png',
             normal: '/prod/base/normal.png',
-            roughness: '/prod/base/roughness.jpg',
+            roughness: '/fx/debug-roughness.png' // '/prod/base/roughness.jpg',
         },
         pattern: {
             albedo2: '/fx/fluid.jpg',
@@ -100,7 +100,7 @@ export default function Card() {
                 label: 'Normal ch.'
             },
             base_roughness: {
-                value: false,
+                value: true,
                 label: 'Roughness ch.'
             }
     })

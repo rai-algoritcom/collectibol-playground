@@ -46,7 +46,7 @@ void main() {
 
     // Normalize interpolated normal
     vec3 normalFromMap = (texture2D(normalMap, vUv).rgb * 2.0 - 1.0) * normalIntensity;
-    vec3 normal = normalize(-vNormal + normalFromMap);
+    vec3 normal = normalize(vNormal + normalFromMap);
 
 
     if (useTransition) {
@@ -87,7 +87,7 @@ void main() {
                       (0.6 * diffusePoint + 0.4 * specularPoint); // Blend diffuse & specular
 
     // Combine lighting contributions
-    vec3 lighting = ambientLight + directionalLight + pointLight;
+    vec3 lighting = directionalLight;
 
     // Soften roughness by blending lighting with a roughness-adjusted diffuse
     vec3 roughnessEffect = mix(lighting, lighting * (1.0 - roughnessValue), roughnessPresence);
