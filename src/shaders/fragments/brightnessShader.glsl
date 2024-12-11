@@ -106,8 +106,8 @@ void main() {
         float fxMaskValue = texture2D(fxMask, vUv).r;
 
         // Angle-dependent iridescence intensity
-        float viewAngle = 1.0 - abs(dot(normal, viewDir));
-        float smoothFactor = smoothstep(0.0, 1.0, viewAngle);
+        float viewAngle =abs(dot(vNormal, viewDir));
+        float smoothFactor = smoothstep(0.4, 1.0, viewAngle);
 
         // Apply iridescence effect
         vec3 iridescenceEffect = iridescenceColor * fxMaskValue * smoothFactor * iridescenceIntensity;
@@ -121,4 +121,3 @@ void main() {
         gl_FragColor = vec4(finalLighting, alphaValue);
     }
 }
-
