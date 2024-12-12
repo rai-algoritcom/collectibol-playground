@@ -426,8 +426,8 @@ export default function LayeredMaterialCard({
 
 
     useControls({
-        'Snapshot .jpg': button(() => takeScreenshot(gl, scene, camera, planeRef.current)),
-        'Snapshot .png': button(() => takeScreenshot(gl, scene, camera, planeRef.current, true))
+        'Snapshot .jpg': button(async () => await takeScreenshot(gl, scene, camera, planeRef.current)),
+        'Snapshot .png': button(async () => await takeScreenshot(gl, scene, camera, planeRef.current, true))
     }, [scene])
 
 
