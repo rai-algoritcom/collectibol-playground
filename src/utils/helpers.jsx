@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import {toPng} from "html-to-image";
+import { toPng } from "html-to-image";
 
 
 export const randomInRange = (min, max) => Math.random() * (max - min) + min
@@ -58,10 +58,7 @@ export const downloadJSON = (cfg) => {
 
 
 
-
-
-
-export const takeScreenshot = async (gl, scene, camera, mesh, htmlElement, transparent = false) => {
+export const takeScreenshot = async (gl, scene, camera, mesh, htmlElements = [], transparent = false, isMin = false) => {
   const originalPosition = camera.position.clone(); // Save original camera position
   const originalRotation = camera.rotation.clone(); // Save original camera rotation
   const originalAspect = camera.aspect; // Save original aspect ratio
@@ -115,24 +112,7 @@ export const takeScreenshot = async (gl, scene, camera, mesh, htmlElement, trans
   // Generate WebGL canvas image
   const webglImage = gl.domElement.toDataURL("image/png");
 
-  // Calculate HTML element size and position relative to the bottom of the mesh
-  const htmlRect = htmlElement.getBoundingClientRect();
-  const meshScreenPosition = new THREE.Vector3(bottomPosition.x, bottomPosition.y, bottomPosition.z);
-  meshScreenPosition.project(camera);
-
-  const meshScreenX = ((meshScreenPosition.x + 1) / 2) * width;
-  const meshScreenY = ((1 - meshScreenPosition.y) / 2) * height;
-
-  // Adjust HTML width with a scaling factor
-  const widthScalingFactor = 1.4; // Increase by 20%
-  const heightScalingFactor = 1.4;
-  const meshScaleX = ((htmlRect.width / window.innerWidth) * width) * widthScalingFactor;
-  const meshScaleY = ((htmlRect.height / window.innerHeight) * height) * heightScalingFactor;
-
-  // Capture HTML content
-  const htmlImage = await toPng(htmlElement);
-
-  // Combine the WebGL and HTML images
+  // Prepare the combined canvas
   const combinedCanvas = document.createElement("canvas");
   combinedCanvas.width = width;
   combinedCanvas.height = height;
@@ -148,15 +128,38 @@ export const takeScreenshot = async (gl, scene, camera, mesh, htmlElement, trans
     };
   });
 
-  // Draw HTML content aligned with the bottom of the mesh
-  const htmlImg = new Image();
-  htmlImg.src = htmlImage;
-  await new Promise((resolve) => {
-    htmlImg.onload = () => {
-      ctx.drawImage(htmlImg, meshScreenX - meshScaleX / 2, meshScreenY - meshScaleY, meshScaleX, meshScaleY);
-      resolve();
-    };
-  });
+  let index = 0
+  // Process each HTML element
+  for (const htmlElement of htmlElements) {
+    // Capture HTML content
+    const htmlImage = await toPng(htmlElement);
+
+    // Calculate HTML element position and size relative to the mesh
+    const htmlRect = htmlElement.getBoundingClientRect();
+    const meshScreenPosition = new THREE.Vector3(bottomPosition.x, bottomPosition.y - ((isMin && index == 0) ? -1 : index > 0 ? -.125 : 0), bottomPosition.z);
+    meshScreenPosition.project(camera);
+
+    const meshScreenX = ((meshScreenPosition.x + 1) / 2) * width;
+    const meshScreenY = ((1 - meshScreenPosition.y) / 2) * height;
+
+    const widthScalingFactor = (isMin && index == 0) ? .98 : 1.4; // Adjust for consistent scaling
+    const heightScalingFactor = (isMin && index == 0) ? .98 : 1.4;
+
+    const meshScaleX = ((htmlRect.width / window.innerWidth) * width) * widthScalingFactor;
+    const meshScaleY = ((htmlRect.height / window.innerHeight) * height) * heightScalingFactor;
+
+    // Draw HTML content aligned with the mesh
+    const htmlImg = new Image();
+    htmlImg.src = htmlImage;
+    await new Promise((resolve) => {
+      htmlImg.onload = () => {
+        ctx.drawImage(htmlImg, meshScreenX - meshScaleX / 2, meshScreenY - meshScaleY, meshScaleX, meshScaleY);
+        resolve();
+      };
+    });
+
+    index++
+  }
 
   // Save combined screenshot
   const screenshot = combinedCanvas.toDataURL("image/png");

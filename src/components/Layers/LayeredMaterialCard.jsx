@@ -89,7 +89,7 @@ export default function LayeredMaterialCard({
     normalToggles, 
     roughnessToggles, 
     alphaToggles, 
-    heightToggles
+    heightToggles,
 }) {
     const { gl, scene, camera } = useThree(); 
 
@@ -425,9 +425,9 @@ export default function LayeredMaterialCard({
 
 
     useControls({
-        'Snapshot .jpg': button(async () => await takeScreenshot(gl, scene, camera, planeRef.current, footerRef.current)),
-        'Snapshot .png': button(() => takeScreenshot(gl, scene, camera, planeRef.current, footerRef.current, true))
-    }, [scene])
+        'Snapshot .jpg': button(async () => await takeScreenshot(gl, scene, camera, planeRef.current, [footerRef.current, skillsRef.current], false, useTransition && blendMode == 1)),
+        'Snapshot .png': button(() => takeScreenshot(gl, scene, camera, planeRef.current, [footerRef.current, skillsRef.current], true, useTransition && blendMode == 1)),
+    }, [scene, useTransition, blendMode])
 
 
     useControls({

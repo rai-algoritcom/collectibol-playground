@@ -4,7 +4,9 @@ import {
 } from "@react-three/drei";
 import Card from "./Card.jsx";
 
-export const Experience = () => {
+export const Experience = ({
+}) => {
+
   return (
     <>
         {/* Camera */}
