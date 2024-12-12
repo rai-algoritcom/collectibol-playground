@@ -29,7 +29,6 @@ import {
     iridescenceFragmentShader,
     brightnessFragmentShader,
     shineFragmentShader,
-    transitionFragmentShader,
     refractionFragmentShader
 } from '../../shaders/fragments/index'
 
@@ -426,8 +425,8 @@ export default function LayeredMaterialCard({
 
 
     useControls({
-        'Snapshot .jpg': button(async () => await takeScreenshot(gl, scene, camera, planeRef.current)),
-        'Snapshot .png': button(async () => await takeScreenshot(gl, scene, camera, planeRef.current, true))
+        'Snapshot .jpg': button(async () => await takeScreenshot(gl, scene, camera, planeRef.current, footerRef.current)),
+        'Snapshot .png': button(() => takeScreenshot(gl, scene, camera, planeRef.current, footerRef.current, true))
     }, [scene])
 
 
@@ -500,14 +499,6 @@ export default function LayeredMaterialCard({
                     folding_y: foldY,
                     folding_rotation: foldRotation
                 },
-                // text_overlay: {
-                //     font_color: fontColor,
-                //     font_size: fontSize,
-                //     max_widt: maxWidth,
-                //     line_height: lineHeight, 
-                //     letter_spacing: letterSpacing, 
-                //     text_content: textContent
-                // },
                 vertex_fx: {
                     id: useGlitch 
                     ? 
@@ -738,13 +729,6 @@ export default function LayeredMaterialCard({
         foldX, 
         foldY, 
         foldRotation,
-        // Text overlay 
-        // fontColor, 
-        // fontSize, 
-        // maxWidth, 
-        // lineHeight, 
-        // letterSpacing, 
-        // textContent,
         // 
         blendMode,
     ])
@@ -1091,22 +1075,6 @@ export default function LayeredMaterialCard({
                     />
                 </mesh>
             )}
-
-            {/* {<Text
-                material-side={THREE.FrontSide}
-                color={fontColor}
-                fontSize={fontSize}
-                maxWidth={maxWidth}
-                lineHeight={lineHeight}
-                letterSpacing={letterSpacing}
-                textAlign={'center'}
-                font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
-                anchorX="center"
-                anchorY="top"
-                position={[0, -1, .1]}
-            >
-                {textContent}
-            </Text>} */}
 
             
             <SkillsCard 

@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import {toPng} from "html-to-image";
 
 
 export const randomInRange = (min, max) => Math.random() * (max - min) + min
@@ -57,18 +58,21 @@ export const downloadJSON = (cfg) => {
 
 
 
-export const takeScreenshot = (gl, scene, camera, mesh, transparent = false) => {
+
+
+
+export const takeScreenshot = async (gl, scene, camera, mesh, htmlElement, transparent = false) => {
   const originalPosition = camera.position.clone(); // Save original camera position
   const originalRotation = camera.rotation.clone(); // Save original camera rotation
   const originalAspect = camera.aspect; // Save original aspect ratio
 
   // Enable transparency
-  const ogBackground = scene.background
+  const ogBackground = scene.background;
 
   if (transparent) {
     gl.setClearColor(0x000000, 0); // Fully transparent
     gl.clear(); // Clear the frame buffer
-    scene.background = null;   
+    scene.background = null;
   }
 
   // Ensure the mesh's world matrix is up-to-date
@@ -81,9 +85,13 @@ export const takeScreenshot = (gl, scene, camera, mesh, transparent = false) => 
   const center = new THREE.Vector3();
   boundingBox.getCenter(center);
 
+  // Adjust the center to the bottom of the mesh
+  const bottomPosition = center.clone();
+  bottomPosition.y -= size.y / 2; // Move to the bottom of the mesh
+
   // Calculate distance required to fit the entire mesh
   const maxDimension = Math.max(size.x, size.y, size.z);
-  const marginMultiplier = 1.1; // Adjust this for larger/smaller margins (e.g., 1.1 for 10%)
+  const marginMultiplier = 1.1; // Adjust this for larger/smaller margins
   const distance = (maxDimension * marginMultiplier) / (2 * Math.tan((camera.fov * Math.PI) / 360)); // Perspective
 
   // Adjust camera position to center the mesh with added margins
@@ -104,23 +112,58 @@ export const takeScreenshot = (gl, scene, camera, mesh, transparent = false) => 
   // Render the scene
   gl.render(scene, camera);
 
-  // Generate the screenshot
-  if (transparent) {
-    const screenshot = gl.domElement.toDataURL("image/png");
-    const link = document.createElement("a");
-    link.href = screenshot;
-    link.download = "screenshoot.png";
-    link.click();
+  // Generate WebGL canvas image
+  const webglImage = gl.domElement.toDataURL("image/png");
 
-    scene.background = ogBackground
+  // Calculate HTML element size and position relative to the bottom of the mesh
+  const htmlRect = htmlElement.getBoundingClientRect();
+  const meshScreenPosition = new THREE.Vector3(bottomPosition.x, bottomPosition.y, bottomPosition.z);
+  meshScreenPosition.project(camera);
 
-  } else {
-    const screenshot = gl.domElement.toDataURL("image/png");
-    const link = document.createElement("a");
-    link.href = screenshot;
-    link.download = "screenshoot.png";
-    link.click();
-  }
+  const meshScreenX = ((meshScreenPosition.x + 1) / 2) * width;
+  const meshScreenY = ((1 - meshScreenPosition.y) / 2) * height;
+
+  // Adjust HTML width with a scaling factor
+  const widthScalingFactor = 1.4; // Increase by 20%
+  const heightScalingFactor = 1.4;
+  const meshScaleX = ((htmlRect.width / window.innerWidth) * width) * widthScalingFactor;
+  const meshScaleY = ((htmlRect.height / window.innerHeight) * height) * heightScalingFactor;
+
+  // Capture HTML content
+  const htmlImage = await toPng(htmlElement);
+
+  // Combine the WebGL and HTML images
+  const combinedCanvas = document.createElement("canvas");
+  combinedCanvas.width = width;
+  combinedCanvas.height = height;
+  const ctx = combinedCanvas.getContext("2d");
+
+  // Draw WebGL content
+  const webglImg = new Image();
+  webglImg.src = webglImage;
+  await new Promise((resolve) => {
+    webglImg.onload = () => {
+      ctx.drawImage(webglImg, 0, 0, width, height);
+      resolve();
+    };
+  });
+
+  // Draw HTML content aligned with the bottom of the mesh
+  const htmlImg = new Image();
+  htmlImg.src = htmlImage;
+  await new Promise((resolve) => {
+    htmlImg.onload = () => {
+      ctx.drawImage(htmlImg, meshScreenX - meshScaleX / 2, meshScreenY - meshScaleY, meshScaleX, meshScaleY);
+      resolve();
+    };
+  });
+
+  // Save combined screenshot
+  const screenshot = combinedCanvas.toDataURL("image/png");
+  const link = document.createElement("a");
+  link.href = screenshot;
+  link.download = "screenshot.png";
+  link.click();
 
   // Restore original camera settings
   camera.position.copy(originalPosition);
@@ -131,6 +174,8 @@ export const takeScreenshot = (gl, scene, camera, mesh, transparent = false) => 
   // Restore renderer size
   gl.setSize(window.innerWidth, window.innerHeight);
   gl.setPixelRatio(window.devicePixelRatio);
+
+  if (transparent) {
+    scene.background = ogBackground;
+  }
 };
-
-
