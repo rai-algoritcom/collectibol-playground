@@ -101,7 +101,7 @@ export default function LayeredMaterialCard({
     const skillsRef = useRef()
     const footerRef = useRef()
 
-    const [blendMode, setBlendMode] = useState(0)
+    const [blendMode, setBlendMode] = useState(1)
 
     const [jsonCfg, setJsonCfg] = useState()
     const [animationTrigger, setAnimationTrigger] = useState('rotation')
@@ -347,7 +347,7 @@ export default function LayeredMaterialCard({
         useTransition: { value: true, label: 'Enable' },
         transitionSpeed: { value: 0.8, min: 0, max: 3, label: 'Speed' },
         'mode': {
-                value: 'full',
+                value: 'min',
                 options: {
                     Full: 'full',
                     Skills: 'max',
@@ -827,7 +827,8 @@ export default function LayeredMaterialCard({
 
     return (
         <group>
-            <mesh 
+            <mesh
+                frustumCulled={true} 
                 ref={planeRef}
                 key={`main-${key}`} 
             > 
@@ -966,13 +967,13 @@ export default function LayeredMaterialCard({
                             }
                             transparent={true}
                             side={THREE.DoubleSide}
-                            depthWrite={false}
+                            // depthWrite={false}
                     />
                 }
             </mesh>
             
             {(useCardio || useSquares || useCircle || useDank || useShine || useEther || useFire || useWaves || useSmoke || useRay || useCrystal || useGalaxy || useLiquid || useAsci || useSpin || useParticles || useBlobs || useGrass) && (
-                <mesh position={[0, 0, .005]} key={`overlay-${key}`} >
+                <mesh frustumCulled={true} position={[0, 0, .005]} key={`overlay-${key}`} >
                     <planeGeometry args={[2, 3, 120, 120]} />
                     <shaderMaterial
                         ref={overlayRef} 

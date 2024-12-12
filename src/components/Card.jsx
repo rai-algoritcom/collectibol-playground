@@ -236,7 +236,7 @@ export default function Card() {
             'Normal': { image: texturePaths.gradingV2.scratches.normal, onChange: (v) => updateGradingTexture('gradingV2', 'scratches', 'normal', v) },
             'Roughness': { image: texturePaths.gradingV2.scratches.roughness, onChange: (v) => updateGradingTexture('gradingV2', 'scratches', 'roughness', v) },
             grading_v2_scratches_albedo: {
-                value: true,
+                value: false,
                 label: 'Albedo ch.'
             },
             grading_v2_scratches_normal: {

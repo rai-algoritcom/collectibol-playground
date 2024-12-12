@@ -1,6 +1,7 @@
 import { Html } from "@react-three/drei";
 import SkillLabel from "./SkillLabel";
 import { forwardRef, useEffect } from "react";
+import * as THREE from 'three'
 
 
 const SkillsCard = forwardRef(({ labelRef1, labelRef2, labelRef3 }, ref) => {
@@ -51,12 +52,14 @@ const SkillsCard = forwardRef(({ labelRef1, labelRef2, labelRef3 }, ref) => {
 
     return (
         <Html   
+                frustumCulled={true}
                 ref={ref}
                 position={[0, -.8, 0.1]}
                 transform
                 scale={1}
                 distanceFactor={2}
                 distance
+                side={THREE.FrontSide}
             >
                 <div style={{ pointerEvents: 'none', padding: '1rem', width: '360px', height: 'max-content', border: '1px solid transparent'}}>
 

@@ -11,8 +11,8 @@ function App() {
       gl={{ alpha: true, antialias: true }} 
       dpr={[1, 2]} 
     >
-      <color attach="background" args={["#111211"]} />
-      {/* <Environment preset="city" background blur={4} /> */}
+      <color attach="background" args={["#1B1B1B"]} />
+      {/* <Environment preset="city" background blur={4} />  */}
       <Experience />
     </Canvas>
   );

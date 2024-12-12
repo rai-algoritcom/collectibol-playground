@@ -3,6 +3,8 @@ import {
   PerspectiveCamera,
 } from "@react-three/drei";
 import Card from "./Card.jsx";
+import Grass from "./Grass.jsx";
+
 
 export const Experience = ({
 }) => {
@@ -14,9 +16,10 @@ export const Experience = ({
         {/* Controls */}
         <OrbitControls />
         {/* Lights */}
-        {/* <ambientLight intensity={5} />
-        <directionalLight position={[10, 10, 10]} /> */}
+        <ambientLight intensity={5} />
+        <directionalLight position={[10, 10, 10]} />
         <Card  />
+        <Grass />
     </>
   );
 };
