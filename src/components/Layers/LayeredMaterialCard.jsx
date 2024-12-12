@@ -315,11 +315,9 @@ export default function LayeredMaterialCard({
     
 
 
-    const { useBrightness, brightnessIntensity, brightnessColor1, brightnessColor2 } = useControls('Brightness Fx', {
+    const { useBrightness, brightnessIntensity  } = useControls('Brightness Fx', {
         useBrightness: { value: false, label: 'Enable' },
-        brightnessIntensity: { value: 0.005, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
-        brightnessColor1: { value: { r: 7, g: 7, b: 7 }, label: 'Color 1' },
-        brightnessColor2: { value: { r: 79, g: 79, b: 79 }, label: 'Color 2' },
+        brightnessIntensity: { value: 0.6, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
     });
 
 
@@ -471,8 +469,6 @@ export default function LayeredMaterialCard({
                 brightness: {
                     brightness_intensity: brightnessIntensity,
                     use_brightness: useBrightness,
-                    brightness_color_1: brightnessColor1,
-                    brightness_color_2: brightnessColor2
                 },
                 iridescence: {
                     use_iridescence: useIridescence, 
@@ -697,8 +693,6 @@ export default function LayeredMaterialCard({
         // Brightness
         useBrightness,
         brightnessIntensity,
-        brightnessColor1,
-        brightnessColor2,
         // Iridescence
         useIridescence,
         iridescenceIntensity,
@@ -911,13 +905,11 @@ export default function LayeredMaterialCard({
 
                                 useBrightness: { value: useBrightness }, 
                                 brightnessIntensity: { value: brightnessIntensity },
-                                brightnessColor1: { value: brightnessColor1 }, 
-                                brightnessColor2: { value: brightnessColor2 },
 
                                 useShine: { value: useShiney  },
                                 shineIntensity: { value: shineyIntensity },
                                 shineColor1: { value: shineyColor },
-                                shineColor2: { value: brightnessColor1 },
+                                shineColor2: { value: shineyColor },
 
                                 useTransition: { value: useTransition },
 

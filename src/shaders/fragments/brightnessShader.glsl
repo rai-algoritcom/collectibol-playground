@@ -26,7 +26,7 @@ uniform float pointLightDecay; // Point light decay factor
 
 // Iridescence-related uniforms
 uniform bool useBrightness;        // Toggle for iridescence effect
-uniform float iridescenceIntensity; // Intensity of the iridescence
+uniform float brightnessIntensity; // Intensity of the iridescence
 uniform float uTime;                // Time uniform for animation
 uniform float uRotation;            // Rotation angle for iridescence mask
 
@@ -110,7 +110,7 @@ void main() {
         float smoothFactor = smoothstep(0.4, 1.0, viewAngle);
 
         // Apply iridescence effect
-        vec3 iridescenceEffect = iridescenceColor * fxMaskValue * smoothFactor * iridescenceIntensity;
+        vec3 iridescenceEffect = iridescenceColor * fxMaskValue * smoothFactor * brightnessIntensity;
         finalLighting += iridescenceEffect;
     }
 
