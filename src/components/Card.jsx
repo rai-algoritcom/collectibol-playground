@@ -350,12 +350,15 @@ export default function Card() {
     };
 
     
-    const updateGradingTexture = (category, subcaregory, type, value) => {
+    const updateGradingTexture = (category, subcategory, type, value) => {
         setTexturePaths((prev) => ({
             ...prev,
             [category]: {
                 ...prev[category],
-                [type]: value,
+                [subcategory]: {
+                    ...prev[category]?.[subcategory],
+                    [type]: value,
+                }
             },
         }));
     };

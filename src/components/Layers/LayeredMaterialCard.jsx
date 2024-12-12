@@ -445,6 +445,8 @@ export default function LayeredMaterialCard({
 
     useEffect(() => {
 
+        console.log(texturePaths)
+
         const cfg =
             {
                 textures: texturePaths,
@@ -457,6 +459,11 @@ export default function LayeredMaterialCard({
                 roughness_presence: roughnessPresence,
                 normal_intensity: normalIntensity,
                 displacement_scale: displacementScale,
+                grading: {
+                    roughness_props: gradingRoughnessProps,
+                    normals_props: gradingNormalsProps,
+                    albedo_props: gradingAlbedoProps
+                },
                 lights: {
                     ambient_light_color: ambientLightColor,
                     ambient_light_intensity: ambientLightIntensity,
@@ -476,7 +483,7 @@ export default function LayeredMaterialCard({
                 },
                 shine: {
                     shine_intensity: shineyIntensity,
-                    use_shine: useBrightness ? false : useRefraction ? false : useShiney,
+                    use_shine: useShiney,
                     shine_color: shineyColor
                 },
                 refraction: {
@@ -486,7 +493,7 @@ export default function LayeredMaterialCard({
                 },
                 transition: {
                     transition_speed: transitionSpeed,
-                    use_transition: useBrightness ? false : useShiney ? false : useRefraction ? false : useTransition
+                    use_transition:  useTransition
                 },
                 folding: {
                     use_folding: useFolding,
