@@ -445,8 +445,6 @@ export default function LayeredMaterialCard({
 
     useEffect(() => {
 
-        console.log(texturePaths)
-
         const cfg =
             {
                 textures: texturePaths,
