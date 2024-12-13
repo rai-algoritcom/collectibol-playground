@@ -6,6 +6,7 @@ import * as THREE from "three"
 import grassFragmentShader from "../shaders/grass/grassFragmentShader.glsl";
 import grassVertexShader from "../shaders/grass/grassVertexShader.glsl"
 import { useFrame } from "@react-three/fiber";
+import { useControls } from "leva";
 
 
 export default function Grass() {
@@ -13,7 +14,6 @@ export default function Grass() {
     const bufferRef = useRef()
     const shaderRef = useRef()
 
-    const instances = 20000 
     const w = 3 // width
     const d = 5.5 // depth
     const h = 0 // height
@@ -23,6 +23,11 @@ export default function Grass() {
     const uvs = []
     const terrPos = []
     const angles = []
+
+
+    const { instances } = useControls('Grass', {
+        instances: { value: 50000, min: 0, max: 200000, step: 1 }
+    })
 
 
     const createParticles = () => {
@@ -78,7 +83,7 @@ export default function Grass() {
 
     useEffect(() => {
         createParticles()
-    }, [])
+    }, [instances])
 
 
     useFrame((state) => {
@@ -96,7 +101,6 @@ export default function Grass() {
             <instancedMesh args={[null, null, instances]} position={[ 0, -3.0, -2.9]} frustumCulled={false} >
                 <instancedBufferGeometry ref={bufferRef} instanceCount={instances} attach="geometry" />
                 <rawShaderMaterial
-                    needsUpdate={true}
                     ref={shaderRef}
                     side={THREE.DoubleSide}
                     vertexShader={grassVertexShader}

@@ -17,6 +17,7 @@ export const Experience = ({
         {/* Controls */}
         <OrbitControls />
         {/* Lights */}
+
         <ambientLight intensity={5} />
         <directionalLight position={[10, 10, 10]} />
         
