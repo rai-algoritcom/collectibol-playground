@@ -13,7 +13,7 @@ export default function Grass() {
     const bufferRef = useRef()
     const shaderRef = useRef()
 
-    const instances = 10000 
+    const instances = 20000 
     const w = 3 // width
     const d = 5.5 // depth
     const h = 0 // height
@@ -83,7 +83,7 @@ export default function Grass() {
 
     useFrame((state) => {
         if (shaderRef.current) {
-            shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime() * 80
+            shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime() * 40
         }
     })
 
@@ -93,7 +93,7 @@ export default function Grass() {
             {/* <Grid args={[10, 10]}  position={[ 0, -1.85, 0 ]} /> */}
             {/* <axesHelper args={[1]} position={[ 0, -1.85, 0 ]} /> */}
 
-            <instancedMesh args={[null, null, instances]} position={[ 0, -2.99, -2.9]} frustumCulled={false} >
+            <instancedMesh args={[null, null, instances]} position={[ 0, -3.0, -2.9]} frustumCulled={false} >
                 <instancedBufferGeometry ref={bufferRef} instanceCount={instances} attach="geometry" />
                 <rawShaderMaterial
                     needsUpdate={true}
