@@ -19,7 +19,7 @@ export const Experience = ({
         <ambientLight intensity={5} />
         <directionalLight position={[10, 10, 10]} />
         <Card  />
-        <Grass />
+        <Grass /> 
     </>
   );
 };

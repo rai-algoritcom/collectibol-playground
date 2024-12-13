@@ -441,6 +441,7 @@ export default function LayeredMaterialCard({
     }
 
 
+ 
 
     useEffect(() => {
 
@@ -594,6 +595,7 @@ export default function LayeredMaterialCard({
         }
 
 
+
         return () => {
             if (shaderRef.current) {
                 if (shaderRef.current.uniforms) {
@@ -653,6 +655,7 @@ export default function LayeredMaterialCard({
             });
         }
     }, [
+        
         animationTrigger,
         // Fragment FX
         useGrass,
@@ -730,7 +733,7 @@ export default function LayeredMaterialCard({
         foldY, 
         foldRotation,
         // 
-        blendMode,
+        blendMode, 
     ])
 
 
@@ -824,6 +827,7 @@ export default function LayeredMaterialCard({
             }
         }
     }
+
 
     return (
         <group>
@@ -1063,7 +1067,7 @@ export default function LayeredMaterialCard({
                         }
                         uniforms={{
                             uTime: { value: 0.0 },
-                            uAlphaMask: { value: /*textures.fx.irisMask*/ textures.base.alpha },
+                            uAlphaMask: { value:  textures.base.alpha },
                             uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
                             foldIntensity: { value: 0.25 },
                             foldPosition: { value: new THREE.Vector2(0.0, 0.0) },

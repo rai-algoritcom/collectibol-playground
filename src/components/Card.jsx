@@ -1,7 +1,7 @@
 
 import { useTexture } from "@react-three/drei";
 import LayeredMaterialCard from "./Layers/LayeredMaterialCard.jsx";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useControls } from "leva";
 
 
@@ -9,71 +9,71 @@ export default function Card() {
 
     const [texturePaths, setTexturePaths] = useState({
         base: {
-            alpha: '/prod/base/alpha.jpg',
-            alpha2: '/prod/base/alpha2.jpg',
-            albedo: '/prod/base/albido.jpg',
-            height: '/prod/base/height.png',
-            normal: '/prod/base/normal.png',
-            roughness: '/prod/base/roughness.jpg',
+            alpha: '/mobile/prod/base/alpha.jpg',
+            alpha2: '/mobile/prod/base/alpha2.jpg',
+            albedo: '/mobile/prod/base/albido.jpg',
+            height: '/mobile/prod/base/height.png',
+            normal: '/mobile/prod/base/normal.png',
+            roughness: '/mobile/prod/base/roughness.jpg',
         },
         pattern: {
-            albedo2: '/fx/fluid.jpg',
-            albedo: '/textures/pattern/albido3.jpg',
-            height: '/fx/fluid.jpg'
+            albedo2: '/mobile/fx/fluid.jpg',
+            albedo: '/mobile/prod/pattern/albido3.jpg',
+            height: '/mobile/fx/fluid.jpg'
         },
         main_interest: {
-            albedo: '/prod/main_interest/albido.png',
+            albedo: '/mobile/prod/main_interest/albido.png',
             // ao: '/textures/main_interest/ao.png',
-            height: '/prod/main_interest/height.png',
-            normal: '/prod/main_interest/normal.png'
+            height: '/mobile/prod/main_interest/height.png',
+            // normal: '/mobile/prod/main_interest/normal.png'
         },
         layout: {
-            albedo: '/prod/layout/albido2.png',
-            albedo2: '/prod/layout/albido2-skills.png',
-            ao: '/prod/layout/ao.png',
-            height: '/prod/layout/height.png',
-            normal: '/prod/layout/normal.png',
+            albedo: '/mobile/prod/layout/albido2.png',
+            albedo2: '/mobile/prod/layout/albido2-skills.png',
+            ao: '/mobile/prod/layout/ao.png',
+            height: '/mobile/prod/layout/height.png',
+            // normal: '/mobile/prod/layout/normal.png',
         },
-        grading: {
-            albedo: '/textures/grading/poor/alpha.png',
-            height: '/textures/grading/poor/height.png',
-            normal: '/textures/grading/poor/normal.png',
-            alpha: '/textures/grading/poor/opacity.png',
-            roughness: '/textures/grading/poor/roughness.png',
-        },
+        // grading: {
+        //     albedo: '/textures/grading/poor/alpha.png',
+        //     height: '/textures/grading/poor/height.png',
+        //     normal: '/textures/grading/poor/normal.png',
+        //     alpha: '/textures/grading/poor/opacity.png',
+        //     roughness: '/textures/grading/poor/roughness.png',
+        // },
         gradingV2: {
             doblez: {
-                albedo: '/prod/grading/poor3/doblez_albedo.png',
-                normal: '/prod/grading/poor2/doblez_normal.png',
-                roughness: '/prod/grading/poor3/doblez_roughness.png'
+                albedo: '/mobile/prod/grading/poor3/doblez_albedo.png',
+                normal: '/mobile/prod/grading/poor2/doblez_normal.png',
+                roughness: '/mobile/prod/grading/poor3/doblez_roughness.png'
             },
             exterior: {
-                albedo: '/prod/grading/poor3/exterior_albedo.png',
+                albedo: '/mobile/prod/grading/poor3/exterior_albedo.png',
                 // normal: '/prod/grading/poor/exterior_normal.png',
-                roughness: '/prod/grading/poor3/exterior_roughness.png'
+                roughness: '/mobile/prod/grading/poor3/exterior_roughness.png'
             },
             manchas: {
-                albedo: '/prod/grading/poor3/manchas_albedo.png'
+                albedo: '/mobile/prod/grading/poor3/manchas_albedo.png'
             },
             rascado: {
-                albedo: '/prod/grading/poor3/rascado_albedo.png',
-                normal: '/prod/grading/poor2/rascado_normal.png',
-                roughness: '/prod/grading/poor3/rascado_roughness.png'
+                albedo: '/mobile/prod/grading/poor3/rascado_albedo.png',
+                normal: '/mobile/prod/grading/poor2/rascado_normal.png',
+                roughness: '/mobile/prod/grading/poor3/rascado_roughness.png'
             },
             scratches: {
-                albedo: '/prod/grading/poor3/scratches_albedo.png',
-                normal: '/prod/grading/poor2/scratches_normal.png',
-                roughness: '/prod/grading/poor3/scratches_roughness.png'
+                albedo: '/mobile/prod/grading/poor3/scratches_albedo.png',
+                normal: '/mobile/prod/grading/poor2/scratches_normal.png',
+                roughness: '/mobile/prod/grading/poor3/scratches_roughness.png'
             }
         },
         fx: {
-            irisMask: '/fx/iris-mask.jpg',
-            iridescence: '/fx/iris4.jpg',
-            brightnessMask: '/fx/LamineCard.png',
-            brightness: '/fx/brightness.jpg',
-            shine: '/prod/main_interest/ao.jpg',
-            refraction: '/fx/pattern.jpg',
-            transition: '/fx/trans.jpg'
+            irisMask: '/mobile/fx/iris-mask.jpg',
+            iridescence: '/mobile/fx/iris4.jpg',
+            brightnessMask: '/mobile/fx/LamineCard.png',
+            brightness: '/mobile/fx/brightness.jpg',
+            shine: '/mobile/prod/main_interest/ao.jpg',
+            refraction: '/mobile/fx/pattern.jpg',
+            transition: '/mobile/fx/trans.jpg'
         }
     })
 
@@ -121,11 +121,11 @@ export default function Card() {
     })
 
 
-    const { main_interest_albedo, main_interest_height, main_interest_normal } = useControls(
+    const { main_interest_albedo, main_interest_height, /*main_interest_normal*/ } = useControls(
         'Main Textures + Channels', {
             'Albedo': { image: texturePaths.main_interest.albedo, onChange: (v) => updateTexture('main_interest', 'albedo', v) },
             'Height': { image: texturePaths.main_interest.height, onChange: (v) => updateTexture('main_interest', 'height', v) },
-            'Normal': { image: texturePaths.main_interest.normal, onChange: (v) => updateTexture('main_interest', 'normal', v) },
+            // 'Normal': { image: texturePaths.main_interest.normal, onChange: (v) => updateTexture('main_interest', 'normal', v) },
             main_interest_albedo: {
                 value: true,
                 label: 'Albedo ch.'
@@ -134,20 +134,20 @@ export default function Card() {
                 value: true,
                 label: 'Height ch.'
             },
-            main_interest_normal: {
-                value: false,
-                label: 'Normal ch.'
-            }
+            // main_interest_normal: {
+            //     value: false,
+            //     label: 'Normal ch.'
+            // }
         }
     )
 
 
-    const { layout_albedo, layout_height, layout_normal, layoutColor } = useControls(
+    const { layout_albedo, layout_height, /*layout_normal,*/ layoutColor } = useControls(
         'Layout Textures + Channels', {
             'Albedo': { image: texturePaths.layout.albedo, onChange: (v) => updateTexture('layout', 'albedo', v) },
             'Albedo II': { image: texturePaths.layout.albedo2, onChange: (v) => updateTexture('layout', 'albedo2', v)  },
             'Height': { image: texturePaths.layout.height, onChange: (v) => updateTexture('layout', 'height', v) },
-            'Normal': { image: texturePaths.layout.normal, onChange: (v) => updateTexture('layout', 'normal', v) },
+            // 'Normal': { image: texturePaths.layout.normal, onChange: (v) => updateTexture('layout', 'normal', v) },
             layoutColor: { value: { r: 44, g: 44, b: 49 }, label: '*Color' },
             layout_albedo: {
                 value: true,
@@ -157,10 +157,10 @@ export default function Card() {
                 value: false,
                 label: 'Height ch.'
             },
-            layout_normal: {
-                value: false,
-                label: 'Normal ch.'
-            }
+            // layout_normal: {
+            //     value: false,
+            //     label: 'Normal ch.'
+            // }
         }
     )
 
@@ -284,15 +284,15 @@ export default function Card() {
 
     const normalToggles = {
         base_normal,
-        main_interest_normal,
-        layout_normal,
+        // main_interest_normal,
+        // layout_normal,
         grading_v2_doblez_normal,
         grading_v2_rascado_normal,
         grading_v2_scratches_normal,
     }
 
     
-    useControls(
+    /*useControls(
         'Grading Textures (vO - Deprecated)', {
             'Alpha': { image: texturePaths.grading.alpha, onChange: (v) => updateTexture('grading', 'alpha', v) },
             'Albedo': { image: texturePaths.grading.albedo, onChange: (v) => updateTexture('grading', 'albedo', v) },
@@ -323,7 +323,7 @@ export default function Card() {
                 }
             }
         }
-    )
+    )*/
 
 
     useControls(
@@ -370,9 +370,7 @@ export default function Card() {
     const mainInterestTextures = useTexture(texturePaths.main_interest);
     const layoutTextures = useTexture(texturePaths.layout);
     const fxTextures = useTexture(texturePaths.fx);
-    // v0
-    const gradingTextures = useTexture(texturePaths.grading); 
-    // v1 
+    // Grading Textures 
     const gradingDoblez = useTexture(texturePaths.gradingV2.doblez)
     const gradingExterior = useTexture(texturePaths.gradingV2.exterior) 
     const gradingManchas = useTexture(texturePaths.gradingV2.manchas)
@@ -380,27 +378,17 @@ export default function Card() {
     const gradingScratches = useTexture(texturePaths.gradingV2.scratches)
 
 
-    if (
-        !(
-            baseTextures &&
-            patternTexture &&
-            mainInterestTextures &&
-            layoutTextures &&
-            gradingTextures && 
-            fxTextures
-        )
-    ) {
-        return  <></>
-    }
 
     return (
+        <Suspense fallback={<></>}>
+
             <LayeredMaterialCard
                 textures={{
                     base: baseTextures,
                     pattern: patternTexture,
                     main_interest: mainInterestTextures,
                     layout: layoutTextures,
-                    grading: gradingTextures,
+                    // grading: gradingTextures,
                     gradingv2: {
                         gradingDoblez, 
                         gradingExterior, 
@@ -419,5 +407,6 @@ export default function Card() {
                 alphaToggles={alphaToggles}
                 heightToggles={heightToggles} 
             />
+        </Suspense>
     )
 }
