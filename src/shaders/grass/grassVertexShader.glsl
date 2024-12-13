@@ -12,8 +12,8 @@ attribute float angle;
 
 varying vec2 vUv;
 
-
-vec4 quat_from_axis_angle(vec3 axis, float angle){ 
+// Function to create a quaternion from an axis and angle
+vec4 quat_from_axis_angle(vec3 axis, float angle) { 
     vec4 qr;
     float half_angle = (angle * 0.5) * 3.14159 / 180.0;
     qr.x = axis.x * sin(half_angle);
@@ -23,21 +23,23 @@ vec4 quat_from_axis_angle(vec3 axis, float angle){
     return qr;
 }
 
-vec3 rotate_vertex_position(vec3 position, vec3 axis, float angle){
-
+// Function to rotate a vertex position around an axis
+vec3 rotate_vertex_position(vec3 position, vec3 axis, float angle) {
     vec4 q = quat_from_axis_angle(axis, angle);
     vec3 v = position.xyz;
     return v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v);
-
 }
-
-
 
 void main()
 {   
     vUv = uv;
 
     vec3 finalPosition = position;
+
+    // Scale the entire particle
+    float scale = 0.2; // Adjust this value to control particle size
+    finalPosition *= scale;
+
     finalPosition.x *= 0.5;
     finalPosition += 0.5;
 
@@ -52,5 +54,4 @@ void main()
     finalPosition += terrPos;
 
     gl_Position = projectionMatrix * modelViewMatrix * vec4(finalPosition, 1.0);
-
 }

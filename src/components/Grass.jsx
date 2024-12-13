@@ -14,8 +14,8 @@ export default function Grass() {
     const shaderRef = useRef()
 
     const instances = 10000 
-    const w = 10 // width
-    const d = 10 // depth
+    const w = 3 // width
+    const d = 5.5 // depth
     const h = 0 // height
 
     const positions = []
@@ -83,17 +83,17 @@ export default function Grass() {
 
     useFrame((state) => {
         if (shaderRef.current) {
-            shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime() * 100
+            shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime() * 80
         }
     })
 
     
     return (
         <group>
-            <Grid args={[10, 10]}  position={[ 0, -1.85, 0 ]} />
+            {/* <Grid args={[10, 10]}  position={[ 0, -1.85, 0 ]} /> */}
             {/* <axesHelper args={[1]} position={[ 0, -1.85, 0 ]} /> */}
 
-            <instancedMesh args={[null, null, instances]} position={[ 0, -1.85, 0 ]} frustumCulled={false} >
+            <instancedMesh args={[null, null, instances]} position={[ 0, -2.99, -2.9]} frustumCulled={false} >
                 <instancedBufferGeometry ref={bufferRef} instanceCount={instances} attach="geometry" />
                 <rawShaderMaterial
                     needsUpdate={true}
@@ -103,16 +103,16 @@ export default function Grass() {
                     fragmentShader={grassFragmentShader}
                     uniforms={{
                         uTime: { value: 0 },
-                        grassMaskTex: { value: useTexture('/grass/grass.jpg') },
+                        grassMaskTex: { value: useTexture('/grass/grass2.jpg') },
                         grassDiffTex: { value: useTexture('/grass/grass_diffuse.jpg') }
                     }}
                 />
             </instancedMesh>
 
-            <mesh position={[0, -1.85, 0]} rotation={[Math.PI / 2, 0, 0]}>
+            {/* <mesh position={[0, -1.85, 0]} rotation={[Math.PI / 2, 0, 0]}>
                 <planeGeometry args={[w + 2, d + 2]} />
                 <meshBasicMaterial color={0x08731f} side={THREE.DoubleSide} />
-            </mesh>
+            </mesh> */}
             
         </group>
     )

@@ -4,6 +4,7 @@ import {
 } from "@react-three/drei";
 import Card from "./Card.jsx";
 import Grass from "./Grass.jsx";
+import Field from "./Field.jsx";
 
 
 export const Experience = ({
@@ -19,6 +20,9 @@ export const Experience = ({
         <ambientLight intensity={5} />
         <directionalLight position={[10, 10, 10]} />
         <Card  />
+
+        <Field />
+
         <Grass /> 
     </>
   );
