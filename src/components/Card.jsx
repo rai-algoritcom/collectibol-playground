@@ -44,7 +44,7 @@ export default function Card() {
         gradingV2: {
             doblez: {
                 albedo: '/mobile/prod/crop_grading/poor3/doblez_albedo.png',
-                normal: '/mobile/prod/crop_grading/poor2/doblez_normal.png',
+                // normal: '/mobile/prod/crop_grading/poor2/doblez_normal.png',
                 roughness: '/mobile/prod/crop_grading/poor3/doblez_roughness.png'
             },
             exterior: {
@@ -57,12 +57,12 @@ export default function Card() {
             },
             rascado: {
                 albedo: '/mobile/prod/crop_grading/poor3/rascado_albedo.png',
-                normal: '/mobile/prod/crop_grading/poor2/rascado_normal.png',
+                // normal: '/mobile/prod/crop_grading/poor2/rascado_normal.png',
                 roughness: '/mobile/prod/crop_grading/poor3/rascado_roughness.png'
             },
             scratches: {
                 albedo: '/mobile/prod/crop_grading/poor3/scratches_albedo.png',
-                normal: '/mobile/prod/crop_grading/poor2/scratches_normal.png',
+                // normal: '/mobile/prod/crop_grading/poor2/scratches_normal.png',
                 roughness: '/mobile/prod/crop_grading/poor3/scratches_roughness.png'
             }
         },
@@ -168,16 +168,16 @@ export default function Card() {
     const { grading_v2_doblez_albedo, grading_v2_doblez_normal, grading_v2_doblez_roughness } = useControls(
         'Doblez (Grading Textures v2)', {
             'Albedo': { image: texturePaths.gradingV2.doblez.albedo, onChange: (v) => updateGradingTexture('gradingV2', 'doblez', 'albedo', v) } ,
-            'Normal': { image: texturePaths.gradingV2.doblez.normal, onChange: (v) => updateGradingTexture('gradingV2', 'doblez', 'normal', v)   },
+            // 'Normal': { image: texturePaths.gradingV2.doblez.normal, onChange: (v) => updateGradingTexture('gradingV2', 'doblez', 'normal', v)   },
             'Roughness': { image: texturePaths.gradingV2.doblez.roughness, onChange: (v) => updateGradingTexture('gradingV2', 'doblez', 'roughness', v)  },
             grading_v2_doblez_albedo: {
                 value: true,
                 label: 'Albedo ch.'
             },
-            grading_v2_doblez_normal: {
-                value: false,
-                label: 'Normal ch.'
-            },
+            // grading_v2_doblez_normal: {
+            //     value: false,
+            //     label: 'Normal ch.'
+            // },
             grading_v2_doblez_roughness: {
                 value: true,
                 label: 'Roughness ch.'
@@ -213,16 +213,16 @@ export default function Card() {
     const { grading_v2_rascado_albedo, grading_v2_rascado_normal, grading_v2_rascado_roughness } = useControls(
         'Rascado (Grading Textures v2)', {
             'Albedo': { image: texturePaths.gradingV2.rascado.albedo, onChange: (v) => updateGradingTexture('gradingV2', 'rascado', 'albedo', v)  },
-            'Normal': { image: texturePaths.gradingV2.rascado.normal, onChange: (v) => updateGradingTexture('gradingV2', 'rascado', 'normal', v) },
+            // 'Normal': { image: texturePaths.gradingV2.rascado.normal, onChange: (v) => updateGradingTexture('gradingV2', 'rascado', 'normal', v) },
             'Roughness': { image: texturePaths.gradingV2.rascado.roughness, onChange: (v) => updateGradingTexture('gradingV2', 'rascado', 'roughness', v) },
             grading_v2_rascado_albedo: {
                 value: true,
                 label: 'Albedo ch.'
             },
-            grading_v2_rascado_normal: {
-                value: false,
-                label: 'Normal ch.'
-            },
+            // grading_v2_rascado_normal: {
+            //     value: false,
+            //     label: 'Normal ch.'
+            // },
             grading_v2_rascado_roughness: {
                 value: true,
                 label: 'Roughness ch.'
@@ -233,16 +233,16 @@ export default function Card() {
     const { grading_v2_scratches_albedo, grading_v2_scratches_normal, grading_v2_scratches_roughness } = useControls(
         'Scratches (Grading Textures v2)', {
             'Albedo': { image: texturePaths.gradingV2.scratches.albedo, onChange: (v) => updateGradingTexture('gradingV2', 'scratches', 'albedo', v)  },
-            'Normal': { image: texturePaths.gradingV2.scratches.normal, onChange: (v) => updateGradingTexture('gradingV2', 'scratches', 'normal', v) },
+            // 'Normal': { image: texturePaths.gradingV2.scratches.normal, onChange: (v) => updateGradingTexture('gradingV2', 'scratches', 'normal', v) },
             'Roughness': { image: texturePaths.gradingV2.scratches.roughness, onChange: (v) => updateGradingTexture('gradingV2', 'scratches', 'roughness', v) },
             grading_v2_scratches_albedo: {
                 value: false,
                 label: 'Albedo ch.'
             },
-            grading_v2_scratches_normal: {
-                value: false,
-                label: 'Normal ch.'
-            },
+            // grading_v2_scratches_normal: {
+            //     value: false,
+            //     label: 'Normal ch.'
+            // },
             grading_v2_scratches_roughness: {
                 value: true,
                 label: 'Roughness ch.'
@@ -286,9 +286,9 @@ export default function Card() {
         base_normal,
         // main_interest_normal,
         // layout_normal,
-        grading_v2_doblez_normal,
-        grading_v2_rascado_normal,
-        grading_v2_scratches_normal,
+        // grading_v2_doblez_normal,
+        // grading_v2_rascado_normal,
+        // grading_v2_scratches_normal,
     }
 
     
