@@ -448,6 +448,7 @@ export default function LayeredMaterialCard({
         const cfg =
             {
                 textures: texturePaths,
+                layout_color: layoutColor,
                 albedo_ch: albedoToggles, 
                 alpha_ch: alphaToggles,
                 roughness_ch: roughnessToggles,

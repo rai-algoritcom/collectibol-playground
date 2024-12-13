@@ -4,10 +4,13 @@ import { blendHeightTXs  } from "./blendHeightTXs.jsx"
 import { blendNormalTXs } from "./blendNormalTXs.jsx"
 import { blendRoughnessTXs } from "./blendRoughnessTXs.jsx"
 
+import getGradingProps from "./getGradingProps.jsx"
+
 export {
     blendAlbedoTXs,
     blendAlphaTXs,
     blendHeightTXs,
     blendNormalTXs,
-    blendRoughnessTXs
+    blendRoughnessTXs,
+    getGradingProps
 }

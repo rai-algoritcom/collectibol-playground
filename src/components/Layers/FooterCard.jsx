@@ -2,7 +2,7 @@ import { Html } from "@react-three/drei";
 import { forwardRef } from "react";
 import * as THREE from 'three'
 
-const FooterCard = forwardRef(({ blendMode }, ref) => {
+const FooterCard = forwardRef(({ blendMode, planeOcclude }, ref) => {
 
     return (
         <Html

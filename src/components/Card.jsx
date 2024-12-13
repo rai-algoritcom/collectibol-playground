@@ -3,6 +3,9 @@ import { useTexture } from "@react-three/drei";
 import LayeredMaterialCard from "./Layers/LayeredMaterialCard.jsx";
 import { Suspense, useState } from "react";
 import { useControls } from "leva";
+import MainCard from "./Layers/MainCard.jsx";
+
+import mock from '../data/genesis.js'
 
 
 export default function Card() {
@@ -382,7 +385,31 @@ export default function Card() {
     return (
         <Suspense fallback={<></>}>
 
-            <LayeredMaterialCard
+            {mock.map((props, i) => (
+                <MainCard 
+                    key={i}
+
+                    textures={{
+                        base: baseTextures,
+                        pattern: patternTexture,
+                        main_interest: mainInterestTextures,
+                        layout: layoutTextures,
+                        // grading: gradingTextures,
+                        gradingv2: {
+                            gradingDoblez, 
+                            gradingExterior, 
+                            gradingManchas, 
+                            gradingRascado, 
+                            gradingScratches
+                        },
+                        fx: fxTextures
+                    }}
+
+                    {...props}
+                />
+            ))}
+
+            {/* <LayeredMaterialCard
                 textures={{
                     base: baseTextures,
                     pattern: patternTexture,
@@ -406,7 +433,7 @@ export default function Card() {
                 roughnessToggles={roughnessToggles}
                 alphaToggles={alphaToggles}
                 heightToggles={heightToggles} 
-            />
+            /> */}
         </Suspense>
     )
 }
