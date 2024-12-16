@@ -47,10 +47,10 @@ void main() {
     float alphaValue2 = texture2D(alphaMap2, vUv).r;
     float blendedAlpha = alphaValue;
 
-    // float roughnessValue = texture2D(roughnessMap, vUv).r * roughnessIntensity;
+    float roughnessValue = texture2D(roughnessMap, vUv).r * roughnessIntensity;
 
-    // vec3 normalFromMap = (texture2D(normalMap, vUv).rgb * 2.0 - 1.0) * normalIntensity;
-    // vec3 normal = normalize(vNormal + normalFromMap);
+    vec3 normalFromMap = (texture2D(normalMap, vUv).rgb * 2.0 - 1.0) * normalIntensity;
+    vec3 normal = normalize(vNormal + normalFromMap);
 
     if (useTransition) {
         vec4 albedo1 = texture2D(albedoMap, vUv);
@@ -63,32 +63,32 @@ void main() {
 
     // Lighting calculations (ambient, directional, point lights)
     vec3 viewDir = normalize(cameraPosition - vPosition);
-    // vec3 ambientLight = ambientLightColor * ambientLightIntensity;
+    vec3 ambientLight = ambientLightColor * ambientLightIntensity;
     vec3 lightDir = normalize(lightDirection);
-    // vec3 lightReflection = reflect(-lightDir, normal);
+    vec3 lightReflection = reflect(-lightDir, normal);
 
-    // float diffuseDirectional = max(dot(normal, lightDir), 0.0);
-    // float specularDirectional = pow(max(dot(lightReflection, viewDir), 0.0), 16.0 * (1.0 - roughnessValue));
+    float diffuseDirectional = max(dot(normal, lightDir), 0.0);
+    float specularDirectional = pow(max(dot(lightReflection, viewDir), 0.0), 16.0 * (1.0 - roughnessValue));
     vec3 directionalLight = directionalLightColor * directionalLightIntensity * 
-                            (0.6 * 1.0 + 0.4 );
+                            (0.6 * diffuseDirectional + 0.4 * specularDirectional);
 
-    // vec3 pointDelta = pointLightPosition - vPosition;
-    // float pointDistance = length(pointDelta);
-    // vec3 pointDir = normalize(pointDelta);
-    // vec3 pointReflection = reflect(-pointDir, normal);
+    vec3 pointDelta = pointLightPosition - vPosition;
+    float pointDistance = length(pointDelta);
+    vec3 pointDir = normalize(pointDelta);
+    vec3 pointReflection = reflect(-pointDir, normal);
 
-    // float diffusePoint = max(dot(normal, pointDir), 0.0);
-    // float specularPoint = pow(max(dot(pointReflection, viewDir), 0.0), 16.0 * (1.0 - roughnessValue));
-    // float pointDecay = max(1.0 / (1.0 + pointDistance * pointDistance * pointLightDecay), 0.0);
-    // vec3 pointLight = pointLightColor * pointLightIntensity * pointDecay * 
-    //                   (0.6 * diffusePoint + 0.4 * specularPoint);
+    float diffusePoint = max(dot(normal, pointDir), 0.0);
+    float specularPoint = pow(max(dot(pointReflection, viewDir), 0.0), 16.0 * (1.0 - roughnessValue));
+    float pointDecay = max(1.0 / (1.0 + pointDistance * pointDistance * pointLightDecay), 0.0);
+    vec3 pointLight = pointLightColor * pointLightIntensity * pointDecay * 
+                      (0.6 * diffusePoint + 0.4 * specularPoint);
 
-    vec3 lighting = directionalLight; // ambientLight + directionalLight + pointLight;
+    vec3 lighting = ambientLight + directionalLight + pointLight;
 
-   //  vec3 roughnessEffect = mix(lighting, lighting * (1.0 - roughnessValue), roughnessPresence);
+    vec3 roughnessEffect = mix(lighting, lighting * (1.0 - roughnessValue), roughnessPresence);
 
     // Final base lighting
-    vec3 finalLighting = albedoColor.rgb; // roughnessEffect * albedoColor.rgb;
+    vec3 finalLighting = roughnessEffect * albedoColor.rgb;
 
     // === Iridescence Effect ===
     if (useIridescence) {

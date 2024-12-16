@@ -34,7 +34,7 @@ export default function Builder() {
                     left: '50%',
                     transform: 'translateX(-50%)',
                     padding: '0.75rem 1.5rem',
-                    fontSize: '1rem',
+                    fontSize: '.85rem',
                     textAlign: 'center',
                     textDecoration: 'none',
                     border: '2px solid white',
