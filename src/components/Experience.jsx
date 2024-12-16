@@ -1,9 +1,8 @@
 import {
-  Environment,
   OrbitControls,
   PerspectiveCamera,
 } from "@react-three/drei";
-import Card from "./Card.jsx";
+import Card from "./CardLoader.jsx";
 import Grass from "./Grass.jsx";
 import Field from "./Field.jsx";
 

@@ -8,7 +8,7 @@ import MainCard from "./Layers/MainCard.jsx";
 import mock from '../data/genesis.js'
 
 
-export default function Card() {
+export default function CardLoader({ isGameplay }) {
 
     const [texturePaths, setTexturePaths] = useState({
         base: {
@@ -381,14 +381,37 @@ export default function Card() {
     const gradingScratches = useTexture(texturePaths.gradingV2.scratches)
 
 
-
     return (
         <Suspense fallback={<></>}>
 
-            {mock.map((props, i) => (
-                <MainCard 
-                    key={i}
-
+            {
+                isGameplay 
+                ? 
+                    mock.map((props, i) => (
+                        <MainCard 
+                            key={i}
+        
+                            textures={{
+                                base: baseTextures,
+                                pattern: patternTexture,
+                                main_interest: mainInterestTextures,
+                                layout: layoutTextures,
+                                // grading: gradingTextures,
+                                gradingv2: {
+                                    gradingDoblez, 
+                                    gradingExterior, 
+                                    gradingManchas, 
+                                    gradingRascado, 
+                                    gradingScratches
+                                },
+                                fx: fxTextures
+                            }}
+        
+                            {...props}
+                        />
+                    ))
+                : 
+                <LayeredMaterialCard
                     textures={{
                         base: baseTextures,
                         pattern: patternTexture,
@@ -404,36 +427,17 @@ export default function Card() {
                         },
                         fx: fxTextures
                     }}
-
-                    {...props}
+                    texturePaths={texturePaths}
+                    layoutColor={layoutColor}
+                    // Toggles
+                    albedoToggles={albedoToggles}
+                    normalToggles={normalToggles}
+                    roughnessToggles={roughnessToggles}
+                    alphaToggles={alphaToggles}
+                    heightToggles={heightToggles} 
                 />
-            ))}
+            }
 
-            {/* <LayeredMaterialCard
-                textures={{
-                    base: baseTextures,
-                    pattern: patternTexture,
-                    main_interest: mainInterestTextures,
-                    layout: layoutTextures,
-                    // grading: gradingTextures,
-                    gradingv2: {
-                        gradingDoblez, 
-                        gradingExterior, 
-                        gradingManchas, 
-                        gradingRascado, 
-                        gradingScratches
-                    },
-                    fx: fxTextures
-                }}
-                texturePaths={texturePaths}
-                layoutColor={layoutColor}
-                // Toggles
-                albedoToggles={albedoToggles}
-                normalToggles={normalToggles}
-                roughnessToggles={roughnessToggles}
-                alphaToggles={alphaToggles}
-                heightToggles={heightToggles} 
-            /> */}
         </Suspense>
     )
 }
