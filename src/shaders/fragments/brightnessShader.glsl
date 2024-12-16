@@ -116,8 +116,7 @@ void main() {
 
     // Output final color
     if (blendMode == 1) {
-        gl_FragColor = vec4(finalLighting, alphaValue2);
-        // gl_FragColor = vec4(finalLighting, blendedAlpha);
+        gl_FragColor = vec4(finalLighting, blendedAlpha);
     } else {
         gl_FragColor = vec4(finalLighting, alphaValue);
     }

@@ -25,7 +25,7 @@ export default [
             "grading_v2_doblez_roughness": true,
             "grading_v2_exterior_roughness": true,
             "grading_v2_rascado_roughness": true,
-            "grading_v2_scratches_roughness": false
+            "grading_v2_scratches_roughness": true
         },
         "normalToggles": {
             "base_normal": true
@@ -47,11 +47,11 @@ export default [
         "pointLightIntensity": 0,
         "pointLightDecay": 0,
         "brightnessIntensity": 0.6,
-        "useBrightness": true,
+        "useBrightness": false,
         "iridescenceIntensity": 0.6,
         "useIridescence": true,
         "shineyIntensity": 0.0045,
-        "useShiney": false,
+        "useShiney": true,
         "shineyColor": { "r": 231, "g": 245, "b": 81 },
         "refractionIntensity": 1,
         "useRefraction": false,

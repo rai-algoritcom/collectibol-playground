@@ -81,6 +81,7 @@ export default function Grass() {
         )
     }
 
+
     useEffect(() => {
         createParticles()
     }, [instances])
@@ -94,7 +95,7 @@ export default function Grass() {
 
     
     return (
-        <group>
+        <group >
             {/* <Grid args={[10, 10]}  position={[ 0, -1.85, 0 ]} /> */}
             {/* <axesHelper args={[1]} position={[ 0, -1.85, 0 ]} /> */}
 
