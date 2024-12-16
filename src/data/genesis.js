@@ -1,7 +1,6 @@
 export default [
     {
         position: [0, -2.25, -.35],
-        // "textures": {},
         "layoutColor": {
             "r": 44,
             "g": 44,
@@ -26,7 +25,7 @@ export default [
             "grading_v2_doblez_roughness": true,
             "grading_v2_exterior_roughness": true,
             "grading_v2_rascado_roughness": true,
-            "grading_v2_scratches_roughness": true
+            "grading_v2_scratches_roughness": false
         },
         "normalToggles": {
             "base_normal": true
@@ -50,7 +49,7 @@ export default [
         "brightnessIntensity": 0.6,
         "useBrightness": true,
         "iridescenceIntensity": 0.6,
-        "useIridescence": false,
+        "useIridescence": true,
         "shineyIntensity": 0.0045,
         "useShiney": false,
         "shineyColor": { "r": 231, "g": 245, "b": 81 },
@@ -71,7 +70,6 @@ export default [
 
     {
         position: [-.8, -2.25, -1.55],
-        // "textures": {},
         "layoutColor": {
             "r": 44,
             "g": 44,
@@ -120,7 +118,7 @@ export default [
         "brightnessIntensity": 0.6,
         "useBrightness": false,
         "iridescenceIntensity": 0.6,
-        "useIridescence": false,
+        "useIridescence": true,
         "shineyIntensity": 0.0045,
         "useShiney": true,
         "shineyColor": { "r": 231, "g": 245, "b": 81 },
@@ -142,7 +140,6 @@ export default [
 
     {
         position: [.8, -2.25, -1.55],
-        // "textures": {},
         "layoutColor": {
             "r": 44,
             "g": 44,
@@ -405,7 +402,7 @@ export default [
         "brightnessIntensity": 0.6,
         "useBrightness": false,
         "iridescenceIntensity": 0.6,
-        "useIridescence": false,
+        "useIridescence": true,
         "shineyIntensity": 0.0045,
         "useShiney": false,
         "shineyColor": { "r": 231, "g": 245, "b": 81 },
@@ -475,7 +472,7 @@ export default [
         "brightnessIntensity": 0.6,
         "useBrightness": false,
         "iridescenceIntensity": 0.6,
-        "useIridescence": false,
+        "useIridescence": true,
         "shineyIntensity": 0.0045,
         "useShiney": false,
         "shineyColor": { "r": 231, "g": 245, "b": 81 },

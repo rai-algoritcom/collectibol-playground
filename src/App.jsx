@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { Experience } from "./components/Experience.jsx";
-// import { Environment } from "@react-three/drei";
+import { Environment } from "@react-three/drei";
 
 function App() {
 
@@ -12,7 +12,9 @@ function App() {
       dpr={[1, 2]} 
     >
       <color attach="background" args={["#1B1B1B"]} />
-      {/* <Environment preset="city" background blur={4} />  */}
+
+      <Environment files="/env/the_sky_is_on_fire_4k.hdr" background={false} />
+
       <Experience />
     </Canvas>
   );

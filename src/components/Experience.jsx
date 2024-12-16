@@ -1,4 +1,5 @@
 import {
+  Environment,
   OrbitControls,
   PerspectiveCamera,
 } from "@react-three/drei";
@@ -18,8 +19,8 @@ export const Experience = ({
         <OrbitControls />
         {/* Lights */}
 
-        <ambientLight intensity={5} />
-        <directionalLight position={[10, 10, 10]} />
+        {/* <ambientLight intensity={5} />
+        <directionalLight position={[10, 10, 10]} /> */}
         
         {/* Gameplay */}
         <Card  />

@@ -204,61 +204,7 @@ export default function MainCard({
                 }
             });
         }
-    }, [
-        position,
-        // textures
-        textures,
-        layoutColor,
-        // channels
-        albedoToggles, 
-        alphaToggles, 
-        roughnessToggles, 
-        normalToggles,
-        heightToggles,
-        // roughness
-        roughnessIntensity,
-        roughnessPresence,
-        // normals
-        normalIntensity,
-        // height
-        displacementScale,
-        // lights 
-        ambientLightColor,
-        ambientLightIntensity,
-        directionalLightColor,
-        directionalLightIntensity,
-        pointLightColor,
-        pointLightIntensity,
-        pointLightDecay,
-        // brightness 
-        brightnessIntensity,
-        useBrightness,
-        // iridescence 
-        iridescenceIntensity,
-        useIridescence, 
-        // shine 
-        shineyIntensity, 
-        useShiney, 
-        shineyColor,
-        // refraction 
-        refractionIntensity, 
-        useRefraction, 
-        stripesVisible, 
-        // transition 
-        useTransition, 
-        transitionSpeed, 
-        // folding 
-        foldIntensity, 
-        useFolding, 
-        foldX,
-        foldY,
-        foldRotation,
-        // vertex_Fx 
-        vertex_fx_id,
-        // fragment_fx 
-        fragment_fx_id,
-        fragment_fx_trigger
-    ])
+    }, [ ])
 
 
 
@@ -269,15 +215,15 @@ export default function MainCard({
 
         if (shaderRef.current) {
             shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
-            shaderRef.current.uniforms.foldIntensity.value = foldIntensity;
-            shaderRef.current.uniforms.foldPosition.value.set(foldX, foldY);
-            shaderRef.current.uniforms.foldRotationZ.value = foldRotation;
+            // shaderRef.current.uniforms.foldIntensity.value = foldIntensity;
+            // shaderRef.current.uniforms.foldPosition.value.set(foldX, foldY);
+            // shaderRef.current.uniforms.foldRotationZ.value = foldRotation;
         }
 
         if (overlayRef.current) {
-            overlayRef.current.uniforms.foldIntensity.value = foldIntensity;
-            overlayRef.current.uniforms.foldPosition.value.set(foldX, foldY);
-            overlayRef.current.uniforms.foldRotationZ.value = foldRotation;
+            // overlayRef.current.uniforms.foldIntensity.value = foldIntensity;
+            // overlayRef.current.uniforms.foldPosition.value.set(foldX, foldY);
+            // overlayRef.current.uniforms.foldRotationZ.value = foldRotation;
         }
 
         if (planeRef.current && camera && shaderRef.current) {
@@ -471,12 +417,12 @@ export default function MainCard({
                     side={THREE.DoubleSide}
                 />
 
-            {/* <SkillsCard 
-                ref={skillsRef} 
-            />
-             */}
+                {/* <SkillsCard 
+                    ref={skillsRef} 
+                />
+                */}
 
-            <FooterCard blendMode={blendMode} ref={footerRef} planeOcclude={shaderRef} />
+                <FooterCard blendMode={blendMode} ref={footerRef} />
             </mesh>
 
         </group>
