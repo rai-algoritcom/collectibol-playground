@@ -302,21 +302,51 @@ export default function LayeredMaterialCard({
         pointLightColor,
         pointLightIntensity,
         pointLightDecay,
+        plXandY,
+        plZ,
         // PL 2
         pointLightColor2,
         pointLightIntensity2,
-        pointLightDecay2
+        pointLightDecay2,
+        plXandY2,
+        plZ2,
     } = useControls('Lighting Config. [Ambient, Point 1, Point 2]', {
         ambientLightColor: { value: { r: 0, g: 0, b: 0 }, label: 'AL Color' },
         ambientLightIntensity: { value: 0.00, min: 0, max: 1, step: 0.001, label: 'AL Intensity' },
 
         pointLightColor: { value: { r: 121, g: 121, b: 121 }, label: 'PL1 Color' },
-        pointLightIntensity: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL1 Intensity' },
-        pointLightDecay: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL1 Decay' },
+        pointLightIntensity: { value: 2.0, min: 0, max: 2, step: 0.001, label: 'PL1 Intensity' },
+        pointLightDecay: { value: 0.21, min: 0, max: 2, step: 0.001, label: 'PL1 Decay' },
+        plXandY: {
+            value: new THREE.Vector2(0, 0),
+            min: -20,
+            max: 20,
+            step: 0.1,
+            label: 'PL1 x & y'
+        },
+        plZ: {
+            value: 10,
+            min: -1,
+            max: 20,
+            label: 'PL1 z'
+        },
 
         pointLightColor2: { value: { r: 121, g: 121, b: 121 }, label: 'PL2 Color' },
         pointLightIntensity2: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL2 Intensity' },
-        pointLightDecay2: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL2 Decay' }
+        pointLightDecay2: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL2 Decay' },
+        plXandY2: {
+            value: new THREE.Vector2(10, 0),
+            min: -20,
+            max: 20,
+            step: 0.1,
+            label: 'PL2 x & y'
+        },
+        plZ2: {
+            value: 10,
+            min: -1,
+            max: 20,
+            label: 'PL2 z'
+        },
     })
     
 
@@ -736,6 +766,10 @@ export default function LayeredMaterialCard({
         pointLightColor2,
         pointLightIntensity2,
         pointLightDecay2,
+        plXandY,
+        plZ,
+        plXandY2,
+        plZ2,
         // Folding
         useFolding, 
         foldIntensity, 
@@ -894,13 +928,21 @@ export default function LayeredMaterialCard({
                                 ambientLightIntensity: { value: ambientLightIntensity },
                                 // Point Light 
                                 pointLightColor: { value: pointLightColor },
-                                pointLightIntensity: { value: pointLightIntensity },
-                                pointLightPosition: { value: new THREE.Vector3(0, 0, 10) },
+                                pointLightIntensity: { value: pointLightIntensity * 0.1 },
+                                pointLightPosition: { value: new THREE.Vector3(
+                                    plXandY.x,
+                                    plXandY.y,
+                                    plZ
+                                ) },
                                 pointLightDecay: { value: pointLightDecay },
                                 // Point Light 2
                                 pointLightColor2: { value: pointLightColor2 },
-                                pointLightIntensity2: { value: pointLightIntensity2 },
-                                pointLightPosition2: { value: new THREE.Vector3(10, 0, 10) },
+                                pointLightIntensity2: { value: pointLightIntensity2 * 0.1 },
+                                pointLightPosition2: { value: new THREE.Vector3(
+                                    plXandY2.x,
+                                    plXandY2.y,
+                                    plZ2
+                                ) },
                                 pointLightDecay2: { value: pointLightDecay2 },
 
                                 roughnessIntensity: { value: roughnessIntensity },
