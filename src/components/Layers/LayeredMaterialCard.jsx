@@ -311,38 +311,38 @@ export default function LayeredMaterialCard({
         plXandY2,
         plZ2,
     } = useControls('Lighting Config. [Ambient, Point 1, Point 2]', {
-        ambientLightColor: { value: { r: 0, g: 0, b: 0 }, label: 'AL Color' },
-        ambientLightIntensity: { value: 0.00, min: 0, max: 1, step: 0.001, label: 'AL Intensity' },
+        ambientLightColor: { value: { r: 2, g: 2, b: 2 }, label: 'AL Color' },
+        ambientLightIntensity: { value: 0.35, min: 0, max: 1, step: 0.001, label: 'AL Intensity' },
 
-        pointLightColor: { value: { r: 121, g: 121, b: 121 }, label: 'PL1 Color' },
-        pointLightIntensity: { value: 2.0, min: 0, max: 2, step: 0.001, label: 'PL1 Intensity' },
-        pointLightDecay: { value: 0.21, min: 0, max: 2, step: 0.001, label: 'PL1 Decay' },
+        pointLightColor: { value: { r: 248, g: 223, b: 177 }, label: 'PL1 Color' },
+        pointLightIntensity: { value: 1.0, min: 0, max: 2, step: 0.001, label: 'PL1 Intensity' },
+        pointLightDecay: { value: 1.20, min: 0, max: 2, step: 0.001, label: 'PL1 Decay' },
         plXandY: {
-            value: new THREE.Vector2(0, 0),
+            value: new THREE.Vector2(-4, 1),
             min: -20,
             max: 20,
             step: 0.1,
             label: 'PL1 x & y'
         },
         plZ: {
-            value: 10,
+            value: 1,
             min: -1,
             max: 20,
             label: 'PL1 z'
         },
 
-        pointLightColor2: { value: { r: 121, g: 121, b: 121 }, label: 'PL2 Color' },
-        pointLightIntensity2: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL2 Intensity' },
-        pointLightDecay2: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL2 Decay' },
+        pointLightColor2: { value: { r: 149, g: 181, b: 230 }, label: 'PL2 Color' },
+        pointLightIntensity2: { value: 1.0, min: 0, max: 2, step: 0.001, label: 'PL2 Intensity' },
+        pointLightDecay2: { value: 1.20, min: 0, max: 2, step: 0.001, label: 'PL2 Decay' },
         plXandY2: {
-            value: new THREE.Vector2(10, 0),
+            value: new THREE.Vector2(4, 1),
             min: -20,
             max: 20,
             step: 0.1,
             label: 'PL2 x & y'
         },
         plZ2: {
-            value: 10,
+            value: 1,
             min: -1,
             max: 20,
             label: 'PL2 z'

@@ -5,7 +5,6 @@ import Field from "./components/Field";
 import Grass from "./components/Grass";
 import { useRef } from "react";
 import LinkButton from "./components/LinkButton";
-import AnimCards from "./components/Layers/AnimCards";
 
 
 export default function Gameplay() {
