@@ -211,7 +211,7 @@ export default function MainCard({
     let lastAngle = 0; // Keep track of the last angle
 
 
-    useFrame((state) => {
+    useFrame((state, delta) => {
 
         if (shaderRef.current) {
             shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
@@ -298,7 +298,7 @@ export default function MainCard({
         }
     }
 
-
+ 
     return (
         <group>
             <mesh

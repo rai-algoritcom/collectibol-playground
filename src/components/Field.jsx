@@ -3,10 +3,13 @@ import { useThree } from "@react-three/fiber"
 import { useControls } from "leva"
 
  
-export default function Field() {
+export default function Field({
+    controlsRef
+}) {
 
     const { scene } = useGLTF('/models/ground_optim.glb', true)
     const { set, size, camera } = useThree()
+
 
     useControls('Camera', {
         'mode': {
@@ -25,9 +28,11 @@ export default function Field() {
                         builtInCamera.updateProjectionMatrix();
 
                         set({ camera: builtInCamera });
+                        // controlsRef.current.enabled = false
                     }
                 } else {
                     set({ camera })
+                    // controlsRef.current.enabled = true
                 }
             }
         }

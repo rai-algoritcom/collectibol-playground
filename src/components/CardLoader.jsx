@@ -46,27 +46,27 @@ export default function CardLoader({ isGameplay }) {
         // },
         gradingV2: {
             doblez: {
-                albedo: '/mobile/prod/crop_grading/poor3/doblez_albedo.png',
+                albedo: '/mobile/prod/grading/poor4/doblez_albedo.png',
                 // normal: '/mobile/prod/crop_grading/poor2/doblez_normal.png',
-                roughness: '/mobile/prod/crop_grading/poor3/doblez_roughness.png'
+                roughness: '/mobile/prod/grading/poor4/doblez_roughness.png'
             },
             exterior: {
-                albedo: '/mobile/prod/grading/poor3/exterior_albedo.png',
+                albedo: '/mobile/prod/grading/poor4/exterior_albedo.png',
                 // normal: '/prod/grading/poor/exterior_normal.png',
-                roughness: '/mobile/prod/grading/poor3/exterior_roughness.png'
+                roughness: '/mobile/prod/grading/poor4/exterior_roughness.png'
             },
             manchas: {
-                albedo: '/mobile/prod/crop_grading/poor3/manchas_albedo.png'
+                albedo: '/mobile/prod/grading/poor4/manchas_albedo.png'
             },
             rascado: {
-                albedo: '/mobile/prod/crop_grading/poor3/rascado_albedo.png',
+                albedo: '/mobile/prod/grading/poor4/rascado_albedo.png',
                 // normal: '/mobile/prod/crop_grading/poor2/rascado_normal.png',
-                roughness: '/mobile/prod/crop_grading/poor3/rascado_roughness.png'
+                roughness: '/mobile/prod/grading/poor4/rascado_roughness.png'
             },
             scratches: {
-                albedo: '/mobile/prod/crop_grading/poor3/scratches_albedo.png',
+                albedo: '/mobile/prod/grading/poor4/scratches_albedo.png',
                 // normal: '/mobile/prod/crop_grading/poor2/scratches_normal.png',
-                roughness: '/mobile/prod/crop_grading/poor3/scratches_roughness.png'
+                roughness: '/mobile/prod/grading/poor4/scratches_roughness.png'
             }
         },
         fx: {
