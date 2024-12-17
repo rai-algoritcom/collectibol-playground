@@ -15,12 +15,16 @@ uniform float uHoverState; // Speed of the transition
 uniform vec3 ambientLightColor;  // Ambient light color
 uniform float ambientLightIntensity; // Ambient light intensity
 uniform vec3 lightDirection; // Directional light direction
-uniform vec3 directionalLightColor; // Directional light color
-uniform float directionalLightIntensity; // Directional light intensity
+
 uniform vec3 pointLightPosition; // Point light position
 uniform vec3 pointLightColor; // Point light color
 uniform float pointLightIntensity; // Point light intensity
 uniform float pointLightDecay; // Point light decay factor
+
+uniform vec3 pointLightPosition2;
+uniform vec3 pointLightColor2;
+uniform float pointLightIntensity2;
+uniform float pointLightDecay2;
 
 // Roughness and normal map controls
 uniform float roughnessIntensity; // Controls the influence of roughness
@@ -58,8 +62,8 @@ void main() {
 
     float diffuseDirectional = max(dot(normal, lightDir), 0.0);
     float specularDirectional = pow(max(dot(lightReflection, viewDir), 0.0), 16.0 * (1.0 - roughnessValue));
-    vec3 directionalLight = directionalLightColor * directionalLightIntensity * 
-                            (0.6 * diffuseDirectional + 0.4 * specularDirectional); // Blend diffuse & specular
+    // vec3 directionalLight = directionalLightColor * directionalLightIntensity * 
+    //                         (0.6 * diffuseDirectional + 0.4 * specularDirectional); // Blend diffuse & specular
 
     // === Point Light ===
     vec3 pointDelta = pointLightPosition - vPosition;
@@ -73,8 +77,22 @@ void main() {
     vec3 pointLight = pointLightColor * pointLightIntensity * pointDecay *
                       (0.6 * diffusePoint + 0.4 * specularPoint); // Blend diffuse & specular
 
+
+
+    // PL2 
+    vec3 pointDelta2 = pointLightPosition2 - vPosition;
+    float pointDistance2 = length(pointDelta2);
+    vec3 pointDir2 = normalize(pointDelta2);
+    vec3 pointReflection2 = reflect(-pointDir2, normal);
+
+    float diffusePoint2 = max(dot(normal, pointDir2), 0.0);
+    float specularPoint2 = pow(max(dot(pointReflection2, viewDir), 0.0), 16.0 * (1.0 - roughnessValue));
+    float pointDecay2 = max(1.0 / (1.0 + pointDistance2 * pointDistance2 * pointLightDecay2), 0.0);
+    vec3 pointLight2 = pointLightColor2 * pointLightIntensity2 * pointDecay2 * 
+                    (0.6 * diffusePoint2 + 0.4 * specularPoint2);                 
+
     // Combine lighting contributions
-    vec3 lighting = ambientLight + directionalLight + pointLight;
+    vec3 lighting = ambientLight + pointLight + pointLight2;
 
     // Soften roughness by blending lighting with a roughness-adjusted diffuse
     vec3 roughnessEffect = mix(lighting, lighting * (1.0 - roughnessValue), roughnessPresence);

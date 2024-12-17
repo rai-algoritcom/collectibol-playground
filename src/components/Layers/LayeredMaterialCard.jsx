@@ -295,21 +295,28 @@ export default function LayeredMaterialCard({
 
 
     const {
+        // AL
         ambientLightColor,
         ambientLightIntensity,
-        directionalLightColor,
-        directionalLightIntensity,
+        // PL 1
         pointLightColor,
         pointLightIntensity,
-        pointLightDecay
-    } = useControls('Lighting Config. [Ambient, Directional, Point]', {
+        pointLightDecay,
+        // PL 2
+        pointLightColor2,
+        pointLightIntensity2,
+        pointLightDecay2
+    } = useControls('Lighting Config. [Ambient, Point 1, Point 2]', {
         ambientLightColor: { value: { r: 0, g: 0, b: 0 }, label: 'AL Color' },
         ambientLightIntensity: { value: 0.00, min: 0, max: 1, step: 0.001, label: 'AL Intensity' },
-        directionalLightColor: { value: { r: 13, g: 13, b: 13 }, label: 'DL Color' },
-        directionalLightIntensity: { value: 0.1, min: 0, max: 1, step: 0.001, label: 'DL Intensity' },
-        pointLightColor: { value: { r: 121, g: 121, b: 121 }, label: 'PL Color' },
-        pointLightIntensity: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL Intensity' },
-        pointLightDecay: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL Decay' },
+
+        pointLightColor: { value: { r: 121, g: 121, b: 121 }, label: 'PL1 Color' },
+        pointLightIntensity: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL1 Intensity' },
+        pointLightDecay: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL1 Decay' },
+
+        pointLightColor2: { value: { r: 121, g: 121, b: 121 }, label: 'PL2 Color' },
+        pointLightIntensity2: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL2 Intensity' },
+        pointLightDecay2: { value: 0.0, min: 0, max: 2, step: 0.001, label: 'PL2 Decay' }
     })
     
 
@@ -466,11 +473,12 @@ export default function LayeredMaterialCard({
                 lights: {
                     ambient_light_color: ambientLightColor,
                     ambient_light_intensity: ambientLightIntensity,
-                    directional_light_color: directionalLightColor,
-                    directional_light_intensity: directionalLightIntensity,
                     point_light_color: pointLightColor,
                     point_light_intensity: pointLightIntensity,
-                    point_light_decay: pointLightDecay
+                    point_light_decay: pointLightDecay,
+                    point_light_color_2: pointLightColor2,
+                    point_light_intensity_2: pointLightIntensity2,
+                    point_light_decay_2: pointLightDecay2
                 },
                 brightness: {
                     brightness_intensity: brightnessIntensity,
@@ -722,11 +730,12 @@ export default function LayeredMaterialCard({
         // Lights
         ambientLightColor,
         ambientLightIntensity,
-        directionalLightColor,
-        directionalLightIntensity,
         pointLightColor,
         pointLightIntensity,
         pointLightDecay,
+        pointLightColor2,
+        pointLightIntensity2,
+        pointLightDecay2,
         // Folding
         useFolding, 
         foldIntensity, 
@@ -883,14 +892,16 @@ export default function LayeredMaterialCard({
                                 // Ambient Light 
                                 ambientLightColor: { value: ambientLightColor },
                                 ambientLightIntensity: { value: ambientLightIntensity },
-                                // Directional Light 
-                                directionalLightColor: { value: directionalLightColor },
-                                directionalLightIntensity: { value: directionalLightIntensity },
                                 // Point Light 
                                 pointLightColor: { value: pointLightColor },
                                 pointLightIntensity: { value: pointLightIntensity },
-                                pointLightPosition: { value: new THREE.Vector3(10, 0, 10) },
+                                pointLightPosition: { value: new THREE.Vector3(0, 0, 10) },
                                 pointLightDecay: { value: pointLightDecay },
+                                // Point Light 2
+                                pointLightColor2: { value: pointLightColor2 },
+                                pointLightIntensity2: { value: pointLightIntensity2 },
+                                pointLightPosition2: { value: new THREE.Vector3(10, 0, 10) },
+                                pointLightDecay2: { value: pointLightDecay2 },
 
                                 roughnessIntensity: { value: roughnessIntensity },
                                 roughnessPresence: { value: roughnessPresence },

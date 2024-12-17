@@ -17,12 +17,16 @@ uniform sampler2D iridescenceMask;
 uniform vec3 ambientLightColor;  // Ambient light color
 uniform float ambientLightIntensity; // Ambient light intensity
 uniform vec3 lightDirection; // Directional light direction
-uniform vec3 directionalLightColor; // Directional light color
-uniform float directionalLightIntensity; // Directional light intensity
+
 uniform vec3 pointLightPosition; // Point light position
 uniform vec3 pointLightColor; // Point light color
 uniform float pointLightIntensity; // Point light intensity
 uniform float pointLightDecay; // Point light decay factor
+
+uniform vec3 pointLightPosition2;
+uniform vec3 pointLightColor2;
+uniform float pointLightIntensity2;
+uniform float pointLightDecay2;
 
 // Iridescence-related uniforms
 uniform bool useIridescence;        // Toggle for iridescence effect
