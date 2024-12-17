@@ -2,6 +2,8 @@ import { Environment, OrbitControls, PerspectiveCamera } from "@react-three/drei
 import { Canvas } from "@react-three/fiber";
 import CardLoader from "./components/CardLoader";
 import LinkButton from "./components/LinkButton";
+import ResetButton from "./components/ResetButton";
+import { removeStorageConfig } from "./data/localStorage";
 
 
 export default function Builder() {
@@ -30,6 +32,10 @@ export default function Builder() {
             <LinkButton 
                 to={"/gameplay"}
                 content={"Gameplay"}
+            />
+
+            <ResetButton 
+                onClick={ () => removeStorageConfig() } 
             />
 
         </>

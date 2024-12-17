@@ -1,4 +1,6 @@
 
+
+
 export const getCardConfigJSON = () => {
     const cardConfig = readStorageConfig()
     if (cardConfig) {
@@ -104,3 +106,9 @@ export const readStorageConfig = (config) => {
     if (!cardConfig) return null
     return JSON.parse(cardConfig)
 }
+
+
+export const removeStorageConfig = () => {
+    localStorage.removeItem('card_data')
+    return window.location.reload()
+} 
