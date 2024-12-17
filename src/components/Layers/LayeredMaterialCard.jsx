@@ -68,11 +68,17 @@ import {
     blendAlphaTXs, 
 } from "../../utils";
 
-import { downloadJSON, getRandomPositionAndRotation, normalizeAngle, takeScreenshot } from "../../utils/helpers";
+import { 
+    downloadJSON, 
+    normalizeAngle,
+    takeScreenshot,
+    getRandomPositionAndRotation 
+} from "../../utils/helpers";
 
 import Stats from "three/examples/jsm/libs/stats.module.js";
 import FooterCard from "./FooterCard";
 import SkillsCard from "./SkillsCard";
+import { writeStorageConfig } from "../../data/localStorage";
 
 
 
@@ -81,6 +87,8 @@ document.body.appendChild(stats.dom);
 
 
 export default function LayeredMaterialCard({ 
+    cardConfig,
+    // 
     textures, 
     texturePaths, 
     layoutColor,
@@ -103,8 +111,10 @@ export default function LayeredMaterialCard({
 
     const [blendMode, setBlendMode] = useState(1)
 
-    const [jsonCfg, setJsonCfg] = useState()
-    const [animationTrigger, setAnimationTrigger] = useState('rotation')
+    const [jsonCfg, setJsonCfg] = 
+        useState(cardConfig)
+    const [animationTrigger, setAnimationTrigger] = 
+        useState(cardConfig.fragment_fx.trigger)
 
     /**
      * Randomize offset and rotation for 'Grading v2': 
@@ -271,14 +281,14 @@ export default function LayeredMaterialCard({
     const { roughnessIntensity, roughnessPresence } = useControls('Roughness Config.', {
         roughnessIntensity: {
             label: 'Intensity',
-            value: 1.1,
+            value: cardConfig.roughness_intensity,
             min: 0.0,
             max: 2.0,
             step: 0.1,
         },
         roughnessPresence: {
             label: 'Presence',
-            value: 0.55,
+            value: cardConfig.roughness_presence,
             min: 0.0,
             max: 1.0,
             step: 0.1,
@@ -286,11 +296,23 @@ export default function LayeredMaterialCard({
     });
 
     const { normalIntensity } = useControls('Normal Config.', {
-        normalIntensity: { label: 'Intensity', value: 5.0, min: 0.1, max: 5.0, step: 0.01 }
+        normalIntensity: { 
+            label: 'Intensity', 
+            value: cardConfig.normal_intensity, 
+            min: 0.1, 
+            max: 5.0, 
+            step: 0.01 
+        }
     });
 
     const { displacementScale } = useControls('Displacement Config.', {
-        displacementScale: { label: 'Height Scale', value: 0.01, min: 0.0, max: 0.5, step: 0.0001 }
+        displacementScale: { 
+            label: 'Height Scale', 
+            value: cardConfig.displacement_scale, 
+            min: 0.0, 
+            max: 0.5, 
+            step: 0.0001 
+        }
     })
 
 
@@ -311,38 +333,44 @@ export default function LayeredMaterialCard({
         plXandY2,
         plZ2,
     } = useControls('Lighting Config. [Ambient, Point 1, Point 2]', {
-        ambientLightColor: { value: { r: 2, g: 2, b: 2 }, label: 'AL Color' },
-        ambientLightIntensity: { value: 0.35, min: 0, max: 1, step: 0.001, label: 'AL Intensity' },
+        ambientLightColor: { value: cardConfig.lights.ambient_light_color, label: 'AL Color' },
+        ambientLightIntensity: { value: cardConfig.lights.ambient_light_intensity, min: 0, max: 1, step: 0.001, label: 'AL Intensity' },
 
-        pointLightColor: { value: { r: 248, g: 223, b: 177 }, label: 'PL1 Color' },
-        pointLightIntensity: { value: 1.0, min: 0, max: 2, step: 0.001, label: 'PL1 Intensity' },
-        pointLightDecay: { value: 1.20, min: 0, max: 2, step: 0.001, label: 'PL1 Decay' },
+        pointLightColor: { value: cardConfig.lights.point_light_color, label: 'PL1 Color' },
+        pointLightIntensity: { value: cardConfig.lights.point_light_intensity, min: 0, max: 2, step: 0.001, label: 'PL1 Intensity' },
+        pointLightDecay: { value: cardConfig.lights.point_light_decay, min: 0, max: 2, step: 0.001, label: 'PL1 Decay' },
         plXandY: {
-            value: new THREE.Vector2(-4, 1),
+            value: new THREE.Vector2(
+                cardConfig.lights.point_light_pos.x,
+                cardConfig.lights.point_light_pos.y
+            ),
             min: -20,
             max: 20,
             step: 0.1,
             label: 'PL1 x & y'
         },
         plZ: {
-            value: 1,
+            value: cardConfig.lights.point_light_pos.z,
             min: -1,
             max: 20,
             label: 'PL1 z'
         },
 
-        pointLightColor2: { value: { r: 149, g: 181, b: 230 }, label: 'PL2 Color' },
-        pointLightIntensity2: { value: 1.0, min: 0, max: 2, step: 0.001, label: 'PL2 Intensity' },
-        pointLightDecay2: { value: 1.20, min: 0, max: 2, step: 0.001, label: 'PL2 Decay' },
+        pointLightColor2: { value: cardConfig.lights.point_light_color_2, label: 'PL2 Color' },
+        pointLightIntensity2: { value: cardConfig.lights.point_light_intensity_2, min: 0, max: 2, step: 0.001, label: 'PL2 Intensity' },
+        pointLightDecay2: { value: cardConfig.lights.point_light_decay_2, min: 0, max: 2, step: 0.001, label: 'PL2 Decay' },
         plXandY2: {
-            value: new THREE.Vector2(4, 1),
+            value: new THREE.Vector2(
+                cardConfig.lights.point_light_pos_2.x,
+                cardConfig.lights.point_light_pos_2.y
+            ),
             min: -20,
             max: 20,
             step: 0.1,
             label: 'PL2 x & y'
         },
         plZ2: {
-            value: 1,
+            value: cardConfig.lights.point_light_pos_2.z,
             min: -1,
             max: 20,
             label: 'PL2 z'
@@ -352,37 +380,37 @@ export default function LayeredMaterialCard({
 
 
     const { useBrightness, brightnessIntensity  } = useControls('Brightness Fx', {
-        useBrightness: { value: false, label: 'Enable' },
-        brightnessIntensity: { value: 0.6, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
+        useBrightness: { value: cardConfig.brightness.use_brightness, label: 'Enable' },
+        brightnessIntensity: { value: cardConfig.brightness.brightness_intensity, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
     });
 
 
     const { useIridescence, iridescenceIntensity } = useControls('Iridescence Fx', {
-        useIridescence: { value: true, label: 'Enable' },
-        iridescenceIntensity: { value: 0.6, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
+        useIridescence: { value: cardConfig.iridescence.use_iridescence, label: 'Enable' },
+        iridescenceIntensity: { value: cardConfig.iridescence.iridescence_intensity, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
     });
 
     
 
     const { useShiney, shineyIntensity, shineyColor } = useControls('Shine Fx', {
-        useShiney: { value: false, label: 'Enable' },
-        shineyIntensity: { value: 0.0045, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
-        shineyColor: { value: { r: 231, g: 245, b: 81 }, label: 'Color' },
+        useShiney: { value: cardConfig.shine.use_shine, label: 'Enable' },
+        shineyIntensity: { value: cardConfig.shine.shine_intensity, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
+        shineyColor: { value: cardConfig.shine.shine_color, label: 'Color' },
     })
 
 
 
     const { useRefraction, refractionIntensity, stripesVisible } = useControls('Refraction Fx', {
-        useRefraction: { value: false, label: 'Enable' },
-        stripesVisible: { value: false, label: 'Stripes' },
-        refractionIntensity: { value: 1.0, min: 0, max: 1.0, step: 0.001, label: 'Intensity' },
+        useRefraction: { value: cardConfig.refraction.use_refraction, label: 'Enable' },
+        stripesVisible: { value: cardConfig.refraction.stripes_visible, label: 'Stripes' },
+        refractionIntensity: { value: cardConfig.refraction.refraction_intensity, min: 0, max: 1.0, step: 0.001, label: 'Intensity' },
     })
 
 
     
     const { useTransition, transitionSpeed } = useControls('Transition Fx', {
-        useTransition: { value: true, label: 'Enable' },
-        transitionSpeed: { value: 0.8, min: 0, max: 3, label: 'Speed' },
+        useTransition: { value: cardConfig.transition.use_transition, label: 'Enable' },
+        transitionSpeed: { value: cardConfig.transition.transition_speed, min: 0, max: 3, label: 'Speed' },
         'mode': {
                 value: 'min',
                 options: {
@@ -406,59 +434,48 @@ export default function LayeredMaterialCard({
 
 
     const { useFolding, foldIntensity, foldX, foldY, foldRotation } = useControls('Folding Fx', { 
-        useFolding: { value: false, label: 'Enable' },
-        foldIntensity: { value: 0.65, min: 0, max: 2, step: 0.01, label: 'Intensity' },
-        foldX: { value: 0.8, min: -1.5, max: 1.5, step: 0.01, label: 'Position X' },
-        foldY: { value: 1.43, min: -1.5, max: 1.5, step: 0.01, label: 'Position Y' },
-        foldRotation: { value: 0.12, min: -Math.PI, max: Math.PI, step: 0.01, label: 'Rotation Z' }
+        useFolding: { value: cardConfig.folding.use_folding, label: 'Enable' },
+        foldIntensity: { value: cardConfig.folding.fold_intensity, min: 0, max: 2, step: 0.01, label: 'Intensity' },
+        foldX: { value: cardConfig.folding.fold_x, min: -1.5, max: 1.5, step: 0.01, label: 'Position X' },
+        foldY: { value: cardConfig.folding.fold_y, min: -1.5, max: 1.5, step: 0.01, label: 'Position Y' },
+        foldRotation: { value: cardConfig.folding.fold_rotation, min: -Math.PI, max: Math.PI, step: 0.01, label: 'Rotation Z' }
     })
     
 
     const { useGlitch, useWave, useBreath, useTwister, usePulse, useJitter, useNoise, useCloth } = useControls('Animations Vertex', {
-        useGlitch: { value: false, label: 'Glitch Fx' },
-        useWave: { value: false, label: 'Wave Fx' },
-        useBreath: { value: false, label: 'Breathe Fx' },
-        useTwister: { value: false, label: 'Twist Fx' },
-        usePulse: { value: false, label: 'Float Fx' },
-        useJitter: { value: false, label: 'Jitter Fx' },
-        useNoise: { value: false, label: 'Noise Fx' },
-        useCloth: { value: false, label: 'Cloth Fx' }
+        useGlitch: { value: cardConfig.vertex_fx.id === 'glitch', label: 'Glitch Fx' },
+        useWave: { value: cardConfig.vertex_fx.id === 'wave', label: 'Wave Fx' },
+        useBreath: { value: cardConfig.vertex_fx.id === 'breath', label: 'Breathe Fx' },
+        useTwister: { value: cardConfig.vertex_fx.id === 'twister', label: 'Twist Fx' },
+        usePulse: { value: cardConfig.vertex_fx.id === 'pulse', label: 'Float Fx' },
+        useJitter: { value: cardConfig.vertex_fx.id === 'jitter', label: 'Jitter Fx' },
+        useNoise: { value: cardConfig.vertex_fx.id === 'noise', label: 'Noise Fx' },
+        useCloth: { value: cardConfig.vertex_fx.id === 'cloth', label: 'Cloth Fx' }
     })
 
 
     const { useCardio, useSquares, useCircle, useDank, useShine, useEther, useFire, useWaves, useSmoke, useRay, useCrystal, useGalaxy, useLiquid, useAsci, useSpin, useParticles, useBlobs, useGrass } = useControls('Animations Fragment (overlay)', {
-        '*Trigger': { options: { rotation: 'rotation', time: 'time' }, onChange: (v) => setAnimationTrigger(v), value: 'rotation' },
-        useCardio: { value: false, label: 'Cardio Fx' },
-        useSquares: { value: false, label: 'Fractal Fx' },
-        useCircle: { value: false, label: 'Circle Fx' },
-        useDank: { value: false, label: 'Dank Fx' },
-        useShine: { value: false, label: 'Shine Fx' },
-        useEther: { value: false, label: 'Ether Fx' },
-        useFire: { value: false, label: 'Fire Fx' },
-        useWaves: { value: false, label: 'Waves Fx' },
-        useSmoke: { value: false, label: 'Smoke Fx' },
-        useRay: { value: false, label: '[!] Ray Fx' },
-        useCrystal: { value: false, label: 'Crystal Fx' },
-        useGalaxy: { value: false, label: 'Galaxy Fx' },
-        useLiquid: { value: false, label: 'Liquid Fx' },
-        useAsci: { value: false, label: 'Ascii Fx' },
-        useSpin: { value: false, label: 'Spin Fx' },
-        useParticles: { value: false, label: '[!] Particles Fx' },
-        useBlobs: { value: false, label: 'Blobs Fx' },
-        useGrass: { value: false, label: 'Grass Fx' }
+        '*Trigger': { options: { rotation: 'rotation', time: 'time' }, onChange: (v) => setAnimationTrigger(v), value: cardConfig.fragment_fx.trigger },
+        useCardio: { value: cardConfig.fragment_fx.id === 'cardio', label: 'Cardio Fx' },
+        useSquares: { value: cardConfig.fragment_fx.id === 'squares', label: 'Fractal Fx' },
+        useCircle: { value: cardConfig.fragment_fx.id === 'circle', label: 'Circle Fx' },
+        useDank: { value: cardConfig.fragment_fx.id === 'dank', label: 'Dank Fx' },
+        useShine: { value: cardConfig.fragment_fx.id === 'shine', label: 'Shine Fx' },
+        useEther: { value: cardConfig.fragment_fx.id === 'ether', label: 'Ether Fx' },
+        useFire: { value: cardConfig.fragment_fx.id === 'fire', label: 'Fire Fx' },
+        useWaves: { value: cardConfig.fragment_fx.id === 'waves', label: 'Waves Fx' },
+        useSmoke: { value: cardConfig.fragment_fx.id === 'smoke', label: 'Smoke Fx' },
+        useRay: { value: cardConfig.fragment_fx.id === 'ray', label: '[!] Ray Fx' },
+        useCrystal: { value: cardConfig.fragment_fx.id === 'crystal', label: 'Crystal Fx' },
+        useGalaxy: { value: cardConfig.fragment_fx.id === 'galaxy', label: 'Galaxy Fx' },
+        useLiquid: { value: cardConfig.fragment_fx.id === 'liquid', label: 'Liquid Fx' },
+        useAsci: { value: cardConfig.fragment_fx.id === 'asci', label: 'Ascii Fx' },
+        useSpin: { value: cardConfig.fragment_fx.id === 'spin', label: 'Spin Fx' },
+        useParticles: { value: cardConfig.fragment_fx.id === 'particles', label: '[!] Particles Fx' },
+        useBlobs: { value: cardConfig.fragment_fx.id === 'blobs', label: 'Blobs Fx' },
+        useGrass: { value: cardConfig.fragment_fx.id === 'grass', label: 'Grass Fx' }
     })
 
-
-
-
-    // const { fontColor, fontSize, maxWidth, lineHeight, letterSpacing, textContent } = useControls('Text Overlay', {
-    //     fontColor: { value: "#ffffff", label: 'Color' },
-    //     fontSize: { value: .16, min: 0, max: 1, label: 'Font Size' },
-    //     maxWidth: { value: 1, min: 1, max: 5, label: 'Max Width' },
-    //     lineHeight: { value: 0.75, min: 0.1, max: 10 , label: 'Line Height' },
-    //     letterSpacing: { value: -0.08, min: -0.5, max: 1, label: 'Letter Spacing' },
-    //     textContent: { value: '', label: 'Content'}
-    // })
 
 
     useControls({
@@ -506,9 +523,19 @@ export default function LayeredMaterialCard({
                     point_light_color: pointLightColor,
                     point_light_intensity: pointLightIntensity,
                     point_light_decay: pointLightDecay,
+                    point_light_pos: {
+                        x: plXandY.x,
+                        y: plXandY.y,
+                        z: plZ
+                    },
                     point_light_color_2: pointLightColor2,
                     point_light_intensity_2: pointLightIntensity2,
-                    point_light_decay_2: pointLightDecay2
+                    point_light_decay_2: pointLightDecay2,
+                    point_light_pos_2: {
+                        x: plXandY2.x,
+                        y: plXandY2.y,
+                        z: plZ2
+                    }
                 },
                 brightness: {
                     brightness_intensity: brightnessIntensity,
@@ -534,10 +561,10 @@ export default function LayeredMaterialCard({
                 },
                 folding: {
                     use_folding: useFolding,
-                    folding_intensity: foldIntensity,
-                    folding_x: foldX,   
-                    folding_y: foldY,
-                    folding_rotation: foldRotation
+                    fold_intensity: foldIntensity,
+                    fold_x: foldX,   
+                    fold_y: foldY,
+                    fold_rotation: foldRotation
                 },
                 vertex_fx: {
                     id: useGlitch 
@@ -628,12 +655,11 @@ export default function LayeredMaterialCard({
         refreshMesh(); 
 
         setJsonCfg(cfg)
+        writeStorageConfig(cfg)
 
         if (!useTransition && skillsRef.current) {
             skillsRef.current.style.opacity = 1
         }
-
-
 
         return () => {
             if (shaderRef.current) {
@@ -675,7 +701,6 @@ export default function LayeredMaterialCard({
             };
             [
                 blendedAlbedoTextures,
-                // blendedAlbedo2Textures,
                 blendedAlbedo3Textures,
                 blendedAlphaTextures,
                 blendedAlpha2Textures,
@@ -1141,7 +1166,10 @@ export default function LayeredMaterialCard({
             />
             
 
-            <FooterCard blendMode={blendMode} ref={footerRef} />
+            <FooterCard 
+                blendMode={blendMode} 
+                ref={footerRef} 
+            />
       
         </group>
     )

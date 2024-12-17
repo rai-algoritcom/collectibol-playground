@@ -6,9 +6,13 @@ import { useControls } from "leva";
 import MainCard from "./Layers/MainCard.jsx";
 
 import mock from '../data/genesis.js'
+import { getCardConfigJSON } from "../data/localStorage.js";
 
 
 export default function CardLoader({ isGameplay }) {
+
+    const cardConfig = getCardConfigJSON()
+    
 
     const [texturePaths, setTexturePaths] = useState({
         base: {
@@ -26,24 +30,14 @@ export default function CardLoader({ isGameplay }) {
         },
         main_interest: {
             albedo: '/mobile/prod/main_interest/albido.png',
-            // ao: '/textures/main_interest/ao.png',
             height: '/mobile/prod/main_interest/height.png',
-            // normal: '/mobile/prod/main_interest/normal.png'
         },
         layout: {
             albedo: '/mobile/prod/layout/albido2.png',
             albedo2: '/mobile/prod/layout/albido2-skills.png',
             ao: '/mobile/prod/layout/ao.png',
             height: '/mobile/prod/layout/height.png',
-            // normal: '/mobile/prod/layout/normal.png',
         },
-        // grading: {
-        //     albedo: '/textures/grading/poor/alpha.png',
-        //     height: '/textures/grading/poor/height.png',
-        //     normal: '/textures/grading/poor/normal.png',
-        //     alpha: '/textures/grading/poor/opacity.png',
-        //     roughness: '/textures/grading/poor/roughness.png',
-        // },
         gradingV2: {
             doblez: {
                 albedo: '/mobile/prod/crop_grading/poor4/doblez_albedo.png',
@@ -90,23 +84,23 @@ export default function CardLoader({ isGameplay }) {
             'Normal': { image: texturePaths.base.normal, onChange: (v) => updateTexture('base', 'normal', v) },
             'Roughness': { image: texturePaths.base.roughness, onChange: (v) => updateTexture('base', 'roughness', v) }, 
             base_alpha: {
-                value: true,
+                value: cardConfig.alpha_ch.base_alpha,
                 label: 'Alpha ch.'
             },
             base_albedo: {
-                value: true, 
+                value: cardConfig.alpha_ch.base_albedo, 
                 label: 'Albedo ch.'
             },
             base_height: {
-                value: false,
+                value: cardConfig.height_ch.base_height,
                 label: 'Height ch.'
             },
             base_normal: {
-                value: true,
+                value: cardConfig.normal_ch.base_normal,
                 label: 'Normal ch.'
             },
             base_roughness: {
-                value: false,
+                value: cardConfig.roughness_ch.base_roughness,
                 label: 'Roughness ch.'
             }
     })
@@ -116,54 +110,43 @@ export default function CardLoader({ isGameplay }) {
         'Pattern Textures + Channels', {
             'Albedo I': { image: texturePaths.pattern.albedo, onChange: (v) => updateTexture('pattern', 'albedo', v) },
             'Albedo II': { image: texturePaths.pattern.albedo2, onChange: (v) => updateTexture('pattern', 'albedo2', v) },
-            // 'Height': { image: texturePaths.pattern.height, onChange: (v) => updateTexture('pattern', 'height', v) },
             pattern_albedo: {
-                value: true,
+                value: cardConfig.albedo_ch.pattern_albedo,
                 label: 'Albedo ch.'
             }
     })
 
 
-    const { main_interest_albedo, main_interest_height, /*main_interest_normal*/ } = useControls(
+    const { main_interest_albedo, main_interest_height } = useControls(
         'Main Textures + Channels', {
             'Albedo': { image: texturePaths.main_interest.albedo, onChange: (v) => updateTexture('main_interest', 'albedo', v) },
             'Height': { image: texturePaths.main_interest.height, onChange: (v) => updateTexture('main_interest', 'height', v) },
-            // 'Normal': { image: texturePaths.main_interest.normal, onChange: (v) => updateTexture('main_interest', 'normal', v) },
             main_interest_albedo: {
-                value: true,
+                value: cardConfig.albedo_ch.main_interest_albedo,
                 label: 'Albedo ch.'
             },
             main_interest_height: {
-                value: true,
+                value: cardConfig.height_ch.main_interest_height,
                 label: 'Height ch.'
             },
-            // main_interest_normal: {
-            //     value: false,
-            //     label: 'Normal ch.'
-            // }
         }
     )
 
 
-    const { layout_albedo, layout_height, /*layout_normal,*/ layoutColor } = useControls(
+    const { layout_albedo, layout_height, layoutColor } = useControls(
         'Layout Textures + Channels', {
             'Albedo': { image: texturePaths.layout.albedo, onChange: (v) => updateTexture('layout', 'albedo', v) },
             'Albedo II': { image: texturePaths.layout.albedo2, onChange: (v) => updateTexture('layout', 'albedo2', v)  },
             'Height': { image: texturePaths.layout.height, onChange: (v) => updateTexture('layout', 'height', v) },
-            // 'Normal': { image: texturePaths.layout.normal, onChange: (v) => updateTexture('layout', 'normal', v) },
-            layoutColor: { value: { r: 44, g: 44, b: 49 }, label: '*Color' },
+            layoutColor: { value: cardConfig.layout_color, label: '*Color' },
             layout_albedo: {
-                value: true,
+                value: cardConfig.albedo_ch.layout_albedo,
                 label: 'Albedo ch.'
             },
             layout_height: {
-                value: false,
+                value: cardConfig.height_ch.layout_height,
                 label: 'Height ch.'
             },
-            // layout_normal: {
-            //     value: false,
-            //     label: 'Normal ch.'
-            // }
         }
     )
 
@@ -174,7 +157,7 @@ export default function CardLoader({ isGameplay }) {
             // 'Normal': { image: texturePaths.gradingV2.doblez.normal, onChange: (v) => updateGradingTexture('gradingV2', 'doblez', 'normal', v)   },
             'Roughness': { image: texturePaths.gradingV2.doblez.roughness, onChange: (v) => updateGradingTexture('gradingV2', 'doblez', 'roughness', v)  },
             grading_v2_doblez_albedo: {
-                value: true,
+                value: cardConfig.albedo_ch.grading_v2_doblez_albedo,
                 label: 'Albedo ch.'
             },
             // grading_v2_doblez_normal: {
@@ -182,7 +165,7 @@ export default function CardLoader({ isGameplay }) {
             //     label: 'Normal ch.'
             // },
             grading_v2_doblez_roughness: {
-                value: true,
+                value: cardConfig.roughness_ch.grading_v2_doblez_roughness,
                 label: 'Roughness ch.'
             }
         },
@@ -193,11 +176,11 @@ export default function CardLoader({ isGameplay }) {
             'Albedo': { image: texturePaths.gradingV2.exterior.albedo, onChange: (v) => updateGradingTexture('gradingV2', 'exterior', 'albedo', v)  },
             'Roughness': { image: texturePaths.gradingV2.exterior.roughness, onChange: (v) => updateGradingTexture('gradingV2', 'exterior', 'roughness', v)  },
             grading_v2_exterior_albedo: {
-                value: true,
+                value: cardConfig.albedo_ch.grading_v2_exterior_albedo,
                 label: 'Albedo ch.'
             },
             grading_v2_exterior_roughness: {
-                value: true,
+                value: cardConfig.roughness_ch.grading_v2_exterior_roughness,
                 label: 'Roughness ch.'
             }
         }
@@ -207,7 +190,7 @@ export default function CardLoader({ isGameplay }) {
         'Manchas (Grading Textures v2)', {
             'Albedo': { image: texturePaths.gradingV2.manchas.albedo, onChange: (v) => updateGradingTexture('gradingV2', 'manchas', 'albedo', v)  },
             grading_v2_manchas_albedo: {
-                value: true,
+                value: cardConfig.albedo_ch.grading_v2_manchas_albedo,
                 label: 'Albedo ch.'
             }
         }
@@ -219,7 +202,7 @@ export default function CardLoader({ isGameplay }) {
             // 'Normal': { image: texturePaths.gradingV2.rascado.normal, onChange: (v) => updateGradingTexture('gradingV2', 'rascado', 'normal', v) },
             'Roughness': { image: texturePaths.gradingV2.rascado.roughness, onChange: (v) => updateGradingTexture('gradingV2', 'rascado', 'roughness', v) },
             grading_v2_rascado_albedo: {
-                value: true,
+                value: cardConfig.albedo_ch.grading_v2_rascado_albedo,
                 label: 'Albedo ch.'
             },
             // grading_v2_rascado_normal: {
@@ -227,7 +210,7 @@ export default function CardLoader({ isGameplay }) {
             //     label: 'Normal ch.'
             // },
             grading_v2_rascado_roughness: {
-                value: true,
+                value: cardConfig.roughness_ch.grading_v2_rascado_roughness,
                 label: 'Roughness ch.'
             }
         }
@@ -239,7 +222,7 @@ export default function CardLoader({ isGameplay }) {
             // 'Normal': { image: texturePaths.gradingV2.scratches.normal, onChange: (v) => updateGradingTexture('gradingV2', 'scratches', 'normal', v) },
             'Roughness': { image: texturePaths.gradingV2.scratches.roughness, onChange: (v) => updateGradingTexture('gradingV2', 'scratches', 'roughness', v) },
             grading_v2_scratches_albedo: {
-                value: false,
+                value: cardConfig.albedo_ch.grading_v2_scratches_albedo,
                 label: 'Albedo ch.'
             },
             // grading_v2_scratches_normal: {
@@ -247,7 +230,7 @@ export default function CardLoader({ isGameplay }) {
             //     label: 'Normal ch.'
             // },
             grading_v2_scratches_roughness: {
-                value: true,
+                value: cardConfig.roughness_ch.grading_v2_scratches_roughness,
                 label: 'Roughness ch.'
             }
         }
@@ -412,6 +395,7 @@ export default function CardLoader({ isGameplay }) {
                     ))
                 : 
                 <LayeredMaterialCard
+                    cardConfig={cardConfig}
                     textures={{
                         base: baseTextures,
                         pattern: patternTexture,
