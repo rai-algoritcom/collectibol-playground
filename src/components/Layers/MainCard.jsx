@@ -357,10 +357,8 @@ const MainCard = forwardRef(({
                          */
                         // Ambient Light 
                         ambientLightColor: { value: ambientLightColor },
-                        ambientLightIntensity: { value: ambientLightIntensity },
-                        // Directional Light 
-                        directionalLightColor: { value: directionalLightColor },
-                        directionalLightIntensity: { value: directionalLightIntensity },
+                        ambientLightIntensity: { value: ambientLightIntensity }, 
+
                         // Point Light 
                         pointLightColor: { value: pointLightColor },
                         pointLightIntensity: { value: pointLightIntensity },
