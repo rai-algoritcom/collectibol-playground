@@ -15,7 +15,8 @@ export const Experience = ({
         {/* Camera */}
         <PerspectiveCamera makeDefault position={[0, 0, 5]} />
         {/* Controls */}
-        <OrbitControls />
+        
+        {/* <OrbitControls /> */}
         {/* Lights */}
 
         {/* <ambientLight intensity={5} />

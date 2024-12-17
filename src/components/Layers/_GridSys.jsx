@@ -1,14 +1,33 @@
 
-import { useTexture } from "@react-three/drei";
+import { OrbitControls, useTexture } from "@react-three/drei";
 import LayeredMaterialCard from "./Layers/LayeredMaterialCard.jsx";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useControls } from "leva";
 import MainCard from "./Layers/MainCard.jsx";
-
 import mock from '../data/genesis.js'
+import { useThree } from "@react-three/fiber";
+import { DragControls } from "three/examples/jsm/controls/DragControls"
 
 
 export default function CardLoader({ isGameplay }) {
+
+
+
+    const groupRef = useRef([])
+    const dragControls = useRef()
+    const orbitControls = useRef()
+    const { camera, gl } = useThree()
+    const initialYRef = useRef(new Map())
+
+
+    const gridSize = 1 
+    const dragLimits = {
+        minX: -5, 
+        maxX: 5, 
+        minZ: -5, 
+        maxZ: 5
+    }
+
 
     const [texturePaths, setTexturePaths] = useState({
         base: {
@@ -46,27 +65,27 @@ export default function CardLoader({ isGameplay }) {
         // },
         gradingV2: {
             doblez: {
-                albedo: '/mobile/prod/crop_grading/poor4/doblez_albedo.png',
+                albedo: '/mobile/prod/grading/poor4/doblez_albedo.png',
                 // normal: '/mobile/prod/crop_grading/poor2/doblez_normal.png',
-                roughness: '/mobile/prod/crop_grading/poor4/doblez_roughness.png'
+                roughness: '/mobile/prod/grading/poor4/doblez_roughness.png'
             },
             exterior: {
-                albedo: '/mobile/prod/crop_grading/poor4/exterior_albedo.png',
+                albedo: '/mobile/prod/grading/poor4/exterior_albedo.png',
                 // normal: '/prod/grading/poor/exterior_normal.png',
-                roughness: '/mobile/prod/crop_grading/poor4/exterior_roughness.png'
+                roughness: '/mobile/prod/grading/poor4/exterior_roughness.png'
             },
             manchas: {
-                albedo: '/mobile/prod/crop_grading/poor4/manchas_albedo.png'
+                albedo: '/mobile/prod/grading/poor4/manchas_albedo.png'
             },
             rascado: {
-                albedo: '/mobile/prod/crop_grading/poor4/rascado_albedo.png',
+                albedo: '/mobile/prod/grading/poor4/rascado_albedo.png',
                 // normal: '/mobile/prod/crop_grading/poor2/rascado_normal.png',
-                roughness: '/mobile/prod/crop_grading/poor4/rascado_roughness.png'
+                roughness: '/mobile/prod/grading/poor4/rascado_roughness.png'
             },
             scratches: {
-                albedo: '/mobile/prod/crop_grading/poor4/scratches_albedo.png',
+                albedo: '/mobile/prod/grading/poor4/scratches_albedo.png',
                 // normal: '/mobile/prod/crop_grading/poor2/scratches_normal.png',
-                roughness: '/mobile/prod/crop_grading/poor4/scratches_roughness.png'
+                roughness: '/mobile/prod/grading/poor4/scratches_roughness.png'
             }
         },
         fx: {
@@ -381,63 +400,115 @@ export default function CardLoader({ isGameplay }) {
     const gradingScratches = useTexture(texturePaths.gradingV2.scratches)
 
 
-    return (
-        <Suspense fallback={<></>}>
 
-            {
-                isGameplay 
-                ? 
-                    mock.map((props, i) => (
-                        <MainCard 
-                            key={i}
-        
-                            textures={{
-                                base: baseTextures,
-                                pattern: patternTexture,
-                                main_interest: mainInterestTextures,
-                                layout: layoutTextures,
-                                // grading: gradingTextures,
-                                gradingv2: {
-                                    gradingDoblez, 
-                                    gradingExterior, 
-                                    gradingManchas, 
-                                    gradingRascado, 
-                                    gradingScratches
-                                },
-                                fx: fxTextures
-                            }}
-        
-                            {...props}
-                        />
-                    ))
-                : 
-                <LayeredMaterialCard
-                    textures={{
-                        base: baseTextures,
-                        pattern: patternTexture,
-                        main_interest: mainInterestTextures,
-                        layout: layoutTextures,
-                        // grading: gradingTextures,
-                        gradingv2: {
-                            gradingDoblez, 
-                            gradingExterior, 
-                            gradingManchas, 
-                            gradingRascado, 
-                            gradingScratches
-                        },
-                        fx: fxTextures
-                    }}
-                    texturePaths={texturePaths}
-                    layoutColor={layoutColor}
-                    // Toggles
-                    albedoToggles={albedoToggles}
-                    normalToggles={normalToggles}
-                    roughnessToggles={roughnessToggles}
-                    alphaToggles={alphaToggles}
-                    heightToggles={heightToggles} 
-                />
+    useEffect(() => {
+
+        if (isGameplay) {
+            if (groupRef.current) {
+                dragControls.current = new DragControls(
+                    groupRef.current,
+                    camera,
+                    gl.domElement
+                )
             }
+    
+             // Disable OrbitControls on drag start
+            dragControls.current.addEventListener("dragstart", (event) => {
+                orbitControls.current.enabled = false;
+                const object = event.object
+    
+                if (!initialYRef.current.has(object.uuid)) {
+                    initialYRef.current.set(object.uuid, object.position.y);
+                }
+            });
+      
+            // Re-enable OrbitControls on drag end
+            dragControls.current.addEventListener("dragend", () => {
+                orbitControls.current.enabled = true;
+            });
+    
+            // Restrict movement to X/Z axes
+            dragControls.current.addEventListener("drag", (event) => {
+             const object = event.object; 
+             const originalY = initialYRef.current.get(object.uuid);
+             object.position.y = originalY;
+          });
+    
+          return () => {
+            dragControls.current.removeEventListener("dragstart", () => {});
+            dragControls.current.removeEventListener("dragend", () => {});
+            dragControls.current.removeEventListener("drag", () => {});
+            dragControls.current.dispose();
+          };   
+        }
 
-        </Suspense>
+
+    }, [camera, gl])
+
+
+
+    return (
+        <>
+            <Suspense fallback={<></>}>
+                {
+                    isGameplay 
+                    ? 
+                            mock.map((props, i) => (
+                                // <DragControls  key={i}>
+                                    <MainCard 
+                                        key={i}
+                                        ref={(el) => (groupRef.current[i] = el)}
+                                        textures={{
+                                            base: baseTextures,
+                                            pattern: patternTexture,
+                                            main_interest: mainInterestTextures,
+                                            layout: layoutTextures,
+                                            // grading: gradingTextures,
+                                            gradingv2: {
+                                                gradingDoblez, 
+                                                gradingExterior, 
+                                                gradingManchas, 
+                                                gradingRascado, 
+                                                gradingScratches
+                                            },
+                                            fx: fxTextures
+                                        }}
+                    
+                                        {...props}
+                                    />
+                                // </DragControls>
+                            ))
+                    : 
+                    <LayeredMaterialCard
+                        textures={{
+                            base: baseTextures,
+                            pattern: patternTexture,
+                            main_interest: mainInterestTextures,
+                            layout: layoutTextures,
+                            // grading: gradingTextures,
+                            gradingv2: {
+                                gradingDoblez, 
+                                gradingExterior, 
+                                gradingManchas, 
+                                gradingRascado, 
+                                gradingScratches
+                            },
+                            fx: fxTextures
+                        }}
+                        texturePaths={texturePaths}
+                        layoutColor={layoutColor}
+                        // Toggles
+                        albedoToggles={albedoToggles}
+                        normalToggles={normalToggles}
+                        roughnessToggles={roughnessToggles}
+                        alphaToggles={alphaToggles}
+                        heightToggles={heightToggles} 
+                    />
+                }
+
+            </Suspense>
+
+            <OrbitControls ref={orbitControls} />
+        </>
     )
 }

@@ -889,7 +889,7 @@ export default function LayeredMaterialCard({
                                 // Point Light 
                                 pointLightColor: { value: pointLightColor },
                                 pointLightIntensity: { value: pointLightIntensity },
-                                pointLightPosition: { value: new THREE.Vector3(0, 0, 10) },
+                                pointLightPosition: { value: new THREE.Vector3(10, 0, 10) },
                                 pointLightDecay: { value: pointLightDecay },
 
                                 roughnessIntensity: { value: roughnessIntensity },

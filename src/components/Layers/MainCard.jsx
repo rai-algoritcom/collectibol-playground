@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import { blendAlbedoTXs, blendAlphaTXs, blendHeightTXs, blendRoughnessTXs, blendNormalTXs, getGradingProps } from "../../utils"
 import { useFrame, useThree } from "@react-three/fiber";
 import { normalizeAngle } from "../../utils/helpers";
@@ -25,7 +25,9 @@ import FooterCard from "./FooterCard";
 
 
 
-export default function MainCard({
+
+
+const MainCard = forwardRef(({
        position,
        // textures
        textures,
@@ -79,7 +81,7 @@ export default function MainCard({
        // fragment_fx 
        fragment_fx_id,
        fragment_fx_trigger
-}) {
+}, ref) => {
     const { gl, scene, camera } = useThree()
 
     const planeRef = useRef()
@@ -300,7 +302,7 @@ export default function MainCard({
 
  
     return (
-        <group>
+        <group ref={ref}>
             <mesh
                 key={`main-${key}`} 
                 frustumCulled={true}
@@ -428,4 +430,7 @@ export default function MainCard({
         </group>
     )
 
-}
+})
+
+
+export default MainCard
