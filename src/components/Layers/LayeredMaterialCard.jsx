@@ -29,6 +29,7 @@ import {
     iridescenceFragmentShader,
     brightnessFragmentShader,
     shineFragmentShader,
+    videoFragmentShader,
     refractionFragmentShader
 } from '../../shaders/fragments/index'
 
@@ -473,6 +474,28 @@ export default function LayeredMaterialCard({
     })
 
 
+    /**
+     * Video textures
+     */
+        const videoElement = useMemo(() => {
+            const video = document.createElement("video");
+            video.src = "/clips/Lamine_clip.mov"; // Path to your video
+            video.crossOrigin = "anonymous";
+            video.loop = true;
+            video.muted = true; // Prevent autoplay sound issues
+            video.play();
+            return video;
+        }, []);
+    
+        const videoTexture = useMemo(() => {
+            return new THREE.VideoTexture(videoElement);
+        }, [videoElement]);
+        
+        const { useVideoTexture } = useControls("Video Texture", {
+            useVideoTexture: { value: false, label: "Enable" },
+        });
+
+
 
     useControls({
         'Snapshot .jpg': button(async () => await takeScreenshot(gl, scene, camera, planeRef.current, [footerRef.current, skillsRef.current], false, useTransition && blendMode == 1)),
@@ -798,6 +821,9 @@ export default function LayeredMaterialCard({
         foldRotation,
         // 
         blendMode, 
+        // 
+        useVideoTexture,
+        videoTexture
     ])
 
 
@@ -891,6 +917,9 @@ export default function LayeredMaterialCard({
             }
         }
     }
+
+
+
 
 
     return (
@@ -991,7 +1020,11 @@ export default function LayeredMaterialCard({
                                 // Grading Randomness 
                                 rotation: { value: 0.0 },
                                 scale: { value: new THREE.Vector2(1, 1) },
-                                offset: { value: new THREE.Vector2(0, 0)}
+                                offset: { value: new THREE.Vector2(0, 0)},
+
+                                // Video
+                                videoTexture: { value: videoTexture },
+                                useVideoTexture: { value: useVideoTexture },
                             }}
                             vertexShader={
                                 useGlitch 
@@ -1040,6 +1073,9 @@ export default function LayeredMaterialCard({
                                 /*: useTransition
                                 ?
                                 transitionFragmentShader*/ // newTransitionFragmentShader 
+                                : useVideoTexture 
+                                ? 
+                                videoFragmentShader 
                                 : 
                                 standardFragmentShader
                             }

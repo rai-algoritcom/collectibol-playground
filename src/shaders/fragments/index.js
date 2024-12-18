@@ -5,7 +5,7 @@ import shineFragmentShader from '../../shaders/fragments/shineShader.glsl'
 import transitionFragmentShader from '../../shaders/fragments/transitionShader.glsl';
 import newTransitionFragmentShader from '../../shaders/fragments/newTransitionShader.glsl'
 import refractionFragmentShader from '../../shaders/fragments/refractionShader.glsl' 
-
+import videoFragmentShader from '../../shaders/fragments/videoShader.glsl'
 
 export {
     shineFragmentShader,
@@ -14,5 +14,6 @@ export {
     brightnessFragmentShader,
     standardFragmentShader,
     newTransitionFragmentShader,
-    refractionFragmentShader
+    refractionFragmentShader,
+    videoFragmentShader
 }
