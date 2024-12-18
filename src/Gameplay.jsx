@@ -5,17 +5,11 @@ import Field from "./components/Field";
 import { useRef } from "react";
 import LinkButton from "./components/LinkButton";
 import GrassV2 from "./components/Grass/GrassV2";
-import { useControls } from "leva";
 
 
 export default function Gameplay() {
 
     const controlsRef = useRef()
-
-    const { instances } = useControls('Grass', {
-        instances: { value: 50000, min: 0, max: 200000, step: 1 }
-    })
-
 
     return (
         <>
@@ -41,7 +35,7 @@ export default function Gameplay() {
                 {/* Field */}
                 <Field controlsRef={controlsRef} />
 
-                <GrassV2 instances={instances} />
+                <GrassV2 />
 
             </Canvas>
 

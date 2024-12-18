@@ -1,25 +1,36 @@
 // Based on https://codepen.io/al-ro/pen/jJJygQ by al-ro, but rewritten in react-three-fiber
 import * as THREE from "three"
-import React, { useRef, useMemo } from "react"
+import React, { useRef, useMemo, useEffect, useState } from "react"
 import SimplexNoise from "simplex-noise"
 import { useFrame, useLoader } from "@react-three/fiber"
 //These have been taken from "Realistic real-time grass rendering" by Eddie Lee, 2010
 import bladeDiffuse from "/grass/blade_diffuse.jpg"
 import bladeAlpha from "/grass/blade_alpha.jpg"
 import "./GrassMaterial.jsx"
+import { useControls } from "leva"
 
 const simplex = new SimplexNoise(Math.random)
 export default function GrassV2({
-  options = { bW: 0.12, bH: 1, joints: 5 },
+  // options = { bW: 0.05, bH: .83, joints: 5 },
   width = 70,
   height = 50, // Add height for rectangle dimensions
-  instances = 50000,
+  // instances = 50000,
   ...props
 }) {
 
-  const { bW, bH, joints } = options;
+  const [key, setKey] = useState(0)
+
+  // const { bW, bH, joints } = options;
   const materialRef = useRef();
   const [texture, alphaMap] = useLoader(THREE.TextureLoader, [bladeDiffuse, bladeAlpha]);
+
+  const { instances, bW, bH, joints } = useControls('Grass', {
+    instances: { value: 50000, min: 0, max: 200000, step: 1 },
+    bW: { value: 0.05, min: 0, max: 2, step: 0.001 },
+    bH: { value: .83, min: 0, max: 2, step: 0.001 },
+    joints: { value: 5, min: 0, max: 10, step: 1 }
+  })
+
 
   // Grass attributes based on rectangular dimensions
   const attributeData = useMemo(() => getAttributeData(instances, width, height), [instances, width, height]);
@@ -27,7 +38,7 @@ export default function GrassV2({
   // Base blade geometry
   const baseGeom = useMemo(
     () => new THREE.PlaneBufferGeometry(bW, bH, 1, joints).translate(0, bH / 2, 0),
-    [options]
+    [bW, bH, joints]
   );
 
   // Ground geometry adjusted for rectangle
@@ -55,8 +66,14 @@ export default function GrassV2({
 
   useFrame((state) => (materialRef.current.uniforms.time.value = state.clock.elapsedTime / 4));
 
+  useEffect(() => {
+    setKey((prevKey) => prevKey + 1)
+  }, [
+    bW, bH, joints, instances
+  ])
+
   return (
-    <group {...props} scale={[0.095, 0.095, 0.095]} position={[0, -2.45, -3]}  rotation={[0, Math.PI / 2, 0]}>
+    <group key={key} {...props} scale={[0.095, 0.095, 0.095]} position={[0, -2.45, -3]}  rotation={[0, Math.PI / 2, 0]}>
       <mesh>
         <instancedBufferGeometry
           index={baseGeom.index}
