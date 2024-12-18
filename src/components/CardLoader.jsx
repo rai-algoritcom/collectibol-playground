@@ -358,6 +358,13 @@ export default function CardLoader({ controlsRef, isGameplay }) {
     const gradingScratches = useTexture(texturePaths.gradingV2.scratches)
 
 
+    const placeholdersPos = mock.map(c => ({
+        x: c.position[0],
+        y: c.position[1],
+        z: c.position[2]
+    }))
+
+
     return (
         <Suspense fallback={<></>}>
 
@@ -368,6 +375,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                         <MainCard 
                             key={i}
                             controlsRef={controlsRef}
+                            placeholdersPos={placeholdersPos}
                             textures={{
                                 base: baseTextures,
                                 pattern: patternTexture,

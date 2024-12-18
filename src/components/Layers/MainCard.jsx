@@ -6,7 +6,7 @@ import {
     blendRoughnessTXs, 
     blendNormalTXs, 
     getGradingProps } from "../../utils"
-import { useFrame, useThree } from "@react-three/fiber";
+import { invalidate, useFrame, useThree } from "@react-three/fiber";
 import { normalizeAngle } from "../../utils/helpers";
 import { DragControls } from "@react-three/drei";
 
@@ -30,6 +30,7 @@ import {
 } from '../../shaders/vertex/index'
 import SkillsCard from "./SkillsCard";
 import FooterCard from "./FooterCard";
+import { button, useControls } from "leva";
 
 
 
@@ -41,6 +42,9 @@ const BOARD_LIMITS = {
 
 
 const MainCard = ({
+       placeholdersPos,
+       id,
+       //
        controlsRef,
        // pos
        position,
@@ -63,8 +67,6 @@ const MainCard = ({
        // lights 
        ambientLightColor,
        ambientLightIntensity,
-       directionalLightColor,
-       directionalLightIntensity,
        pointLightColor,
        pointLightIntensity,
        pointLightDecay,
@@ -99,6 +101,7 @@ const MainCard = ({
 }) => {
     const { gl, scene, camera, raycaster } = useThree()
 
+    const dragRef = useRef()
     const planeRef = useRef()
     const shaderRef = useRef()
     const overlayRef = useRef()
@@ -109,6 +112,8 @@ const MainCard = ({
 
     const [blendMode, setBlendMode] = useState(1)
     const [animationTrigger, setAnimationTrigger] = useState('rotation')
+
+    const initialY = position[1]
 
 
     const {
@@ -263,24 +268,38 @@ const MainCard = ({
     };
     
 
-    const animRef = useRef(false)
-    const targetPosition = { x: 0, y: position[1], z: 0 }
     const onDragEnd = () => {
         if (controlsRef?.current) {
           controlsRef.current.enabled = true; // Re-enable OrbitControls
         }
-        // Demo animation on Drag End 
-        
-        /*gsap.to(planeRef.current.position, {
-            x: targetPosition.x,
-            y: targetPosition.y,
-            z: targetPosition.z,
-            duration: 3, 
-            ease: "power2.out",
-            onComplete: () => {
-                animRef.current = true
-            }
-        })*/
+
+        /*planeRef.current.updateMatrixWorld(true);
+        // Get the current world position of the mesh
+        const currentPosition = new THREE.Vector3();
+        planeRef.current.getWorldPosition(currentPosition);
+    
+        // Find the nearest initial position
+        const nearestPosition = placeholdersPos.reduce((closest, initialPos) => {
+            const distance = Math.sqrt(
+                Math.pow(initialPos.x - currentPosition.x, 2) +
+                Math.pow(initialPos.z - currentPosition.z, 2)
+            );
+            return distance < closest.distance
+                ? { position: initialPos, distance }
+                : closest;
+        }, { position: null, distance: Infinity }).position;
+
+        planeRef.current.updateMatrixWorld(false);
+
+        // Snap the mesh to the nearest division center
+        gsap.to(planeRef.current.position, {
+            x: nearestPosition.x,
+            y: initialY,
+            z: nearestPosition.z,
+            duration: 2,
+            ease: 'power2.out',
+            onUpdate: invalidate()
+        });*/
     };
 
     const dragLimits = useMemo(() => {
@@ -292,13 +311,46 @@ const MainCard = ({
             x: [(xMin + boardCenter[0]) - position[0], (xMax + boardCenter[0]) - position[0]],
             z: [(zMin + boardCenter[1]) - position[2], (zMax + boardCenter[1]) - position[2]],
         };
-    }, [targetPosition]);
+    }, []);
 
+
+    useControls('Card ' + id, {
+        [`Roll #${id}`]: button(() => moveCards({x: 2, y: position[1], z: -2.85})),
+        [`Unroll #${id}`]: button(() => moveCards({x: position[0], y: position[1], z: position[2]}))
+    }, [])
+
+    const moveCards = (targetPosition) => {
+        // Temporarily disable DragControls
+        if (controlsRef?.current) controlsRef.current.enabled = false;
+
+        // Animate the mesh's position
+        gsap.to(planeRef.current.position, {
+            x: targetPosition.x,
+            y: targetPosition.y,
+            z: targetPosition.z,
+            duration: 1, // Duration of the animation
+            ease: 'power2.out',
+            onUpdate: () => {
+                // Ensure the matrixWorld is updated
+                planeRef.current.updateMatrix();
+                planeRef.current.updateMatrixWorld(true);
+
+                // Trigger a re-render
+                invalidate();
+            },
+            onComplete: () => {
+                // Re-enable DragControls after the animation
+                if (controlsRef?.current) controlsRef.current.enabled = true;
+            },
+        });
+    };
 
 
  
     return (
         <DragControls
+            ref={dragRef}
+            enabled
             axisLock={"y"}
             args={[[planeRef.current], camera, gl.domElement]}
             dragLimits={[

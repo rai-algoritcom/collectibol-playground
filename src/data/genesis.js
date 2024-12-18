@@ -1,5 +1,6 @@
 export default [
     {
+        id: 1,
         position: [0, -2.25, -.35],
         "layoutColor": {
             "r": 0,
@@ -69,6 +70,7 @@ export default [
     },
 
     {
+        id: 2,
         position: [-.8, -2.25, -1.55],
         "layoutColor": {
             "r": 255,
@@ -139,6 +141,7 @@ export default [
 
 
     {
+        id: 3,
         position: [.8, -2.25, -1.55],
         "layoutColor": {
             "r": 4,
@@ -210,6 +213,7 @@ export default [
 
 
     {
+        id: 4,
         position: [.4, -2.25, -1],
         // "textures": {},
         "layoutColor": {
@@ -281,6 +285,7 @@ export default [
 
 
     {
+        id: 5,
         position: [-.4, -2.25, -1],
         // "textures": {},
         "layoutColor": {
@@ -352,6 +357,7 @@ export default [
 
 
     {
+        id: 6,
         position: [-.3, -2.25, -2],
         // "textures": {},
         "layoutColor": {
@@ -422,6 +428,7 @@ export default [
     },
 
     {
+        id: 7,
         position: [.3, -2.25, -2],
         // "textures": {},
         "layoutColor": {
