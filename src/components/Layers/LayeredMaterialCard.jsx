@@ -248,10 +248,6 @@ export default function LayeredMaterialCard({
         return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps);
     }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches]);
 
-    // const blendedAlbedo2Textures = useMemo(() => {
-    //     return blendAlbedoTXs(gl, textures, albedoToggles, true, false, layoutColor);
-    // }, [gl, textures, albedoToggles, layoutColor])
-
     const blendedAlbedo3Textures = useMemo(() => {
         return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor, gradingAlbedoProps);
     }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez])
@@ -774,7 +770,6 @@ export default function LayeredMaterialCard({
         displacementScale,
         // Blending
         blendedAlbedoTextures,
-        // blendedAlbedo2Textures,
         blendedAlbedo3Textures,
         blendedAlphaTextures,
         blendedAlpha2Textures,
@@ -913,7 +908,7 @@ export default function LayeredMaterialCard({
                             uniformsNeedUpdate={true}
                             uniforms={{
                                 albedoMap2: { value: blendedAlbedoTextures },
-                                albedoMap: { value: blendedAlbedo3Textures /*blendedAlbedo2Textures*/ },
+                                albedoMap: { value: blendedAlbedo3Textures },
                                 alphaMap2: { value: blendedAlpha2Textures },
                                 alphaMap: { value: blendedAlphaTextures },
                                 heightMap: { value: blendedHeightTextures },

@@ -36,7 +36,7 @@ export default function ResetButton({
                     e.target.style.color = 'white';
                   }}
             >
-                Reset <span style={{ marginLeft: '.25rem', fontSize: '1.5rem' }}>&#9881;</span>
+                Reset <span style={{ marginLeft: '.25rem', fontSize: '1rem' }}>🛠️</span>
             </Link>
     )
 }

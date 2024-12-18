@@ -9,11 +9,10 @@ import mock from '../data/genesis.js'
 import { getCardConfigJSON } from "../data/localStorage.js";
 
 
-export default function CardLoader({ isGameplay }) {
+export default function CardLoader({ isGameplay }) { 
 
     const cardConfig = getCardConfigJSON()
     
-
     const [texturePaths, setTexturePaths] = useState({
         base: {
             alpha: '/mobile/prod/base/alpha.jpg',

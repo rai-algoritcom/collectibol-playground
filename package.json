@@ -19,6 +19,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.0.2",
+    "simplex-noise": "2.4.0",
     "three": "0.153.0",
     "vite-plugin-glsl": "^1.3.0"
   },

@@ -2,14 +2,20 @@ import { Environment, OrbitControls, PerspectiveCamera } from "@react-three/drei
 import { Canvas } from "@react-three/fiber";
 import CardLoader from "./components/CardLoader";
 import Field from "./components/Field";
-import Grass from "./components/Grass";
 import { useRef } from "react";
 import LinkButton from "./components/LinkButton";
+import GrassV2 from "./components/Grass/GrassV2";
+import { useControls } from "leva";
 
 
 export default function Gameplay() {
 
     const controlsRef = useRef()
+
+    const { instances } = useControls('Grass', {
+        instances: { value: 50000, min: 0, max: 200000, step: 1 }
+    })
+
 
     return (
         <>
@@ -34,7 +40,8 @@ export default function Gameplay() {
 
                 {/* Field */}
                 <Field controlsRef={controlsRef} />
-                <Grass /> 
+
+                <GrassV2 instances={instances} />
 
             </Canvas>
 
