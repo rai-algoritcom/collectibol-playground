@@ -2,9 +2,9 @@ export default [
     {
         position: [0, -2.25, -.35],
         "layoutColor": {
-            "r": 44,
-            "g": 44,
-            "b": 49
+            "r": 0,
+            "g": 255,
+            "b": 255
         },
         "albedoToggles": {
             "base_albedo": true,
@@ -71,9 +71,9 @@ export default [
     {
         position: [-.8, -2.25, -1.55],
         "layoutColor": {
-            "r": 44,
-            "g": 44,
-            "b": 49
+            "r": 255,
+            "g": 204,
+            "b": 255
         },
         "albedoToggles": {
             "base_albedo": true,
@@ -141,9 +141,9 @@ export default [
     {
         position: [.8, -2.25, -1.55],
         "layoutColor": {
-            "r": 44,
-            "g": 44,
-            "b": 49
+            "r": 4,
+            "g": 144,
+            "b": 149
         },
         "albedoToggles": {
             "base_albedo": true,
@@ -213,9 +213,9 @@ export default [
         position: [.4, -2.25, -1],
         // "textures": {},
         "layoutColor": {
-            "r": 44,
-            "g": 44,
-            "b": 49
+            "r": 255,
+            "g": 178,
+            "b": 102
         },
         "albedoToggles": {
             "base_albedo": true,

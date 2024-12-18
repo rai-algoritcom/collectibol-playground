@@ -11,7 +11,7 @@ import { normalizeAngle } from "../../utils/helpers";
 import { DragControls } from "@react-three/drei";
 
 import * as THREE from "three"
-// import gsap from "gsap"
+import gsap from "gsap"
 
 
 /**
@@ -35,7 +35,7 @@ import FooterCard from "./FooterCard";
 
 const BOARD_LIMITS = {
     x: [-1.8, 1.8],
-    z: [-6, 0],
+    z: [-5.75, 0],
 };
 
 
@@ -262,10 +262,25 @@ const MainCard = ({
         }
     };
     
+
+    const animRef = useRef(false)
+    const targetPosition = { x: 0, y: position[1], z: 0 }
     const onDragEnd = () => {
         if (controlsRef?.current) {
           controlsRef.current.enabled = true; // Re-enable OrbitControls
         }
+        // Demo animation on Drag End 
+        
+        /*gsap.to(planeRef.current.position, {
+            x: targetPosition.x,
+            y: targetPosition.y,
+            z: targetPosition.z,
+            duration: 3, 
+            ease: "power2.out",
+            onComplete: () => {
+                animRef.current = true
+            }
+        })*/
     };
 
     const dragLimits = useMemo(() => {
@@ -277,7 +292,7 @@ const MainCard = ({
             x: [(xMin + boardCenter[0]) - position[0], (xMax + boardCenter[0]) - position[0]],
             z: [(zMin + boardCenter[1]) - position[2], (zMax + boardCenter[1]) - position[2]],
         };
-    }, []);
+    }, [targetPosition]);
 
 
 

@@ -25,9 +25,9 @@ export default function GrassV2({
   const [texture, alphaMap] = useLoader(THREE.TextureLoader, [bladeDiffuse, bladeAlpha]);
 
   const { instances, bW, bH, joints } = useControls('Grass', {
-    instances: { value: 50000, min: 0, max: 200000, step: 1 },
+    instances: { value: 80000, min: 0, max: 200000, step: 1 },
     bW: { value: 0.05, min: 0, max: 2, step: 0.001 },
-    bH: { value: .83, min: 0, max: 2, step: 0.001 },
+    bH: { value: 1.05, min: 0, max: 2, step: 0.001 },
     joints: { value: 5, min: 0, max: 10, step: 1 }
   })
 
