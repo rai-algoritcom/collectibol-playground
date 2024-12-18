@@ -14,15 +14,15 @@ const FooterCard = forwardRef(({ blendMode }, ref) => {
             distanceFactor={2}
             distance
         >
-            <div style={{ display: 'flex', width: '370px', justifyContent: 'space-between', alignItems: 'center',  marginTop: '.25rem' }}>
-                <div style={{ color: 'white', fontFamily: "'Inter Tight', sans-serif"}}>
+            <div style={{ pointerEvents: 'none', display: 'flex', width: '370px', justifyContent: 'space-between', alignItems: 'center',  marginTop: '.25rem' }}>
+                <div style={{ pointerEvents: 'none', color: 'white', fontFamily: "'Inter Tight', sans-serif"}}>
                     <span style={{fontSize: '9px', fontWeight: 'bold', color: 'gainsboro'}}>FC BARCELONA</span>
                     <span style={{fontSize: '8px', fontWeight: 'bold', display: 'block', color: 'gainsboro'}}>&copy; 2025 Collectibol</span>
                 </div>
-                <div style={{ marginLeft: '-1rem'  }}>
+                <div style={{ pointerEvents: 'none', marginLeft: '-1rem'  }}>
                     <img src="/icons/rare.png" style={{ width: '60px', height: '60px'}} />
                 </div>
-                <div style={{ color: 'white', fontFamily: "'Inter Tight', sans-serif" }}>
+                <div style={{ pointerEvents: 'none', color: 'white', fontFamily: "'Inter Tight', sans-serif" }}>
                     <span style={{fontSize: '18px', fontWeight: 'bold', color: 'gainsboro'}}>EX 3</span>
                     <span style={{fontSize: '8px', fontWeight: 'bold', display: 'block', color: 'gainsboro'}}>25 18 A0 45</span>
                 </div>

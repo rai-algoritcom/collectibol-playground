@@ -1,10 +1,18 @@
-import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
-import { blendAlbedoTXs, blendAlphaTXs, blendHeightTXs, blendRoughnessTXs, blendNormalTXs, getGradingProps } from "../../utils"
+import { useEffect, useMemo, useRef, useState } from "react";
+import { 
+    blendAlbedoTXs, 
+    blendAlphaTXs, 
+    blendHeightTXs, 
+    blendRoughnessTXs, 
+    blendNormalTXs, 
+    getGradingProps } from "../../utils"
 import { useFrame, useThree } from "@react-three/fiber";
 import { normalizeAngle } from "../../utils/helpers";
+import { DragControls } from "@react-three/drei";
 
 import * as THREE from "three"
-import gsap from "gsap"
+// import gsap from "gsap"
+
 
 /**
  * Fragment
@@ -27,7 +35,9 @@ import FooterCard from "./FooterCard";
 
 
 
-const MainCard = forwardRef(({
+const MainCard = ({
+       controlsRef,
+       // pos
        position,
        // textures
        textures,
@@ -71,18 +81,18 @@ const MainCard = forwardRef(({
        useTransition, 
        transitionSpeed, 
        // folding 
-       foldIntensity, 
-       useFolding, 
-       foldX,
-       foldY,
-       foldRotation,
-       // vertex_Fx 
-       vertex_fx_id,
-       // fragment_fx 
-       fragment_fx_id,
-       fragment_fx_trigger
-}, ref) => {
-    const { gl, scene, camera } = useThree()
+        //    foldIntensity, 
+        //    useFolding, 
+        //    foldX,
+        //    foldY,
+        //    foldRotation,
+        //    // vertex_Fx 
+        //    vertex_fx_id,
+        //    // fragment_fx 
+        //    fragment_fx_id,
+        //    fragment_fx_trigger
+}) => {
+    const { gl, scene, camera, raycaster } = useThree()
 
     const planeRef = useRef()
     const shaderRef = useRef()
@@ -217,15 +227,6 @@ const MainCard = forwardRef(({
 
         if (shaderRef.current) {
             shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
-            // shaderRef.current.uniforms.foldIntensity.value = foldIntensity;
-            // shaderRef.current.uniforms.foldPosition.value.set(foldX, foldY);
-            // shaderRef.current.uniforms.foldRotationZ.value = foldRotation;
-        }
-
-        if (overlayRef.current) {
-            // overlayRef.current.uniforms.foldIntensity.value = foldIntensity;
-            // overlayRef.current.uniforms.foldPosition.value.set(foldX, foldY);
-            // overlayRef.current.uniforms.foldRotationZ.value = foldRotation;
         }
 
         if (planeRef.current && camera && shaderRef.current) {
@@ -249,71 +250,36 @@ const MainCard = forwardRef(({
     })
 
 
-
-    const changeCardMode = (mode) => {
-        if (shaderRef.current && footerRef.current && useTransition) {
-            if (mode == 'max') {
-
-                gsap.to(shaderRef.current.uniforms.uHoverState, {
-                    duration: transitionSpeed,
-                    value: 1,
-                })
-                gsap.to(skillsRef.current, {
-                    duration: transitionSpeed ,
-                    opacity: 1,
-                    delay: 0.5
-                })
-                
-            } else if (mode == 'min') { 
-
-                gsap.to(footerRef.current, {
-                    opacity: 0,
-                    duration: 0
-                })
-                
-                gsap.to(skillsRef.current, {
-                    duration: transitionSpeed,
-                    opacity: 0,
-                })
-                gsap.to(shaderRef.current.uniforms.uHoverState, {
-                    duration: transitionSpeed,
-                    value: 1,
-                }).then(() => {
-                    gsap.to(footerRef.current, {
-                        opacity: 1,
-                        duration: transitionSpeed
-                    })
-                })
-
-            } else if (mode == 'full')  {
-
-                gsap.to(shaderRef.current.uniforms.uHoverState, {
-                    duration: transitionSpeed,
-                    value: 0,
-                    delay: 0.5
-                })
-                gsap.to(skillsRef.current, {
-                    duration: transitionSpeed ,
-                    opacity: 0,
-                })
-            }
+    const onDragStart = () => {
+        if (controlsRef?.current) {
+          controlsRef.current.enabled = false; // Disable OrbitControls
         }
-    }
+    };
+    
+    const onDragEnd = () => {
+        if (controlsRef?.current) {
+          controlsRef.current.enabled = true; // Re-enable OrbitControls
+        }
+    };
+
 
  
     return (
-        <group ref={ref}>
+        <DragControls
+            axisLock={"y"}
+            args={[[planeRef.current], camera, gl.domElement]}
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+        >
             <mesh
                 key={`main-${key}`} 
                 frustumCulled={true}
                 ref={planeRef}
                 position={position}
-                // Tweaks to fit on Field
                 scale={0.25}
                 rotation={[-Math.PI * 0.25, 0, 0]}
             >
                 <planeGeometry args={[2, 3, 120, 120]} />
-                {/* <meshBasicMaterial color="pink" /> */}
                 <shaderMaterial 
                     ref={shaderRef}
                     needsUpdate={true}
@@ -425,10 +391,9 @@ const MainCard = forwardRef(({
                 <FooterCard blendMode={blendMode} ref={footerRef} />
             </mesh>
 
-        </group>
+        </DragControls>
     )
-
-})
+}
 
 
 export default MainCard

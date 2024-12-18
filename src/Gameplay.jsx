@@ -29,8 +29,10 @@ export default function Gameplay() {
                 <OrbitControls ref={controlsRef} />
                 
                 {/* Gameplay */}
-                <CardLoader isGameplay={true} />
-                {/* <AnimCards /> */}
+                <CardLoader 
+                    controlsRef={controlsRef} 
+                    isGameplay={true} 
+                />
 
                 {/* Field */}
                 <Field controlsRef={controlsRef} />

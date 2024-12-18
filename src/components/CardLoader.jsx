@@ -1,7 +1,7 @@
 
 import { useTexture } from "@react-three/drei";
 import LayeredMaterialCard from "./Layers/LayeredMaterialCard.jsx";
-import { Suspense, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { useControls } from "leva";
 import MainCard from "./Layers/MainCard.jsx";
 
@@ -9,7 +9,7 @@ import mock from '../data/genesis.js'
 import { getCardConfigJSON } from "../data/localStorage.js";
 
 
-export default function CardLoader({ isGameplay }) { 
+export default function CardLoader({ controlsRef, isGameplay }) {
 
     const cardConfig = getCardConfigJSON()
     
@@ -279,11 +279,6 @@ export default function CardLoader({ isGameplay }) {
     
     /*useControls(
         'Grading Textures (vO - Deprecated)', {
-            'Alpha': { image: texturePaths.grading.alpha, onChange: (v) => updateTexture('grading', 'alpha', v) },
-            'Albedo': { image: texturePaths.grading.albedo, onChange: (v) => updateTexture('grading', 'albedo', v) },
-            'Height': { image: texturePaths.grading.height, onChange: (v) => updateTexture('grading', 'height', v) },
-            'Normal': { image: texturePaths.grading.normal, onChange: (v) => updateTexture('grading', 'normal', v) },
-            'Roughness': { image: texturePaths.grading.roughness, onChange: (v) => updateTexture('grading', 'roughness', v) },
             'Grading Level': {
                 value: 'poor',
                 options: {
@@ -372,7 +367,7 @@ export default function CardLoader({ isGameplay }) {
                     mock.map((props, i) => (
                         <MainCard 
                             key={i}
-        
+                            controlsRef={controlsRef}
                             textures={{
                                 base: baseTextures,
                                 pattern: patternTexture,
