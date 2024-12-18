@@ -1,7 +1,7 @@
 
 import { useTexture } from "@react-three/drei";
 import LayeredMaterialCard from "./Layers/LayeredMaterialCard.jsx";
-import { Suspense, useRef, useState } from "react";
+import { Suspense, useState } from "react";
 import { useControls } from "leva";
 import MainCard from "./Layers/MainCard.jsx";
 

@@ -33,6 +33,11 @@ import FooterCard from "./FooterCard";
 
 
 
+const BOARD_LIMITS = {
+    x: [-1.8, 1.8],
+    z: [-6, 0],
+};
+
 
 
 const MainCard = ({
@@ -104,6 +109,7 @@ const MainCard = ({
 
     const [blendMode, setBlendMode] = useState(1)
     const [animationTrigger, setAnimationTrigger] = useState('rotation')
+
 
     const {
         gradingRoughnessProps,
@@ -262,12 +268,29 @@ const MainCard = ({
         }
     };
 
+    const dragLimits = useMemo(() => {
+        const boardCenter = [0, 0]; // Center of the board in global space
+        const [xMin, xMax] = BOARD_LIMITS.x;
+        const [zMin, zMax] = BOARD_LIMITS.z;
+
+        return {
+            x: [(xMin + boardCenter[0]) - position[0], (xMax + boardCenter[0]) - position[0]],
+            z: [(zMin + boardCenter[1]) - position[2], (zMax + boardCenter[1]) - position[2]],
+        };
+    }, []);
+
+
 
  
     return (
         <DragControls
             axisLock={"y"}
             args={[[planeRef.current], camera, gl.domElement]}
+            dragLimits={[
+                dragLimits.x,
+                [0, 0],
+                dragLimits.z
+            ]}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
         >
