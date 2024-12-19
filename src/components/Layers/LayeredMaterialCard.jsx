@@ -76,9 +76,9 @@ import {
     getRandomPositionAndRotation 
 } from "../../utils/helpers";
 
-import Stats from "three/examples/jsm/libs/stats.module.js";
 import FooterCard from "./FooterCard";
 import SkillsCard from "./SkillsCard";
+import Stats from "three/examples/jsm/libs/stats.module.js";
 import { writeStorageConfig } from "../../data/localStorage";
 
 
