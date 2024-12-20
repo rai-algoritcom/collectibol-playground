@@ -41,68 +41,86 @@ uniform bool useVideoTexture; // Toggle for video texture
 void main() {
     // Sample textures
     vec4 albedoColor = texture2D(albedoMap, vUv);
+    vec4 albedoColor2 = texture2D(albedoMap2, vUv);
+
     float alphaValue = texture2D(alphaMap, vUv).r;
+    float alphaValue2 = texture2D(alphaMap2, vUv).r;
+    float blendedAlpha = alphaValue;
+
+    float roughnessValue = texture2D(roughnessMap, vUv).r * roughnessIntensity;
+    // Normal mapping
+    vec3 normalFromMap = (texture2D(normalMap, vUv).rgb * 2.0 - 1.0) * normalIntensity;
+    vec3 normal = normalize(vNormal + normalFromMap);
 
     // Video texture handling
     vec4 videoColor = texture2D(videoTexture, vUv);
     float videoAlpha = videoColor.a; // Use video texture alpha if available
 
-    // Normal mapping
-    vec3 normalFromMap = (texture2D(normalMap, vUv).rgb * 2.0 - 1.0) * normalIntensity;
-    vec3 normal = normalize(vNormal + normalFromMap);
-
     // Transition logic
     if (useTransition) {
-        vec4 albedo1 = texture2D(albedoMap, vUv);
-        vec4 albedo2 = texture2D(albedoMap2, vUv);
+        vec4 albedo1 = mix(videoColor, albedoColor, 0.5);
+        vec4 albedo2 = mix(videoColor, albedoColor2, 0.5);
+
         vec4 disp = texture2D(uDisp, vUv);
         float pct = clamp((disp.r - uHoverState) * 20.0, 0.0, 1.0);
         albedoColor = mix(albedo1, albedo2, pct);
-        alphaValue = mix(texture2D(alphaMap2, vUv).r, alphaValue, pct);
+        blendedAlpha = mix(alphaValue2, alphaValue, pct);
+    
+    } else {
+        albedoColor = mix(videoColor, albedoColor, 0.5);
     }
 
-    // Override with video texture if enabled
-    if (useVideoTexture) {
-        albedoColor = videoColor;
-        // alphaValue = videoAlpha;
-    }
+
+
+
 
     // Lighting calculations
     vec3 viewDir = normalize(cameraPosition - vPosition);
+    // === Ambient Light ===
     vec3 ambientLight = ambientLightColor * ambientLightIntensity;
 
+    // === Directional Light ===
     vec3 lightDir = normalize(lightDirection);
     vec3 lightReflection = reflect(-lightDir, normal);
 
     float diffuseDirectional = max(dot(normal, lightDir), 0.0);
-    float specularDirectional = pow(max(dot(lightReflection, viewDir), 0.0), 16.0 * (1.0 - roughnessIntensity));
+    float specularDirectional = pow(max(dot(lightReflection, viewDir), 0.0), 16.0 * (1.0 - roughnessValue));
+    // vec3 directionalLight = directionalLightColor * directionalLightIntensity * 
+    //                         (0.6 * diffuseDirectional + 0.4 * specularDirectional); // Blend diffuse & specular
 
+    // === Point Light ===
     vec3 pointDelta = pointLightPosition - vPosition;
     float pointDistance = length(pointDelta);
     vec3 pointDir = normalize(pointDelta);
     vec3 pointReflection = reflect(-pointDir, normal);
 
     float diffusePoint = max(dot(normal, pointDir), 0.0);
-    float specularPoint = pow(max(dot(pointReflection, viewDir), 0.0), 16.0 * (1.0 - roughnessIntensity));
-    float pointDecay = max(1.0 / (1.0 + pointDistance * pointDistance * pointLightDecay), 0.0);
+    float specularPoint = pow(max(dot(pointReflection, viewDir), 0.0), 16.0 * (1.0 - roughnessValue));
+    float pointDecay = max(1.0 / (1.0 + pointDistance * pointDistance * pointLightDecay), 0.0); // Soft decay
     vec3 pointLight = pointLightColor * pointLightIntensity * pointDecay *
-                      (0.6 * diffusePoint + 0.4 * specularPoint);
-
+                      (0.6 * diffusePoint + 0.4 * specularPoint); // Blend diffuse & specular
+    
+    // PL2 
     vec3 pointDelta2 = pointLightPosition2 - vPosition;
     float pointDistance2 = length(pointDelta2);
     vec3 pointDir2 = normalize(pointDelta2);
     vec3 pointReflection2 = reflect(-pointDir2, normal);
 
     float diffusePoint2 = max(dot(normal, pointDir2), 0.0);
-    float specularPoint2 = pow(max(dot(pointReflection2, viewDir), 0.0), 16.0 * (1.0 - roughnessIntensity));
+    float specularPoint2 = pow(max(dot(pointReflection2, viewDir), 0.0), 16.0 * (1.0 - roughnessValue));
     float pointDecay2 = max(1.0 / (1.0 + pointDistance2 * pointDistance2 * pointLightDecay2), 0.0);
-    vec3 pointLight2 = pointLightColor2 * pointLightIntensity2 * pointDecay2 *
-                       (0.6 * diffusePoint2 + 0.4 * specularPoint2);
+    vec3 pointLight2 = pointLightColor2 * pointLightIntensity2 * pointDecay2 * 
+                    (0.6 * diffusePoint2 + 0.4 * specularPoint2);
 
     vec3 lighting = ambientLight + pointLight + pointLight2;
-    vec3 roughnessEffect = mix(lighting, lighting * (1.0 - roughnessIntensity), roughnessPresence);
-    vec3 finalLighting = clamp(albedoColor.rgb, 0.0, 1.0);
+    vec3 roughnessEffect = mix(lighting, lighting * (3. - roughnessIntensity), roughnessPresence);
+    vec3 finalLighting = clamp(roughnessEffect * albedoColor.rgb, 0.0, 1.0);
 
     // Final output
-    gl_FragColor = vec4(finalLighting, alphaValue);
+    if (blendMode == 1) {
+         gl_FragColor = vec4(finalLighting, blendedAlpha);
+    } else {
+        gl_FragColor = vec4(finalLighting, alphaValue);
+    }
+    
 }

@@ -110,7 +110,7 @@ export default function LayeredMaterialCard({
     const skillsRef = useRef()
     const footerRef = useRef()
 
-    const [blendMode, setBlendMode] = useState(1)
+    const [blendMode, setBlendMode] = useState(0)
 
     const [jsonCfg, setJsonCfg] = 
         useState(cardConfig)
@@ -244,14 +244,35 @@ export default function LayeredMaterialCard({
         },
     }
 
+    /**
+     * Video textures
+     */
+        const videoElement = useMemo(() => {
+            const video = document.createElement("video");
+            video.src = "/clips/Lamine_clip.mov"; // Path to your video
+            video.crossOrigin = "anonymous";
+            video.loop = true;
+            video.muted = true; // Prevent autoplay sound issues
+            video.play();
+            return video;
+        }, []);
+    
+        const videoTexture = useMemo(() => {
+            return new THREE.VideoTexture(videoElement);
+        }, [videoElement]);
+        
+        const { useVideoTexture } = useControls("Video Texture", {
+            useVideoTexture: { value: cardConfig.use_video, label: "Enable" },
+        });
+
     // Blended Textures
     const blendedAlbedoTextures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps);
-    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches]);
+        return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps, useVideoTexture);
+    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture]);
 
     const blendedAlbedo3Textures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor, gradingAlbedoProps);
-    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez])
+        return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor, gradingAlbedoProps, useVideoTexture);
+    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture])
 
     const blendedAlphaTextures = useMemo(() => {
         return blendAlphaTXs(gl, textures, alphaToggles);
@@ -409,7 +430,7 @@ export default function LayeredMaterialCard({
         useTransition: { value: cardConfig.transition.use_transition, label: 'Enable' },
         transitionSpeed: { value: cardConfig.transition.transition_speed, min: 0, max: 3, label: 'Speed' },
         'mode': {
-                value: 'min',
+                value: 'full',
                 options: {
                     Full: 'full',
                     Skills: 'max',
@@ -472,28 +493,6 @@ export default function LayeredMaterialCard({
         useBlobs: { value: cardConfig.fragment_fx.id === 'blobs', label: 'Blobs Fx' },
         useGrass: { value: cardConfig.fragment_fx.id === 'grass', label: 'Grass Fx' }
     })
-
-
-    /**
-     * Video textures
-     */
-        const videoElement = useMemo(() => {
-            const video = document.createElement("video");
-            video.src = "/clips/Lamine_clip.mov"; // Path to your video
-            video.crossOrigin = "anonymous";
-            video.loop = true;
-            video.muted = true; // Prevent autoplay sound issues
-            video.play();
-            return video;
-        }, []);
-    
-        const videoTexture = useMemo(() => {
-            return new THREE.VideoTexture(videoElement);
-        }, [videoElement]);
-        
-        const { useVideoTexture } = useControls("Video Texture", {
-            useVideoTexture: { value: false, label: "Enable" },
-        });
 
 
 
@@ -585,6 +584,7 @@ export default function LayeredMaterialCard({
                     fold_y: foldY,
                     fold_rotation: foldRotation
                 },
+                use_video: useVideoTexture,
                 vertex_fx: {
                     id: useGlitch 
                     ? 

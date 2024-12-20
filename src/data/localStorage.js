@@ -17,7 +17,7 @@ export const getCardConfigJSON = () => {
             grading_v2_exterior_albedo: true,
             grading_v2_manchas_albedo: true,
             grading_v2_rascado_albedo: true,
-            grading_v2_scratches_albedo: true 
+            grading_v2_scratches_albedo: false 
         },
         alpha_ch: {
             base_alpha: true
@@ -61,7 +61,7 @@ export const getCardConfigJSON = () => {
         },
         iridescence: {
             iridescence_intensity: 0.6,
-            use_iridescence: true
+            use_iridescence: false
         },
         shine: {
             shine_intensity: 0.0045,
@@ -84,6 +84,7 @@ export const getCardConfigJSON = () => {
             fold_x: 0.8,
             fold_y: 1.43
         },
+        use_video: true,
         vertex_fx: {
             id: 'none'
         },
