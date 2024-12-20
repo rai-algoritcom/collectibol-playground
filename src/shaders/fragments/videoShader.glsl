@@ -58,8 +58,8 @@ void main() {
 
     // Transition logic
     if (useTransition) {
-        vec4 albedo1 = mix(videoColor, albedoColor, 0.5);
-        vec4 albedo2 = mix(videoColor, albedoColor2, 0.5);
+        vec4 albedo1 = mix(videoColor, albedoColor, albedoColor.a);
+        vec4 albedo2 = mix(videoColor, albedoColor2, albedoColor2.a);
 
         vec4 disp = texture2D(uDisp, vUv);
         float pct = clamp((disp.r - uHoverState) * 20.0, 0.0, 1.0);
@@ -118,9 +118,9 @@ void main() {
 
     // Final output
     if (blendMode == 1) {
-         gl_FragColor = vec4(finalLighting, blendedAlpha);
+         gl_FragColor = vec4(finalLighting, blendedAlpha * videoAlpha);
     } else {
-        gl_FragColor = vec4(finalLighting, alphaValue);
+        gl_FragColor = vec4(finalLighting, alphaValue * videoAlpha);
     }
     
 }
