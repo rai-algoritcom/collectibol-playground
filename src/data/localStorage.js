@@ -17,7 +17,7 @@ export const getCardConfigJSON = () => {
             grading_v2_exterior_albedo: true,
             grading_v2_manchas_albedo: true,
             grading_v2_rascado_albedo: true,
-            grading_v2_scratches_albedo: false 
+            grading_v2_scratches_albedo: true 
         },
         alpha_ch: {
             base_alpha: true

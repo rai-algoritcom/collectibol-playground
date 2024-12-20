@@ -113,7 +113,7 @@ void main() {
                     (0.6 * diffusePoint2 + 0.4 * specularPoint2);
 
     vec3 lighting = ambientLight + pointLight + pointLight2;
-    vec3 roughnessEffect = mix(lighting, lighting * (3. - roughnessIntensity), roughnessPresence);
+    vec3 roughnessEffect = mix(lighting, lighting * (1. - roughnessValue), roughnessPresence);
     vec3 finalLighting = clamp(roughnessEffect * albedoColor.rgb, 0.0, 1.0);
 
     // Final output
