@@ -1058,7 +1058,10 @@ export default function LayeredMaterialCard({
                                 standardVertexShader
                                 }
                             fragmentShader={
-                                useRefraction
+                                useVideoTexture 
+                                ? 
+                                videoFragmentShader 
+                                : useRefraction
                                 ? 
                                 refractionFragmentShader
                                 : useBrightness 
@@ -1073,9 +1076,6 @@ export default function LayeredMaterialCard({
                                 /*: useTransition
                                 ?
                                 transitionFragmentShader*/ // newTransitionFragmentShader 
-                                : useVideoTexture 
-                                ? 
-                                videoFragmentShader 
                                 : 
                                 standardFragmentShader
                             }
