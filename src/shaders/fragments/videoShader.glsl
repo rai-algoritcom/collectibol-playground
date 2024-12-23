@@ -67,7 +67,7 @@ void main() {
         blendedAlpha = mix(alphaValue2, alphaValue, pct);
     
     } else {
-        albedoColor = mix(videoColor, albedoColor, 0.5);
+        albedoColor = mix(videoColor, albedoColor, albedoColor.a);
     }
 
 
