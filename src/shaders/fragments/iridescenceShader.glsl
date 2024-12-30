@@ -71,12 +71,6 @@ void main() {
     vec3 lightDir = normalize(lightDirection);
     vec3 lightReflection = reflect(-lightDir, normal);
 
-    float diffuseDirectional = max(dot(normal, lightDir), 0.0);
-    float specularDirectional = pow(max(dot(lightReflection, viewDir), 0.0), 16.0 * (1.0 - roughnessValue));
-    // vec3 directionalLight = directionalLightColor * directionalLightIntensity * 
-    //                         (0.6 * diffuseDirectional + 0.4 * specularDirectional);
-
-
 
     // PL1 
     vec3 pointDelta = pointLightPosition - vPosition;

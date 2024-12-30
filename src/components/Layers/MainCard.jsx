@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { 
-    blendAlbedoTXs, 
-    blendAlphaTXs, 
-    blendHeightTXs, 
-    blendRoughnessTXs, 
-    blendNormalTXs, 
+    blendRoughnessZipped,
+    blendAlbedosZipped,
+    blendNormalsZipped,
+    blendHeightsZipped,
+    blendAlphasZipped,
     getGradingProps } from "../../utils"
 import { useFrame, useThree } from "@react-three/fiber";
 import { normalizeAngle } from "../../utils/helpers";
@@ -28,7 +28,6 @@ import {
 import {
     standardVertexShader,
 } from '../../shaders/vertex/index'
-// import SkillsCard from "./SkillsCard";
 import FooterCard from "./FooterCard";
 import { button, useControls } from "leva";
 
@@ -42,21 +41,17 @@ const BOARD_LIMITS = {
 
 
 const MainCard = ({
-       placeholdersPos,
        id,
        //
        controlsRef,
+       // configs 
+       renderScene,
+       renderCamera,
        // pos
        position,
        // textures
        textures,
        layoutColor,
-       // channels
-       albedoToggles, 
-       alphaToggles, 
-       roughnessToggles, 
-       normalToggles,
-       heightToggles,
        // roughness
        roughnessIntensity,
        roughnessPresence,
@@ -86,20 +81,8 @@ const MainCard = ({
        stripesVisible, 
        // transition 
        useTransition, 
-       transitionSpeed, 
-       // folding 
-        //    foldIntensity, 
-        //    useFolding, 
-        //    foldX,
-        //    foldY,
-        //    foldRotation,
-        //    // vertex_Fx 
-        //    vertex_fx_id,
-        //    // fragment_fx 
-        //    fragment_fx_id,
-        //    fragment_fx_trigger
 }) => {
-    const { gl, scene, camera, raycaster } = useThree()
+    const { gl, camera, clock } = useThree()
 
     const dragRef = useRef()
     const planeRef = useRef()
@@ -108,141 +91,178 @@ const MainCard = ({
     const skillsRef = useRef()
     const footerRef = useRef()
 
-    const [key, setKey] = useState(0);
+    const shaderMaterialCfg = useRef(null)
 
-    const [blendMode, setBlendMode] = useState(1)
-    const [animationTrigger, setAnimationTrigger] = useState('rotation')
-
-    const initialY = position[1]
+    const [blendMode] = useState(1)
+    const [animationTrigger] = useState('rotation')
 
 
     const {
         gradingRoughnessProps,
-        gradingNormalsProps,
         gradingAlbedoProps
-    } = getGradingProps()
+    } = useMemo(() => getGradingProps(), [])
 
+    useEffect(() => {
+        if (
+            !renderScene ||
+            !renderCamera ||
+            !textures
+        ) return 
 
-     // Blended Textures
-     const blendedAlbedoTextures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps);
-    }, [gl, textures, albedoToggles, layoutColor]);
+        const blendedAlbedoTextures = 
+            blendAlbedosZipped(
+                { renderScene, renderCamera, renderer: gl },
+                textures, false, layoutColor, gradingAlbedoProps
+            )
 
-    const blendedAlbedo3Textures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor, gradingAlbedoProps);
-    }, [gl, textures, albedoToggles, layoutColor])
+        const blendedAlbedo3Textures = 
+            blendAlbedosZipped(
+                { renderScene, renderCamera, renderer: gl },
+                textures, true, layoutColor, gradingAlbedoProps
+            )
 
-    const blendedAlphaTextures = useMemo(() => {
-        return blendAlphaTXs(gl, textures, alphaToggles);
-    }, [gl, textures, alphaToggles]);
+        const blendedAlphaTextures = 
+            blendAlphasZipped(
+                textures, false
+            )
 
-    const blendedAlpha2Textures = useMemo(() => {
-        return blendAlphaTXs(gl, textures, alphaToggles, true)
-    }, [gl, textures, alphaToggles])
+        const blendedAlpha2Textures = 
+            blendAlphasZipped(
+                textures, true
+            )
 
-    const blendedHeightTextures = useMemo(() => {
-        return blendHeightTXs(gl, textures, heightToggles);
-    }, [gl, textures, heightToggles]);
+        const blendedHeightTextures = 
+            blendHeightsZipped(
+                textures
+            )
 
-    const blendedRoughnessTextures = useMemo(() => {
-        return blendRoughnessTXs(gl, textures, roughnessToggles, gradingRoughnessProps);
-    }, [gl, textures, roughnessToggles]);
+        const blendedRoughnessTextures = 
+            blendRoughnessZipped(
+                { renderScene, renderCamera, renderer: gl },
+                textures, gradingRoughnessProps
+            )
 
-    const blendedNormalTextures = useMemo(() => {
-        return blendNormalTXs(gl, textures, normalToggles, gradingNormalsProps);
-    }, [gl, textures, normalToggles]);
+        const blendedNormalTextures =
+            blendNormalsZipped(
+                textures
+            )
 
+        shaderMaterialCfg.current = {
+            vertexShader: standardVertexShader,
+            fragmentShader: 
+                useRefraction
+                ? 
+                refractionFragmentShader
+                : useBrightness 
+                ? 
+                brightnessFragmentShader 
+                : useIridescence
+                ?
+                iridescenceFragmentShader
+                : useShiney 
+                ? 
+                shineFragmentShader 
+                : 
+                standardFragmentShader,
+            transparent: true,
+            side: THREE.DoubleSide,
+            uniforms: {
+                // textures
+                albedoMap2: { value: blendedAlbedoTextures },
+                albedoMap: { value: blendedAlbedo3Textures },
+                alphaMap: { value: blendedAlphaTextures },
+                alphaMap2: { value: blendedAlpha2Textures },
+                heightMap: { value: blendedHeightTextures },
+                roughnessMap: { value: blendedRoughnessTextures },
+                normalMap: { value: blendedNormalTextures },
+                fxMask: { value: useIridescence ? textures.fx.irisMask : useBrightness ? textures.fx.brightnessMask : textures.fx.shine },
+                iridescenceMask: { value: useIridescence ? textures.fx.iridescence : textures.fx.brightness },
+                // transition 
+                blendMode: { value: blendMode },
 
-    const refreshMesh = () => {
-        setKey((prevKey) => prevKey + 1);
-    }
+                gradientMap: { value: textures.fx.refraction  },
+                refractionIntensity: { value: refractionIntensity },
+                stripesVisible: { value: stripesVisible },
 
+                uDisp: { value: textures.fx.transition },
+                uHoverState: { value: 0 },
+
+                displacementScale: { value: displacementScale },
+                normalIntensity: { value: normalIntensity }, 
+
+                lightDirection: { value: new THREE.Vector3(0, 0, 2).normalize() },
+                cameraPosition: { value: new THREE.Vector3(0, 0, 5) },
+
+                /**
+                * Lights
+                */
+                // Ambient Light 
+                ambientLightColor: { value: ambientLightColor },
+                ambientLightIntensity: { value: ambientLightIntensity }, 
+
+                // Point Light 
+                pointLightColor: { value: pointLightColor },
+                pointLightIntensity: { value: pointLightIntensity },
+                pointLightPosition: { value: new THREE.Vector3(0, 0, 10) },
+                pointLightDecay: { value: pointLightDecay },
+
+                roughnessIntensity: { value: roughnessIntensity },
+                roughnessPresence: { value: roughnessPresence },
+
+                useIridescence: { value: useIridescence }, 
+                iridescenceIntensity: { value: iridescenceIntensity },
+
+                useBrightness: { value: useBrightness }, 
+                brightnessIntensity: { value: brightnessIntensity },
+
+                useShine: { value: useShiney  },
+                shineIntensity: { value: shineyIntensity },
+                shineColor1: { value: shineyColor },
+                shineColor2: { value: shineyColor },
+
+                useTransition: { value: useTransition },
+
+                uTime: { value: 0.0 },
+                uRotation: { value: 0.0 },
+                uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+
+                environmentIntensity: { value: 1.0 }, // Adjust as needed
+                environmentColor: { value: new THREE.Color(0xffffff) }, // White light
+            }
+        }
+    }, [ ])
 
 
     useEffect(() => {
-
-        refreshMesh();
-
         if (!useTransition && skillsRef.current) {
             skillsRef.current.style.opacity = 1
-        }
-
-        return () => {
-            if (shaderRef.current) {
-                if (shaderRef.current.uniforms) {
-                    // Dispose any texture-based uniforms
-                    Object.values(shaderRef.current.uniforms).forEach((uniform) => {
-                        if (uniform && uniform.value && uniform.value.dispose) {
-                            uniform.value.dispose();
-                        }
-                    });
-                }
-                shaderRef.current.dispose()
-                shaderRef.current = null
-            }
-
-            if (overlayRef.current) {
-                if (overlayRef.current.uniforms) {
-                    // Dispose any texture-based uniforms
-                    Object.values(overlayRef.current.uniforms).forEach((uniform) => {
-                        if (uniform && uniform.value && uniform.value.dispose) {
-                            uniform.value.dispose();
-                        }
-                    });
-                }
-                overlayRef.current.dispose()
-                overlayRef.current = null
-            }
-
-            if (planeRef.current) {
-                if (planeRef.current.geometry) {
-                    planeRef.current.geometry.dispose(); // Dispose geometry explicitly
-                }
-                planeRef.current = null
-            }
-
-            const disposeTexture = (texture) => {
-                if (texture && texture.dispose) {
-                    texture.dispose();
-                }
-            };
-
-            [
-                blendedAlbedoTextures,
-                // blendedAlbedo2Textures,
-                blendedAlbedo3Textures,
-                blendedAlphaTextures,
-                blendedAlpha2Textures,
-                blendedHeightTextures,
-                blendedRoughnessTextures,
-                blendedNormalTextures,
-                textures.fx
-            ].forEach(disposeTexture);
-        
-            // Additional cleanups for textures if applicable
-            scene.traverse((child) => {
-                if (child.isMesh) {
-                    child.geometry?.dispose();
-                    child.material?.dispose();
-                }
-            });
         }
     }, [ ])
 
 
 
     let lastAngle = 0; // Keep track of the last angle
+    useFrame(() => {
 
-
-    useFrame((state, delta) => {
-
-        if (shaderRef.current) {
-            shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
+        if (
+            shaderRef.current && 
+            shaderRef.current.uniforms
+        ) {
+            shaderRef.current.uniforms.uTime.value = clock.getElapsedTime()
+            shaderRef.current.needsUpdate = true
         }
 
-        if (planeRef.current && camera && shaderRef.current) {
+        if (
+            camera &&
+            planeRef.current &&  
+            shaderRef.current && 
+            shaderRef.current.uniforms
+        ) {
             const cameraToMesh = new THREE.Vector3();
-            cameraToMesh.subVectors(planeRef.current.getWorldPosition(new THREE.Vector3()), camera.position).normalize();
+            cameraToMesh.subVectors(
+                planeRef.current.getWorldPosition(new THREE.Vector3()), 
+                camera.position
+            ).normalize();
             
             const angle = Math.atan2(cameraToMesh.x, cameraToMesh.z)
             const smoothAngle = normalizeAngle(angle, lastAngle)
@@ -251,7 +271,7 @@ const MainCard = ({
                 if (animationTrigger === 'rotation') {
                     overlayRef.current.uniforms.uTime.value = smoothAngle 
                 } else {
-                    overlayRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
+                    overlayRef.current.uniforms.uTime.value = clock.getElapsedTime()
                 }
             }
 
@@ -272,34 +292,6 @@ const MainCard = ({
         if (controlsRef?.current) {
           controlsRef.current.enabled = true; // Re-enable OrbitControls
         }
-
-        /*planeRef.current.updateMatrixWorld(true);
-        // Get the current world position of the mesh
-        const currentPosition = new THREE.Vector3();
-        planeRef.current.getWorldPosition(currentPosition);
-    
-        // Find the nearest initial position
-        const nearestPosition = placeholdersPos.reduce((closest, initialPos) => {
-            const distance = Math.sqrt(
-                Math.pow(initialPos.x - currentPosition.x, 2) +
-                Math.pow(initialPos.z - currentPosition.z, 2)
-            );
-            return distance < closest.distance
-                ? { position: initialPos, distance }
-                : closest;
-        }, { position: null, distance: Infinity }).position;
-
-        planeRef.current.updateMatrixWorld(false);
-
-        // Snap the mesh to the nearest division center
-        gsap.to(planeRef.current.position, {
-            x: nearestPosition.x,
-            y: initialY,
-            z: nearestPosition.z,
-            duration: 2,
-            ease: 'power2.out',
-            onUpdate: invalidate()
-        });*/
     };
 
     const dragLimits = useMemo(() => {
@@ -348,140 +340,43 @@ const MainCard = ({
 
  
     return (
-        <DragControls
-            ref={dragRef}
-            enabled
-            axisLock={"y"}
-            args={[[planeRef.current], camera, gl.domElement]}
-            dragLimits={[
-                dragLimits.x,
-                [0, 0],
-                dragLimits.z
-            ]}
-            onDragStart={onDragStart}
-            onDragEnd={onDragEnd}
-        >
-            <mesh
-                key={`main-${key}`} 
-                frustumCulled={true}
-                ref={planeRef}
-                position={position}
-                scale={0.25}
-                rotation={[-Math.PI * 0.25, 0, 0]}
+        shaderMaterialCfg.current && (
+            <DragControls
+                ref={dragRef}
+                enabled
+                axisLock={"y"}
+                args={[[planeRef.current], camera, gl.domElement]}
+                dragLimits={[
+                    dragLimits.x,
+                    [0, 0],
+                    dragLimits.z
+                ]}
+                onDragStart={onDragStart}
+                onDragEnd={onDragEnd}
             >
-                <planeGeometry args={[2, 3, 120, 120]} />
-                <shaderMaterial 
-                    ref={shaderRef}
-                    // needsUpdate={true}
-                    // uniformsNeedUpdate={true}
-                    uniforms={{
-                        albedoMap2: { value: blendedAlbedoTextures },
-                        albedoMap: { value: blendedAlbedo3Textures },
-                        alphaMap2: { value: blendedAlpha2Textures },
-                        alphaMap: { value: blendedAlphaTextures },
-                        heightMap: { value: blendedHeightTextures },
-                        roughnessMap: { value: blendedRoughnessTextures },
-                        normalMap: { value: blendedNormalTextures },
-                        fxMask: { value: useIridescence ? textures.fx.irisMask : useBrightness ? textures.fx.brightnessMask : textures.fx.shine },
-                        iridescenceMask: { value: useIridescence ? textures.fx.iridescence : textures.fx.brightness },
+                <mesh
+                    frustumCulled={true}
+                    ref={planeRef}
+                    position={position}
+                    scale={0.25}
+                    rotation={[-Math.PI * 0.25, 0, 0]}
+                >
+                    <planeGeometry args={[2, 3, 120, 120]} />
+                    <shaderMaterial 
+                        ref={shaderRef}
+                        attach="material"
+                        {...shaderMaterialCfg.current}
+                    />
 
-                        // Transition
-                        blendMode: { value: blendMode },
+                    {/* <SkillsCard 
+                        ref={skillsRef} 
+                    />
+                    */}
 
-                        gradientMap: { value: textures.fx.refraction  },
-                        refractionIntensity: { value: refractionIntensity },
-                        stripesVisible: { value: stripesVisible },
-
-                        uDisp: { value: textures.fx.transition },
-                        uHoverState: { value: 0 },
-                        
-                        displacementScale: { value: displacementScale },
-                        normalIntensity: { value: normalIntensity }, 
-
-                        lightDirection: { value: new THREE.Vector3(0, 0, 2).normalize() },
-                        cameraPosition: { value: new THREE.Vector3(0, 0, 5) },
-
-                        /**
-                         * Folding
-                         */
-                        foldIntensity: { value: 0.25 },
-                        foldPosition: { value: new THREE.Vector2(0.0, 0.0) },
-                        foldRotationZ: { value: 0.0 },
-
-                        /**
-                         * Lights
-                         */
-                        // Ambient Light 
-                        ambientLightColor: { value: ambientLightColor },
-                        ambientLightIntensity: { value: ambientLightIntensity }, 
-
-                        // Point Light 
-                        pointLightColor: { value: pointLightColor },
-                        pointLightIntensity: { value: pointLightIntensity },
-                        pointLightPosition: { value: new THREE.Vector3(0, 0, 10) },
-                        pointLightDecay: { value: pointLightDecay },
-
-                        roughnessIntensity: { value: roughnessIntensity },
-                        roughnessPresence: { value: roughnessPresence },
-
-                        useIridescence: { value: useIridescence }, 
-                        iridescenceIntensity: { value: iridescenceIntensity },
-
-                        useBrightness: { value: useBrightness }, 
-                        brightnessIntensity: { value: brightnessIntensity },
-
-                        useShine: { value: useShiney  },
-                        shineIntensity: { value: shineyIntensity },
-                        shineColor1: { value: shineyColor },
-                        shineColor2: { value: shineyColor },
-
-                        useTransition: { value: useTransition },
-
-                        uTime: { value: 0.0 },
-                        uRotation: { value: 0.0 },
-                        uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-
-                        environmentIntensity: { value: 1.0 }, // Adjust as needed
-                        environmentColor: { value: new THREE.Color(0xffffff) }, // White light
-
-                        // Grading Randomness 
-                        rotation: { value: 0.0 },
-                        scale: { value: new THREE.Vector2(1, 1) },
-                        offset: { value: new THREE.Vector2(0, 0)}
-                    }}
-
-                    vertexShader={
-                        standardVertexShader
-                    }
-                    fragmentShader={
-                        useRefraction
-                        ? 
-                        refractionFragmentShader
-                        : useBrightness 
-                        ? 
-                        brightnessFragmentShader 
-                        : useIridescence
-                        ?
-                        iridescenceFragmentShader
-                        : useShiney 
-                        ? 
-                        shineFragmentShader 
-                        : 
-                        standardFragmentShader
-                    }
-                    transparent={true}
-                    side={THREE.DoubleSide}
-                />
-
-                {/* <SkillsCard 
-                    ref={skillsRef} 
-                />
-                */}
-
-                <FooterCard blendMode={blendMode} ref={footerRef} />
-            </mesh>
-
-        </DragControls>
+                    <FooterCard blendMode={blendMode} ref={footerRef} />
+                </mesh>
+            </DragControls>
+        )
     )
 }
 

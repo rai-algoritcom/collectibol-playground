@@ -1,8 +1,9 @@
 
 import { useTexture } from "@react-three/drei";
 import LayeredMaterialCard from "./Layers/LayeredMaterialCard.jsx";
-import { Suspense, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { useControls } from "leva";
+import * as THREE from "three"
 import MainCard from "./Layers/MainCard.jsx";
 
 import mock from '../data/genesis.js'
@@ -12,6 +13,13 @@ import { getCardConfigJSON } from "../data/localStorage.js";
 export default function CardLoader({ controlsRef, isGameplay }) {
 
     const cardConfig = getCardConfigJSON()
+
+    /**
+     * Blending Reusable Configs.
+     */
+    const renderScene = useMemo(() => new THREE.Scene(), [])
+    const renderCamera = useMemo(() => new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1), [])
+
     
     const [texturePaths, setTexturePaths] = useState({
         base: {
@@ -269,11 +277,6 @@ export default function CardLoader({ controlsRef, isGameplay }) {
 
     const normalToggles = {
         base_normal,
-        // main_interest_normal,
-        // layout_normal,
-        // grading_v2_doblez_normal,
-        // grading_v2_rascado_normal,
-        // grading_v2_scratches_normal,
     }
 
     
@@ -343,8 +346,6 @@ export default function CardLoader({ controlsRef, isGameplay }) {
         }));
     };
 
-
-
     const baseTextures = useTexture(texturePaths.base);
     const patternTexture = useTexture(texturePaths.pattern);
     const mainInterestTextures = useTexture(texturePaths.main_interest);
@@ -358,16 +359,8 @@ export default function CardLoader({ controlsRef, isGameplay }) {
     const gradingScratches = useTexture(texturePaths.gradingV2.scratches)
 
 
-    const placeholdersPos = mock.map(c => ({
-        x: c.position[0],
-        y: c.position[1],
-        z: c.position[2]
-    }))
-
-
     return (
         <Suspense fallback={<></>}>
-
             {
                 isGameplay 
                 ? 
@@ -375,7 +368,6 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                         <MainCard 
                             key={i}
                             controlsRef={controlsRef}
-                            placeholdersPos={placeholdersPos}
                             textures={{
                                 base: baseTextures,
                                 pattern: patternTexture,
@@ -391,11 +383,15 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                                 },
                                 fx: fxTextures
                             }}
+
+                            renderScene={renderScene}
+                            renderCamera={renderCamera}
         
                             {...props}
                         />
                     ))
                 : 
+                
                 <LayeredMaterialCard
                     cardConfig={cardConfig}
                     textures={{

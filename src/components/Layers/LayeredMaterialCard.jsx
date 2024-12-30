@@ -84,7 +84,6 @@ import Stats from "three/examples/jsm/libs/stats.module.js";
 import { writeStorageConfig } from "../../data/localStorage";
 
 import { BrightnessContrast, ChromaticAberration, DepthOfField, EffectComposer, GodRays, HueSaturation } from "@react-three/postprocessing"
-import SparklesCard from "./SparklesCard";
 
 
 

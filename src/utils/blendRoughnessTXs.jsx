@@ -1,5 +1,6 @@
 
 import blendUVs from './blendUVs.jsx';
+import * as THREE from "three"
 
 
 /**
