@@ -1,7 +1,7 @@
 
 import { useTexture } from "@react-three/drei";
 import LayeredMaterialCard from "./Layers/LayeredMaterialCard.jsx";
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useControls } from "leva";
 import * as THREE from "three"
 import MainCard from "./Layers/MainCard.jsx";
@@ -86,7 +86,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
         'Base Textures + Channels', {
             'Alpha': { image: texturePaths.base.alpha, onChange: (v) => updateTexture('base', 'alpha', v) },
             'Alpha II': { image: texturePaths.base.alpha2, onChange: (v) => updateTexture('base', 'alpha2', v)  },
-            'Albedo': { image: texturePaths.base.albedo, onChange: (v) => updateTexture('base', 'albedo', v) },
+            // 'Albedo': { image: texturePaths.base.albedo, onChange: (v) => updateTexture('base', 'albedo', v) },
             'Height': { image: texturePaths.base.height, onChange: (v) => updateTexture('base', 'height', v) },
             'Normal': { image: texturePaths.base.normal, onChange: (v) => updateTexture('base', 'normal', v) },
             'Roughness': { image: texturePaths.base.roughness, onChange: (v) => updateTexture('base', 'roughness', v) }, 
@@ -94,10 +94,10 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 value: cardConfig.alpha_ch.base_alpha,
                 label: 'Alpha ch.'
             },
-            base_albedo: {
-                value: cardConfig.alpha_ch.base_albedo, 
-                label: 'Albedo ch.'
-            },
+            // base_albedo: {
+            //     value: cardConfig.alpha_ch.base_albedo, 
+            //     label: 'Albedo ch.'
+            // },
             base_height: {
                 value: cardConfig.height_ch.base_height,
                 label: 'Height ch.'
@@ -359,6 +359,36 @@ export default function CardLoader({ controlsRef, isGameplay }) {
     const gradingScratches = useTexture(texturePaths.gradingV2.scratches)
 
 
+    // Queue to process cards sequentally 
+    const queueRef = useRef([])
+    const [queue, setQueue] = useState([])
+    const processingCard = useRef(null)
+
+    const enqueue = useCallback((id) => {
+        queueRef.current = [...queueRef.current, id]
+        setQueue([...queueRef.current])
+    }, [])
+
+    const processNext = useCallback(() => {
+        if (queueRef.current.length > 0 && !processingCard.current) {
+            const nextCard = queueRef.current[0];
+            processingCard.current = nextCard;
+      
+            // Remove the processed card from the queue
+            queueRef.current = queueRef.current.slice(1);
+            setQueue([...queueRef.current]); // Trigger React re-render
+          } else {
+              processingCard.current = null;
+          }
+    }, [])
+
+    useEffect(() => {
+        if (!processingCard.current && queueRef.current.length > 0) {
+            processNext()
+        }
+    }, [queue])
+
+
     return (
         <Suspense fallback={<></>}>
             {
@@ -366,7 +396,6 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 ? 
                     mock.map((props, i) => (
                         <MainCard 
-                            key={i}
                             controlsRef={controlsRef}
                             textures={{
                                 base: baseTextures,
@@ -386,8 +415,15 @@ export default function CardLoader({ controlsRef, isGameplay }) {
 
                             renderScene={renderScene}
                             renderCamera={renderCamera}
+
+                            enqueue={enqueue}
+                            processNext={processNext}
+                            isProcessing={(id) => processingCard.current === id}
         
                             {...props}
+
+                            key={`card-${i}`}
+                            id={`card-${i}`}
                         />
                     ))
                 : 

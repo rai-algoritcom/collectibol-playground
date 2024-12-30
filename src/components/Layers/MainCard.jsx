@@ -81,6 +81,10 @@ const MainCard = ({
        stripesVisible, 
        // transition 
        useTransition, 
+       // queue 
+       enqueue, 
+       processNext,
+       isProcessing
 }) => {
     const { gl, camera, clock } = useThree()
 
@@ -102,11 +106,15 @@ const MainCard = ({
         gradingAlbedoProps
     } = useMemo(() => getGradingProps(), [])
 
+
+    useEffect(() => {
+        enqueue(id)
+    }, [])
+
+
     useEffect(() => {
         if (
-            !renderScene ||
-            !renderCamera ||
-            !textures
+            !isProcessing(id)
         ) return 
 
         const blendedAlbedoTextures = 
@@ -150,19 +158,19 @@ const MainCard = ({
         shaderMaterialCfg.current = {
             vertexShader: standardVertexShader,
             fragmentShader: 
-                useRefraction
-                ? 
-                refractionFragmentShader
-                : useBrightness 
-                ? 
-                brightnessFragmentShader 
-                : useIridescence
-                ?
-                iridescenceFragmentShader
-                : useShiney 
-                ? 
-                shineFragmentShader 
-                : 
+                // useRefraction
+                // ? 
+                // refractionFragmentShader
+                // : useBrightness 
+                // ? 
+                // brightnessFragmentShader 
+                // : useIridescence
+                // ?
+                // iridescenceFragmentShader
+                // : useShiney 
+                // ? 
+                // shineFragmentShader 
+                // : 
                 standardFragmentShader,
             transparent: true,
             side: THREE.DoubleSide,
@@ -229,8 +237,10 @@ const MainCard = ({
                 environmentIntensity: { value: 1.0 }, // Adjust as needed
                 environmentColor: { value: new THREE.Color(0xffffff) }, // White light
             }
+        
         }
-    }, [ ])
+        processNext()
+    }, [isProcessing, processNext])
 
 
     useEffect(() => {
@@ -244,7 +254,7 @@ const MainCard = ({
     let lastAngle = 0; // Keep track of the last angle
     useFrame(() => {
 
-        if (
+        /*if (
             shaderRef.current && 
             shaderRef.current.uniforms
         ) {
@@ -277,7 +287,7 @@ const MainCard = ({
 
             shaderRef.current.uniforms.uRotation.value = smoothAngle * 3
             lastAngle = smoothAngle
-        }
+        }*/
     })
 
 
