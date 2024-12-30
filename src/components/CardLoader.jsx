@@ -1,7 +1,7 @@
 
 import { useTexture } from "@react-three/drei";
 import LayeredMaterialCard from "./Layers/LayeredMaterialCard.jsx";
-import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { useControls } from "leva";
 import * as THREE from "three"
 import MainCard from "./Layers/MainCard.jsx";
@@ -12,14 +12,13 @@ import { getCardConfigJSON } from "../data/localStorage.js";
 
 export default function CardLoader({ controlsRef, isGameplay }) {
 
-    const cardConfig = getCardConfigJSON()
+    const cardConfig = useMemo(() => getCardConfigJSON(), []) 
 
     /**
      * Blending Reusable Configs.
      */
     const renderScene = useMemo(() => new THREE.Scene(), [])
     const renderCamera = useMemo(() => new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1), [])
-
     
     const [texturePaths, setTexturePaths] = useState({
         base: {
@@ -48,12 +47,10 @@ export default function CardLoader({ controlsRef, isGameplay }) {
         gradingV2: {
             doblez: {
                 albedo: '/mobile/prod/crop_grading/poor4/doblez_albedo.png',
-                // normal: '/mobile/prod/crop_grading/poor2/doblez_normal.png',
                 roughness: '/mobile/prod/crop_grading/poor4/doblez_roughness.png'
             },
             exterior: {
                 albedo: '/mobile/prod/crop_grading/poor4/exterior_albedo.png',
-                // normal: '/prod/grading/poor/exterior_normal.png',
                 roughness: '/mobile/prod/crop_grading/poor4/exterior_roughness.png'
             },
             manchas: {
@@ -61,12 +58,10 @@ export default function CardLoader({ controlsRef, isGameplay }) {
             },
             rascado: {
                 albedo: '/mobile/prod/crop_grading/poor4/rascado_albedo.png',
-                // normal: '/mobile/prod/crop_grading/poor2/rascado_normal.png',
                 roughness: '/mobile/prod/crop_grading/poor4/rascado_roughness.png'
             },
             scratches: {
                 albedo: '/mobile/prod/crop_grading/poor4/scratches_albedo.png',
-                // normal: '/mobile/prod/crop_grading/poor2/scratches_normal.png',
                 roughness: '/mobile/prod/crop_grading/poor4/scratches_roughness.png'
             }
         },
@@ -86,7 +81,6 @@ export default function CardLoader({ controlsRef, isGameplay }) {
         'Base Textures + Channels', {
             'Alpha': { image: texturePaths.base.alpha, onChange: (v) => updateTexture('base', 'alpha', v) },
             'Alpha II': { image: texturePaths.base.alpha2, onChange: (v) => updateTexture('base', 'alpha2', v)  },
-            // 'Albedo': { image: texturePaths.base.albedo, onChange: (v) => updateTexture('base', 'albedo', v) },
             'Height': { image: texturePaths.base.height, onChange: (v) => updateTexture('base', 'height', v) },
             'Normal': { image: texturePaths.base.normal, onChange: (v) => updateTexture('base', 'normal', v) },
             'Roughness': { image: texturePaths.base.roughness, onChange: (v) => updateTexture('base', 'roughness', v) }, 
@@ -94,10 +88,6 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 value: cardConfig.alpha_ch.base_alpha,
                 label: 'Alpha ch.'
             },
-            // base_albedo: {
-            //     value: cardConfig.alpha_ch.base_albedo, 
-            //     label: 'Albedo ch.'
-            // },
             base_height: {
                 value: cardConfig.height_ch.base_height,
                 label: 'Height ch.'
@@ -158,19 +148,14 @@ export default function CardLoader({ controlsRef, isGameplay }) {
     )
 
 
-    const { grading_v2_doblez_albedo, grading_v2_doblez_normal, grading_v2_doblez_roughness } = useControls(
+    const { grading_v2_doblez_albedo, grading_v2_doblez_roughness } = useControls(
         'Doblez (Grading Textures v2)', {
             'Albedo': { image: texturePaths.gradingV2.doblez.albedo, onChange: (v) => updateGradingTexture('gradingV2', 'doblez', 'albedo', v) } ,
-            // 'Normal': { image: texturePaths.gradingV2.doblez.normal, onChange: (v) => updateGradingTexture('gradingV2', 'doblez', 'normal', v)   },
             'Roughness': { image: texturePaths.gradingV2.doblez.roughness, onChange: (v) => updateGradingTexture('gradingV2', 'doblez', 'roughness', v)  },
             grading_v2_doblez_albedo: {
                 value: cardConfig.albedo_ch.grading_v2_doblez_albedo,
                 label: 'Albedo ch.'
             },
-            // grading_v2_doblez_normal: {
-            //     value: false,
-            //     label: 'Normal ch.'
-            // },
             grading_v2_doblez_roughness: {
                 value: cardConfig.roughness_ch.grading_v2_doblez_roughness,
                 label: 'Roughness ch.'
@@ -203,19 +188,14 @@ export default function CardLoader({ controlsRef, isGameplay }) {
         }
     )
 
-    const { grading_v2_rascado_albedo, grading_v2_rascado_normal, grading_v2_rascado_roughness } = useControls(
+    const { grading_v2_rascado_albedo, grading_v2_rascado_roughness } = useControls(
         'Rascado (Grading Textures v2)', {
             'Albedo': { image: texturePaths.gradingV2.rascado.albedo, onChange: (v) => updateGradingTexture('gradingV2', 'rascado', 'albedo', v)  },
-            // 'Normal': { image: texturePaths.gradingV2.rascado.normal, onChange: (v) => updateGradingTexture('gradingV2', 'rascado', 'normal', v) },
             'Roughness': { image: texturePaths.gradingV2.rascado.roughness, onChange: (v) => updateGradingTexture('gradingV2', 'rascado', 'roughness', v) },
             grading_v2_rascado_albedo: {
                 value: cardConfig.albedo_ch.grading_v2_rascado_albedo,
                 label: 'Albedo ch.'
             },
-            // grading_v2_rascado_normal: {
-            //     value: false,
-            //     label: 'Normal ch.'
-            // },
             grading_v2_rascado_roughness: {
                 value: cardConfig.roughness_ch.grading_v2_rascado_roughness,
                 label: 'Roughness ch.'
@@ -223,19 +203,14 @@ export default function CardLoader({ controlsRef, isGameplay }) {
         }
     )
 
-    const { grading_v2_scratches_albedo, grading_v2_scratches_normal, grading_v2_scratches_roughness } = useControls(
+    const { grading_v2_scratches_albedo, grading_v2_scratches_roughness } = useControls(
         'Scratches (Grading Textures v2)', {
             'Albedo': { image: texturePaths.gradingV2.scratches.albedo, onChange: (v) => updateGradingTexture('gradingV2', 'scratches', 'albedo', v)  },
-            // 'Normal': { image: texturePaths.gradingV2.scratches.normal, onChange: (v) => updateGradingTexture('gradingV2', 'scratches', 'normal', v) },
             'Roughness': { image: texturePaths.gradingV2.scratches.roughness, onChange: (v) => updateGradingTexture('gradingV2', 'scratches', 'roughness', v) },
             grading_v2_scratches_albedo: {
                 value: cardConfig.albedo_ch.grading_v2_scratches_albedo,
                 label: 'Albedo ch.'
             },
-            // grading_v2_scratches_normal: {
-            //     value: false,
-            //     label: 'Normal ch.'
-            // },
             grading_v2_scratches_roughness: {
                 value: cardConfig.roughness_ch.grading_v2_scratches_roughness,
                 label: 'Roughness ch.'
@@ -358,35 +333,50 @@ export default function CardLoader({ controlsRef, isGameplay }) {
     const gradingRascado = useTexture(texturePaths.gradingV2.rascado)
     const gradingScratches = useTexture(texturePaths.gradingV2.scratches)
 
+    const textures = useMemo(() => ({
+        base: baseTextures,
+        pattern: patternTexture,
+        main_interest: mainInterestTextures,
+        layout: layoutTextures,
+        fx: fxTextures,
+        gradingv2: {
+            gradingDoblez,
+            gradingExterior,
+            gradingManchas,
+            gradingRascado,
+            gradingScratches
+        }
+    }), [baseTextures, patternTexture, mainInterestTextures, layoutTextures, fxTextures, gradingDoblez, gradingExterior, gradingManchas, gradingRascado, gradingScratches])
+
 
     // Queue to process cards sequentally 
-    const queueRef = useRef([])
-    const [queue, setQueue] = useState([])
-    const processingCard = useRef(null)
+    // const queueRef = useRef([])
+    // const [queue, setQueue] = useState([])
+    // const processingCard = useRef(null)
 
-    const enqueue = useCallback((id) => {
-        queueRef.current = [...queueRef.current, id]
-        setQueue([...queueRef.current])
-    }, [])
+    // const enqueue = useCallback((id) => {
+    //     queueRef.current = [...queueRef.current, id]
+    //     setQueue([...queueRef.current])
+    // }, [])
 
-    const processNext = useCallback(() => {
-        if (queueRef.current.length > 0 && !processingCard.current) {
-            const nextCard = queueRef.current[0];
-            processingCard.current = nextCard;
+    // const processNext = useCallback(() => {
+    //     if (queueRef.current.length > 0 && !processingCard.current) {
+    //         const nextCard = queueRef.current[0];
+    //         processingCard.current = nextCard;
       
-            // Remove the processed card from the queue
-            queueRef.current = queueRef.current.slice(1);
-            setQueue([...queueRef.current]); // Trigger React re-render
-          } else {
-              processingCard.current = null;
-          }
-    }, [])
+    //         // Remove the processed card from the queue
+    //         queueRef.current = queueRef.current.slice(1);
+    //         setQueue([...queueRef.current]); // Trigger React re-render
+    //       } else {
+    //           processingCard.current = null;
+    //       }
+    // }, [])
 
-    useEffect(() => {
-        if (!processingCard.current && queueRef.current.length > 0) {
-            processNext()
-        }
-    }, [queue])
+    // useEffect(() => {
+    //     if (!processingCard.current && queueRef.current.length > 0) {
+    //         processNext()
+    //     }
+    // }, [queue])
 
 
     return (
@@ -396,55 +386,27 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 ? 
                     mock.map((props, i) => (
                         <MainCard 
+                            key={`card-${i}`}
+                            id={`card-${i}`}
+
                             controlsRef={controlsRef}
-                            textures={{
-                                base: baseTextures,
-                                pattern: patternTexture,
-                                main_interest: mainInterestTextures,
-                                layout: layoutTextures,
-                                // grading: gradingTextures,
-                                gradingv2: {
-                                    gradingDoblez, 
-                                    gradingExterior, 
-                                    gradingManchas, 
-                                    gradingRascado, 
-                                    gradingScratches
-                                },
-                                fx: fxTextures
-                            }}
+                            textures={textures}
 
                             renderScene={renderScene}
                             renderCamera={renderCamera}
 
-                            enqueue={enqueue}
-                            processNext={processNext}
-                            isProcessing={(id) => processingCard.current === id}
+                            // enqueue={enqueue}
+                            // processNext={processNext}
+                            // isProcessing={(id) => processingCard.current === id}
         
                             {...props}
-
-                            key={`card-${i}`}
-                            id={`card-${i}`}
                         />
                     ))
                 : 
                 
                 <LayeredMaterialCard
                     cardConfig={cardConfig}
-                    textures={{
-                        base: baseTextures,
-                        pattern: patternTexture,
-                        main_interest: mainInterestTextures,
-                        layout: layoutTextures,
-                        // grading: gradingTextures,
-                        gradingv2: {
-                            gradingDoblez, 
-                            gradingExterior, 
-                            gradingManchas, 
-                            gradingRascado, 
-                            gradingScratches
-                        },
-                        fx: fxTextures
-                    }}
+                    textures={textures}
                     texturePaths={texturePaths}
                     layoutColor={layoutColor}
                     // Toggles

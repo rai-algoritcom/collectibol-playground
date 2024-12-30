@@ -1,15 +1,18 @@
 import { useGLTF } from "@react-three/drei"
 import { useThree } from "@react-three/fiber"
 import { useControls } from "leva"
+import { useEffect } from "react"
 
  
 export default function Field({
-    controlsRef
+    onLoad
 }) {
-
     const { scene } = useGLTF('/models/ground_optim.glb', true)
     const { set, size, camera } = useThree()
 
+    useEffect(() => {
+        if (scene) onLoad()
+    }, [scene])
 
     useControls('Camera', {
         'mode': {

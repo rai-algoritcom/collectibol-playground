@@ -2,7 +2,7 @@ import { Environment, OrbitControls, PerspectiveCamera } from "@react-three/drei
 import { Canvas } from "@react-three/fiber";
 import CardLoader from "./components/CardLoader";
 import Field from "./components/Field";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import LinkButton from "./components/LinkButton";
 import GrassV2 from "./components/Grass/GrassV2";
 
@@ -10,6 +10,11 @@ import GrassV2 from "./components/Grass/GrassV2";
 export default function Gameplay() {
 
     const controlsRef = useRef()
+
+    const [fieldLoaded, setFieldLoaded] = useState(false)
+    const [grassLoaded, setGrassLoaded] = useState(false)
+
+    const isGameplayReady = fieldLoaded && grassLoaded
 
     return (
         <>
@@ -29,15 +34,21 @@ export default function Gameplay() {
                 <OrbitControls ref={controlsRef} />
                 
                 {/* Gameplay */}
-                <CardLoader 
-                    controlsRef={controlsRef} 
-                    isGameplay={true} 
-                />
+                {isGameplayReady && (
+                    <CardLoader 
+                        controlsRef={controlsRef} 
+                        isGameplay={true} 
+                    />
+                )}
 
                 {/* Field */}
-                <Field controlsRef={controlsRef} />
+                <Field 
+                    onLoad={() => setFieldLoaded(true)}
+                />
 
-                <GrassV2 />
+                <GrassV2 
+                    onLoad={() => setGrassLoaded(true)}
+                />
 
             </Canvas>
 

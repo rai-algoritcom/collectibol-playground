@@ -282,6 +282,5 @@ export function blendAlbedosZipped(
     renderer.setRenderTarget(null);
 
     renderScene.remove(quad);
-  
     return renderTarget.texture;
 }

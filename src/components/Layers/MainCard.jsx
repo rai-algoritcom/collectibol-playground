@@ -44,7 +44,7 @@ const MainCard = ({
        id,
        //
        controlsRef,
-       // configs 
+       // configs
        renderScene,
        renderCamera,
        // pos
@@ -82,9 +82,9 @@ const MainCard = ({
        // transition 
        useTransition, 
        // queue 
-       enqueue, 
-       processNext,
-       isProcessing
+    //    enqueue, 
+    //    processNext,
+    //    isProcessing
 }) => {
     const { gl, camera, clock } = useThree()
 
@@ -108,20 +108,12 @@ const MainCard = ({
 
 
     useEffect(() => {
-        enqueue(id)
-    }, [])
 
-
-    useEffect(() => {
-        if (
-            !isProcessing(id)
-        ) return 
-
-        const blendedAlbedoTextures = 
-            blendAlbedosZipped(
-                { renderScene, renderCamera, renderer: gl },
-                textures, false, layoutColor, gradingAlbedoProps
-            )
+        // const blendedAlbedoTextures = 
+        //     blendAlbedosZipped(
+        //         { renderTarget, renderScene, renderCamera, renderer: gl },
+        //         textures, false, layoutColor, gradingAlbedoProps
+        //     )
 
         const blendedAlbedo3Textures = 
             blendAlbedosZipped(
@@ -158,25 +150,25 @@ const MainCard = ({
         shaderMaterialCfg.current = {
             vertexShader: standardVertexShader,
             fragmentShader: 
-                // useRefraction
-                // ? 
-                // refractionFragmentShader
-                // : useBrightness 
-                // ? 
-                // brightnessFragmentShader 
-                // : useIridescence
-                // ?
-                // iridescenceFragmentShader
-                // : useShiney 
-                // ? 
-                // shineFragmentShader 
-                // : 
+                useRefraction
+                ? 
+                refractionFragmentShader
+                : useBrightness 
+                ? 
+                brightnessFragmentShader 
+                : useIridescence
+                ?
+                iridescenceFragmentShader
+                : useShiney 
+                ? 
+                shineFragmentShader 
+                : 
                 standardFragmentShader,
             transparent: true,
             side: THREE.DoubleSide,
             uniforms: {
                 // textures
-                albedoMap2: { value: blendedAlbedoTextures },
+                // albedoMap2: { value: blendedAlbedoTextures },
                 albedoMap: { value: blendedAlbedo3Textures },
                 alphaMap: { value: blendedAlphaTextures },
                 alphaMap2: { value: blendedAlpha2Textures },
@@ -239,8 +231,7 @@ const MainCard = ({
             }
         
         }
-        processNext()
-    }, [isProcessing, processNext])
+    }, [])
 
 
     useEffect(() => {

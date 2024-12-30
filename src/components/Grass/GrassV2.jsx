@@ -15,6 +15,7 @@ THREE.ColorManagement.legacyMode = false;
 
 const simplex = new SimplexNoise(Math.random)
 export default function GrassV2({
+  onLoad,
   // options = { bW: 0.05, bH: .83, joints: 5 },
   width = 70,
   height = 50, // Add height for rectangle dimensions
@@ -45,33 +46,11 @@ export default function GrassV2({
     [bW, bH, joints]
   );
 
-  // Ground geometry adjusted for rectangle
-  const groundGeo = useMemo(() => {
-    const geo = new THREE.PlaneGeometry(width, height, 32, 32); // width and height for rectangle
-    geo.lookAt(new THREE.Vector3(0, 1, 0));
-
-    const positionAttribute = geo.attributes.position;
-
-    // Modify Y positions based on custom logic
-    for (let i = 0; i < positionAttribute.count; i++) {
-      const x = positionAttribute.getX(i);
-      const z = positionAttribute.getZ(i);
-      const y = getYPosition(x, z); // Replace with your logic for Y displacement
-
-      positionAttribute.setY(i, y);
-    }
-
-    // Notify Three.js of the update
-    positionAttribute.needsUpdate = true;
-
-    geo.computeVertexNormals(); // Recalculate normals for proper shading
-    return geo;
-  }, [width, height]); // Include height for rectangle
-
   useFrame((state) => (materialRef.current.uniforms.time.value = state.clock.elapsedTime / 4));
 
   useEffect(() => {
     setKey((prevKey) => prevKey + 1)
+    if (onLoad) onLoad()
   }, [
     bW, bH, joints, instances
   ])
@@ -92,9 +71,6 @@ export default function GrassV2({
         </instancedBufferGeometry>
         <grassMaterial ref={materialRef} map={texture} alphaMap={alphaMap} toneMapped={false} />
       </mesh>
-      {/* <mesh position={[0, 0, 0]} geometry={groundGeo}>
-        <meshStandardMaterial color="#000f00" />
-      </mesh> */}
     </group>
   );
 }
