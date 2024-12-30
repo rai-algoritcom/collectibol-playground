@@ -4,7 +4,7 @@ import { button, useControls } from "leva";
 import * as THREE from 'three';
 import gsap from "gsap";
 
-import { BlendFunction, Resizer, KernelSize } from "postprocessing"
+import { BlendFunction, KernelSize } from "postprocessing"
 
 
 /**
@@ -249,8 +249,6 @@ export default function LayeredMaterialCard({
             rot: rotScratches
         },
     }
-
-    console.log(gradingRoughnessProps)
 
     /**
      * Video textures

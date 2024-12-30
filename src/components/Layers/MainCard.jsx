@@ -6,7 +6,7 @@ import {
     blendRoughnessTXs, 
     blendNormalTXs, 
     getGradingProps } from "../../utils"
-import { invalidate, useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { normalizeAngle } from "../../utils/helpers";
 import { DragControls } from "@react-three/drei";
 
@@ -28,7 +28,7 @@ import {
 import {
     standardVertexShader,
 } from '../../shaders/vertex/index'
-import SkillsCard from "./SkillsCard";
+// import SkillsCard from "./SkillsCard";
 import FooterCard from "./FooterCard";
 import { button, useControls } from "leva";
 
@@ -336,7 +336,7 @@ const MainCard = ({
                 planeRef.current.updateMatrixWorld(true);
 
                 // Trigger a re-render
-                invalidate();
+                // invalidate();
             },
             onComplete: () => {
                 // Re-enable DragControls after the animation
@@ -372,8 +372,8 @@ const MainCard = ({
                 <planeGeometry args={[2, 3, 120, 120]} />
                 <shaderMaterial 
                     ref={shaderRef}
-                    needsUpdate={true}
-                    uniformsNeedUpdate={true}
+                    // needsUpdate={true}
+                    // uniformsNeedUpdate={true}
                     uniforms={{
                         albedoMap2: { value: blendedAlbedoTextures },
                         albedoMap: { value: blendedAlbedo3Textures },

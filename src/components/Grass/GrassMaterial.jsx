@@ -111,10 +111,13 @@ const GrassMaterial = shaderMaterial(
         col = mix(vec4(tipColor, 1.0), col, frc);
         //Add a shadow towards root
         col = mix(vec4(bottomColor, 1.0), col, frc);
+        
+        // Apply sRGB encoding
+        col.rgb = pow(col.rgb, vec3(1.0 / 2.2)); // Gamma correction (convert linear to sRGB)
         gl_FragColor = col;
 
         #include <tonemapping_fragment>
-	      #include <encodings_fragment>
+	      // #include <encodings_fragment>
       }`,
   (self) => {
     self.side = THREE.DoubleSide
