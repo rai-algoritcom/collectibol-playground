@@ -6,50 +6,6 @@ import * as THREE from 'three'
 
 const SkillsCard = forwardRef(({ labelRef1, labelRef2, labelRef3 }, ref) => {
 
-
-    useEffect(() => {
-
-        // if (labelRef1.current && labelRef2.current && labelRef3.current) {
-        //     labelRef1.current.style.opacity = 0
-        //     labelRef2.current.style.opacity = 0
-        //     labelRef3.current.style.opacity = 0
-        // }
- 
-        /*if (mode === 'max') {
-            gsap.to(labelRef1.current, {
-                duration: 0.5 ,
-                opacity: 1,
-                delay: 0
-            })
-            gsap.to(labelRef2.current, {
-                duration: 0.5 ,
-                opacity: 1,
-                delay: 1
-            })
-            gsap.to(labelRef3.current, {
-                duration: 0.5,
-                opacity: 1,
-                delay: 2
-            })
-        } else {
-            gsap.to(labelRef1.current, {
-                duration: 0.5 ,
-                opacity: 0,
-                delay: 0
-            })
-            gsap.to(labelRef2.current, {
-                duration: 0.5 ,
-                opacity: 0,
-                delay: 1
-            })
-            gsap.to(labelRef3.current, {
-                duration: 0.5,
-                opacity: 0,
-                delay: 2
-            })
-        }*/
-    }, [ref])
-
     return (
         <Html   
                 frustumCulled={true}

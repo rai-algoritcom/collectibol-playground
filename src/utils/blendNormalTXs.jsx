@@ -59,3 +59,12 @@ export function blendNormalTXs(renderer, textures, controls, gradingNormalsProps
 
 
 }
+
+
+export function blendNormalsZipped(
+    textures
+) {
+    const { base } = textures
+    let blendedNormal = base.normal
+    return blendedNormal
+}

@@ -37,3 +37,12 @@ export function blendHeightTXs(renderer, textures, controls) {
 
     return blendedHeight
 }
+
+
+export function blendHeightsZipped(
+    textures
+) {
+    const { main_interest } = textures
+    let blendedHeight = main_interest.height
+    return blendedHeight
+}

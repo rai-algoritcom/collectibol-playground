@@ -4,6 +4,8 @@ import { button, useControls } from "leva";
 import * as THREE from 'three';
 import gsap from "gsap";
 
+import { BlendFunction, Resizer, KernelSize } from "postprocessing"
+
 
 /**
  * Vertex
@@ -81,10 +83,14 @@ import SkillsCard from "./SkillsCard";
 import Stats from "three/examples/jsm/libs/stats.module.js";
 import { writeStorageConfig } from "../../data/localStorage";
 
+import { BrightnessContrast, ChromaticAberration, DepthOfField, EffectComposer, GodRays, HueSaturation } from "@react-three/postprocessing"
+import SparklesCard from "./SparklesCard";
+
 
 
 const stats = Stats();
 document.body.appendChild(stats.dom);
+
 
 
 export default function LayeredMaterialCard({ 
@@ -243,6 +249,8 @@ export default function LayeredMaterialCard({
             rot: rotScratches
         },
     }
+
+    console.log(gradingRoughnessProps)
 
     /**
      * Video textures
@@ -493,6 +501,62 @@ export default function LayeredMaterialCard({
         useBlobs: { value: cardConfig.fragment_fx.id === 'blobs', label: 'Blobs Fx' },
         useGrass: { value: cardConfig.fragment_fx.id === 'grass', label: 'Grass Fx' }
     })
+
+
+    /**
+     * PostProcessing
+     */
+    const { useDepthOfField, focusDistance, focalLength, bokehScale } = useControls('Depth of Field [Postprocessing]', {
+        useDepthOfField: { value: false, label: 'Enable' },
+        focusDistance: { value: 0.012, min: 0.001, max: 0.1, step: 0.001, label: 'Focus Distance' },
+        focalLength: { value: 0.015, min: 0.001, max: 0.1, step: 0.001, label: 'Focal Length' },
+        bokehScale: { value: 7, min: 0, max: 20, step: 0.1, label: 'Bokeh Scale'} 
+    })
+
+    const { useHueSaturation, hue, saturation } = useControls('Hue Saturation [Postprocessing]', {
+        useHueSaturation: { value: false, label: 'Enable' },
+        hue: { value: 0, min: -1, max: 1, step: 0.01, label: 'Hue' },
+        saturation: { value: -0.15, min: -1, max: 1, step: 0.01, label: 'Saturation' },
+    })
+
+    const { useBrightnessContrast, brightness, contrast } = useControls('Brightness Contrast [Postprocessing]', {
+        useBrightnessContrast: { value: false, label: 'Enable' },
+        brightness: { value: 0.0, min: -1, max: 1, step: 0.01, label: 'Brightness' },
+        contrast: { value: 0.035, min: -1, max: 1, step: 0.01, label: 'Contrast' },
+    })
+
+    const { useChromaticAberration, radialModulation, offset } = useControls('Chromatic Aberration [Postprocessing]', {
+        useChromaticAberration: { value: false, label: 'Enable' },
+        radialModulation: { value: true, label: 'Radial Modulation' },
+        offset: { value: 0.0015, min: 0, max: 0.1, step: 0.0001, label: 'Offset' },
+    })
+
+    const { useGodRays, useRaysBg, raysBgColor, samples, density, weight, decay, exposure } = useControls('God Rays [Postprocessing]', {
+        useGodRays: { value: false, label: 'Enable' },
+        useRaysBg: { value: false, label: 'Background' },
+        raysBgColor: { value: { r: 100, g: 20, b: 0 }, label: 'Background Color' },
+        samples: { value: 10, min: 1, max: 100, step: 1, label: 'Samples' },
+        density: { value: 0.97, min: 0, max: 1, step: 0.01, label: 'Density' },
+        weight: { value: 0.5, min: 0, max: 1, step: 0.001, label: 'Weight' },
+        decay: { value: 0.95, min: 0, max: 1, step: 0.001, label: 'Decay' },
+        exposure: { value: 0.3, min: 0, max: 1, step: 0.001, label: 'Exposure' },
+    })
+
+    let mesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(2, 3, 120, 120),
+        new THREE.MeshBasicMaterial({
+            color: new THREE.Color(
+                raysBgColor.r / 255,
+                raysBgColor.g / 255,
+                raysBgColor.b / 255
+            ), 
+            transparent: true,
+            opacity: 1,
+            alphaMap: textures.base.alpha,
+        })
+    )
+    mesh.position.set(0, 0, -.15)
+    mesh.scale.set(1.05, 1.05, 1.05)
 
 
 
@@ -924,6 +988,7 @@ export default function LayeredMaterialCard({
 
     return (
         <group>
+            { useRaysBg && <primitive object={mesh}></primitive> }
             <mesh
                 frustumCulled={true} 
                 ref={planeRef}
@@ -1201,6 +1266,56 @@ export default function LayeredMaterialCard({
                 blendMode={blendMode} 
                 ref={footerRef} 
             />
+
+            <EffectComposer> 
+                { useDepthOfField && (
+                    <DepthOfField
+                        focusDistance={focusDistance}
+                        focalLength={focalLength}
+                        bokehScale={bokehScale}
+                    />
+                )}
+
+                { useHueSaturation && (
+                    <HueSaturation
+                        hue={hue}
+                        saturation={saturation}
+                    />
+                )}
+
+                { useBrightnessContrast && (
+                    <BrightnessContrast
+                        brightness={brightness}
+                        contrast={contrast}
+                    />
+                )}
+
+                { useChromaticAberration && (
+                    <ChromaticAberration
+                        radialModulation={radialModulation}
+                        offset={[offset, offset]}
+                    />
+                )}
+
+
+                { useGodRays && (
+                    <GodRays
+                        sun={mesh}
+                        blendFunction={BlendFunction.Screen}
+                        samples={samples}
+                        density={density}
+                        decay={decay}
+                        weight={weight}
+                        exposure={exposure}
+                        clampMax={1}
+                        width={Resizer.AUTO_SIZE}
+                        height={Resizer.AUTO_SIZE}
+                        kernelSize={KernelSize.SMALL}
+                        blur={true}
+                    />
+                )}
+        
+            </EffectComposer>
       
         </group>
     )

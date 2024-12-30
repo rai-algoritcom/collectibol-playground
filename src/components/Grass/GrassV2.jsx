@@ -9,6 +9,10 @@ import bladeAlpha from "/grass/blade_alpha.jpg"
 import "./GrassMaterial.jsx"
 import { useControls } from "leva"
 
+
+THREE.ColorManagement.legacyMode = false;
+
+
 const simplex = new SimplexNoise(Math.random)
 export default function GrassV2({
   // options = { bW: 0.05, bH: .83, joints: 5 },
@@ -37,7 +41,7 @@ export default function GrassV2({
 
   // Base blade geometry
   const baseGeom = useMemo(
-    () => new THREE.PlaneBufferGeometry(bW, bH, 1, joints).translate(0, bH / 2, 0),
+    () => new THREE.PlaneGeometry(bW, bH, 1, joints).translate(0, bH / 2, 0),
     [bW, bH, joints]
   );
 

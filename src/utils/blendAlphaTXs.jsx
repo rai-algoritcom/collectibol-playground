@@ -28,3 +28,13 @@ export function blendAlphaTXs(renderer, textures, controls, is2ndLayout = false)
 
     return blendedAlpha
 }
+
+
+export function blendAlphasZipped(
+    textures, 
+    is2ndLayout = false
+) {
+    const { base } = textures
+    let blendedAlpha = is2ndLayout ? base.alpha2 : base.alpha
+    return blendedAlpha
+}
