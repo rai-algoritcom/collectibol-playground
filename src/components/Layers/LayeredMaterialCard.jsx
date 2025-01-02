@@ -1,5 +1,5 @@
+import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
 import { button, useControls } from "leva";
 import * as THREE from 'three';
 import gsap from "gsap";
@@ -32,6 +32,7 @@ import {
     brightnessFragmentShader,
     shineFragmentShader,
     videoFragmentShader,
+    hdriFragmentShader,
     refractionFragmentShader
 } from '../../shaders/fragments/index'
 
@@ -84,6 +85,9 @@ import Stats from "three/examples/jsm/libs/stats.module.js";
 import { writeStorageConfig } from "../../data/localStorage";
 
 import { BrightnessContrast, ChromaticAberration, DepthOfField, EffectComposer, GodRays, HueSaturation } from "@react-three/postprocessing"
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
+import { CubeTextureLoader } from "three";
+import { useCubeTexture } from "@react-three/drei";
 
 
 
@@ -252,32 +256,44 @@ export default function LayeredMaterialCard({
     /**
      * Video textures
      */
-        const videoElement = useMemo(() => {
-            const video = document.createElement("video");
-            video.src = "/clips/Lamine_clip.mov"; // Path to your video
-            video.crossOrigin = "anonymous";
-            video.loop = true;
-            video.muted = true; // Prevent autoplay sound issues
-            video.play();
-            return video;
-        }, []);
+    const videoElement = useMemo(() => {
+        const video = document.createElement("video");
+        video.src = "/clips/Lamine_clip.mov"; // Path to your video
+        video.crossOrigin = "anonymous";
+        video.loop = true;
+        video.muted = true; // Prevent autoplay sound issues
+        video.play();
+        return video;
+    }, []);
     
-        const videoTexture = useMemo(() => {
-            return new THREE.VideoTexture(videoElement);
-        }, [videoElement]);
+    const videoTexture = useMemo(() => {
+        return new THREE.VideoTexture(videoElement);
+    }, [videoElement]);
         
-        const { useVideoTexture } = useControls("Video Texture", {
-            useVideoTexture: { value: cardConfig.use_video, label: "Enable" },
-        });
+
+    const hdriTexture = useLoader(RGBELoader, "/env/the_sky_is_on_fire_4k.hdr");
+    // hdriTexture.mapping = THREE.EquirectangularReflectionMapping;
+    const { useVideoTexture } = useControls("Video Texture", {
+        useVideoTexture: { value: cardConfig.use_video, label: "Enable" },
+    });
+
+
+    /**
+     * HDRI textures
+     */
+    const { useHDRITexture } = useControls("HDRI Texture", {
+        useHDRITexture: { value: false, label: "Enable" }
+    })
+
 
     // Blended Textures
     const blendedAlbedoTextures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps, useVideoTexture);
-    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture]);
+        return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps, useVideoTexture || useHDRITexture);
+    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture, useHDRITexture]);
 
     const blendedAlbedo3Textures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor, gradingAlbedoProps, useVideoTexture);
-    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture])
+        return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor, gradingAlbedoProps, useVideoTexture || useHDRITexture);
+    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture, useHDRITexture])
 
     const blendedAlphaTextures = useMemo(() => {
         return blendAlphaTXs(gl, textures, alphaToggles);
@@ -884,7 +900,9 @@ export default function LayeredMaterialCard({
         blendMode, 
         // 
         useVideoTexture,
-        videoTexture
+        videoTexture,
+        useHDRITexture,
+        hdriTexture
     ])
 
 
@@ -1023,6 +1041,7 @@ export default function LayeredMaterialCard({
 
                                 lightDirection: { value: new THREE.Vector3(0, 0, 2).normalize() },
                                 cameraPosition: { value: new THREE.Vector3(0, 0, 5) },
+                                uOrbitCameraPosition: { value: camera.position },
 
                                 /**
                                  * Folding
@@ -1086,7 +1105,8 @@ export default function LayeredMaterialCard({
 
                                 // Video
                                 videoTexture: { value: videoTexture },
-                                useVideoTexture: { value: useVideoTexture },
+                                // HDRI 
+                                hdriTexture: { value: hdriTexture }
                             }}
                             vertexShader={
                                 useGlitch 
@@ -1120,7 +1140,10 @@ export default function LayeredMaterialCard({
                                 standardVertexShader
                                 }
                             fragmentShader={
-                                useVideoTexture 
+                                useHDRITexture 
+                                ? 
+                                hdriFragmentShader 
+                                : useVideoTexture 
                                 ? 
                                 videoFragmentShader 
                                 : useRefraction

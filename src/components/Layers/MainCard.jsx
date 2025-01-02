@@ -139,7 +139,8 @@ const MainCard = ({
         const blendedRoughnessTextures = 
             blendRoughnessZipped(
                 { renderScene, renderCamera, renderer: gl },
-                textures, gradingRoughnessProps
+                textures, gradingRoughnessProps,
+                 true
             )
 
         const blendedNormalTextures =

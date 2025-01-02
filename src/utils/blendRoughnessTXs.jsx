@@ -56,7 +56,8 @@ export function blendRoughnessTXs(renderer, textures, controls, gradingRoughness
 export function blendRoughnessZipped(
     { renderScene, renderCamera, renderer },
     textures,
-    gradingRoughnessProps
+    gradingRoughnessProps,
+    optimize = false
 ) {
     // Textures 
     const { gradingv2 } = textures 
@@ -66,6 +67,7 @@ export function blendRoughnessZipped(
     const { doblez, rascado, scratches } = gradingRoughnessProps
 
     if (!renderer) return null
+    if (optimize) return gradingExterior.roughness
 
     gradingDoblez.roughness.minFilter = THREE.LinearFilter 
     gradingDoblez.roughness.magFilter = THREE.LinearFilter

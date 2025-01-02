@@ -17,6 +17,7 @@ export function blendAlbedoTXs(
     gradingAlbedoProps,
     useVideoTexture = false
 ) {
+
     const { base, pattern, main_interest, layout, gradingv2 } = textures 
 
     const { manchas, doblez, rascado, scratches } = gradingAlbedoProps

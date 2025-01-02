@@ -36,7 +36,6 @@ uniform int blendMode;
 uniform sampler2D uDisp;
 uniform float uHoverState;
 uniform bool useTransition;
-uniform bool useVideoTexture; // Toggle for video texture
 
 void main() {
     // Sample textures
