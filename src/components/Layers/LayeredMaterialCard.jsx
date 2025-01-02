@@ -4,7 +4,7 @@ import { button, useControls } from "leva";
 import * as THREE from 'three';
 import gsap from "gsap";
 
-import { BlendFunction, KernelSize } from "postprocessing"
+import { Resizer, BlendFunction, KernelSize } from "postprocessing"
 
 
 /**
