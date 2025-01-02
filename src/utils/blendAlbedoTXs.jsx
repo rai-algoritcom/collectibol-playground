@@ -15,7 +15,8 @@ export function blendAlbedoTXs(
     is2ndLayout = false, 
     layoutColor,
     gradingAlbedoProps,
-    useVideoTexture = false
+    useVideoTexture = false,
+    useHDRITexture = false
 ) {
 
     const { base, pattern, main_interest, layout, gradingv2 } = textures 
@@ -54,7 +55,7 @@ export function blendAlbedoTXs(
 
     let blendedAlbedo = null
 
-    if (pattern_albedo && !useVideoTexture) blendedAlbedo = is2ndPattern ? pattern.albedo2 : pattern.albedo
+    if (pattern_albedo && !useVideoTexture && !useHDRITexture) blendedAlbedo = is2ndPattern ? pattern.albedo2 : pattern.albedo
     if (main_interest_albedo && !useVideoTexture) blendedAlbedo = main_interest.albedo;
     if (layout_albedo) blendedAlbedo = is2ndLayout ? layout.albedo2 : layout.albedo;
     // if (grading_albedo) blendedAlbedo = grading.albedo;
@@ -67,7 +68,7 @@ export function blendAlbedoTXs(
 
 
     if (base_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, base.albedo, renderer);
-    if (pattern_albedo && blendedAlbedo && !useVideoTexture) blendedAlbedo = blendUVs(blendedAlbedo, is2ndPattern ? pattern.albedo2 : pattern.albedo, renderer);
+    if (pattern_albedo && blendedAlbedo && !useVideoTexture && !useHDRITexture) blendedAlbedo = blendUVs(blendedAlbedo, is2ndPattern ? pattern.albedo2 : pattern.albedo, renderer);
     if (main_interest_albedo && blendedAlbedo && !useVideoTexture) blendedAlbedo = blendUVs(blendedAlbedo, main_interest.albedo, renderer);
     if (layout_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, is2ndLayout ? layout.albedo2 : layout.albedo, renderer, 0, false, new THREE.Vector2(0,0), 0, threeColor);
     // if (grading_albedo && blendedAlbedo) blendedAlbedo = blendUVs(blendedAlbedo, grading.albedo, renderer);

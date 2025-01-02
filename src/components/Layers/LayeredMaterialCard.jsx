@@ -280,17 +280,17 @@ export default function LayeredMaterialCard({
      * HDRI textures
      */
     const { useHDRITexture } = useControls("HDRI Texture", {
-        useHDRITexture: { value: false, label: "Enable" }
+        useHDRITexture: { value: cardConfig.use_hdri, label: "Enable" }
     })
 
 
     // Blended Textures
     const blendedAlbedoTextures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps, useVideoTexture || useHDRITexture);
+        return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps, useVideoTexture, useHDRITexture);
     }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture, useHDRITexture]);
 
     const blendedAlbedo3Textures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor, gradingAlbedoProps, useVideoTexture || useHDRITexture);
+        return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor, gradingAlbedoProps, useVideoTexture, useHDRITexture);
     }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture, useHDRITexture])
 
     const blendedAlphaTextures = useMemo(() => {
@@ -660,6 +660,7 @@ export default function LayeredMaterialCard({
                     fold_rotation: foldRotation
                 },
                 use_video: useVideoTexture,
+                use_hdri: useHDRITexture,
                 vertex_fx: {
                     id: useGlitch 
                     ? 

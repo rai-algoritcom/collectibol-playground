@@ -85,6 +85,7 @@ export const getCardConfigJSON = () => {
             fold_y: 1.43
         },
         use_video: true,
+        use_hdri: false,
         vertex_fx: {
             id: 'none'
         },
