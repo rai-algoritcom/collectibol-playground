@@ -3,6 +3,8 @@ varying vec3 vNormal;
 varying vec3 vPosition;
 varying mat3 vNormalMatrix;
 
+varying vec3 vWorldPosition;
+
 uniform sampler2D heightMap;
 uniform float displacementScale;
 uniform float uTime;
@@ -29,5 +31,6 @@ void main() {
     // Pass normal and position to fragment shader
     vNormalMatrix = mat3(modelViewMatrix);
     vNormal = normalize(normalMatrix * normal);
+    vWorldPosition = (modelMatrix * vec4(position, 1.0)).xyz;
     vPosition = modelPosition.xyz;
 }

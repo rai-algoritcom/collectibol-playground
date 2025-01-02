@@ -86,8 +86,6 @@ import { writeStorageConfig } from "../../data/localStorage";
 
 import { BrightnessContrast, ChromaticAberration, DepthOfField, EffectComposer, GodRays, HueSaturation } from "@react-three/postprocessing"
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
-import { CubeTextureLoader } from "three";
-import { useCubeTexture } from "@react-three/drei";
 
 
 
