@@ -12,12 +12,12 @@ export default function Builder() {
             <Canvas
                 shadows 
                 camera={{ position: [3, 3, 3], fov: 30 }}
-                gl={{ alpha: true, antialias: true, precision: 'mediump' }}
+                gl={{ alpha: true, antialias: true, precision: 'mediump', stencil: true }}
                 dpr={[1, 2]}
             >
                 <color attach="background" args={["#1B1B1B"]} />
                 
-                <Environment files="/env/the_sky_is_on_fire_4k.hdr" background={false} />
+                <Environment files="/env/the_sky_is_on_fire_1k.exr" background={false} />
 
                 {/* Camera */}
                 <PerspectiveCamera makeDefault position={[0, 0, 5]} />

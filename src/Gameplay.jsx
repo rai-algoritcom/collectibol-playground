@@ -26,7 +26,7 @@ export default function Gameplay() {
             >
                 <color attach="background" args={["#1B1B1B"]} />
 
-                <Environment files="/env/the_sky_is_on_fire_4k.hdr" background={false} />
+                <Environment files="/env/the_sky_is_on_fire_1k.exr" background={false} />
 
                 {/* Camera */}
                 <PerspectiveCamera makeDefault position={[0, 0, 5]} />

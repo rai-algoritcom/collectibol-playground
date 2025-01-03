@@ -86,6 +86,7 @@ import { writeStorageConfig } from "../../data/localStorage";
 
 import { BrightnessContrast, ChromaticAberration, DepthOfField, EffectComposer, GodRays, HueSaturation } from "@react-three/postprocessing"
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
+import { Float, Mask, useGLTF } from "@react-three/drei";
 
 
 
@@ -112,11 +113,13 @@ export default function LayeredMaterialCard({
 
     const [key, setKey] = useState(0);
 
+    const groupRef = useRef()
     const planeRef = useRef()
     const shaderRef = useRef()
     const overlayRef = useRef()
     const skillsRef = useRef()
     const footerRef = useRef()
+    const glbRef = useRef()
 
     const [blendMode, setBlendMode] = useState(0)
 
@@ -270,11 +273,19 @@ export default function LayeredMaterialCard({
     }, [videoElement]);
         
 
-    const hdriTexture = useLoader(RGBELoader, "/env/the_sky_is_on_fire_4k.hdr");
+    // const hdriTexture = useLoader(RGBELoader, "/env/the_sky_is_on_fire_4k.hdr");
+    const hdriTexture = useLoader(THREE.TextureLoader, "/env/orlando_stadium_4k.jpg");
     // hdriTexture.mapping = THREE.EquirectangularReflectionMapping;
     const { useVideoTexture } = useControls("Video Texture", {
         useVideoTexture: { value: cardConfig.use_video, label: "Enable" },
     });
+
+
+    const glbTextureModel = useGLTF("/models/cat_compressed.glb")
+    // const glbTextureModel2 = useGLTF("/models/fcb_low_polly.glb")
+    const { useGLBTexture } = useControls('GLB Texture', {
+        useGLBTexture: { value: false, label: "Enable" }
+    })
 
 
     /**
@@ -287,12 +298,12 @@ export default function LayeredMaterialCard({
 
     // Blended Textures
     const blendedAlbedoTextures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps, useVideoTexture, useHDRITexture);
-    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture, useHDRITexture]);
+        return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps, useVideoTexture || useGLBTexture, useHDRITexture);
+    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture, useHDRITexture, useGLBTexture]);
 
     const blendedAlbedo3Textures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor, gradingAlbedoProps, useVideoTexture, useHDRITexture);
-    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture, useHDRITexture])
+        return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor, gradingAlbedoProps, useVideoTexture || useGLBTexture, useHDRITexture);
+    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture, useHDRITexture, useGLBTexture])
 
     const blendedAlphaTextures = useMemo(() => {
         return blendAlphaTXs(gl, textures, alphaToggles);
@@ -908,7 +919,6 @@ export default function LayeredMaterialCard({
 
     let lastAngle = 0; // Keep track of the last angle
 
-
     useFrame((state) => {
 
         stats.update();
@@ -999,10 +1009,76 @@ export default function LayeredMaterialCard({
 
 
 
+    const stencilMaterial = { 
+        depthWrite: true,
+        stencilWrite: true,
+        stencilRef: 1,
+        stencilFunc: THREE.AlwaysStencilFunc,
+        stencilFail: THREE.ReplaceStencilOp,
+        stencilZFail: THREE.ReplaceStencilOp,
+        stencilZPass: THREE.ReplaceStencilOp,
+    }
+    
+
+    useEffect(() => {
+        if (groupRef.current && glbTextureModel.scene) {
+          const portal = groupRef.current;
+    
+          const hasCameraPassedThroughPortal = () => {
+            const cameraPosition = camera.position.clone();
+            const portalCenter = new THREE.Vector3(0, 0, 0.01).applyMatrix4(portal.matrixWorld); // Portal center in world space
+            const portalNormal = new THREE.Vector3(0, 0, 1).applyMatrix3(new THREE.Matrix3().getNormalMatrix(portal.matrixWorld));
+    
+            const toCamera = cameraPosition.clone().sub(portalCenter);
+            return toCamera.dot(portalNormal) > 0; // Positive if in front, negative if behind
+          };
+    
+          const updateStencilLogic = () => {
+            const isCameraInFront = hasCameraPassedThroughPortal();
+    
+            glbTextureModel.scene.traverse((child) => {
+              if (child.isMesh) {
+                child.material.stencilWrite = true;
+                child.material.stencilFunc = THREE.EqualStencilFunc;
+                child.material.stencilRef = isCameraInFront ? 1 : 2; // Use different stencil refs for front/back
+                child.material.stencilFail = THREE.KeepStencilOp;
+                child.material.stencilZFail = THREE.KeepStencilOp;
+                child.material.stencilZPass = THREE.ReplaceStencilOp;
+                child.material.needsUpdate = true;
+                // child.material.transparent = true; // Enable transparency
+                // child.material.opacity = 0.85; 
+                // child.material.depthWrite = true
+              }
+            });
+          };
+    
+    
+          updateStencilLogic(); // Run once initially
+          camera.addEventListener("change", updateStencilLogic); // Run on camera movement
+    
+          return () => {
+            camera.removeEventListener("change", updateStencilLogic);
+          };
+        }
+      }, [camera, glbTextureModel.scene, groupRef.current]);
+
+
+      useEffect(() => {
+        // Perpetual rotation using GSAP
+        if (glbRef.current) {
+          gsap.to(glbRef.current.rotation, {
+            y: "+=6.28", // Rotate 360 degrees (2 * Math.PI)
+            duration: 10, // Rotation duration
+            repeat: -1, // Infinite repeat
+            ease: "linear", // Linear easing for consistent rotation
+          });
+        }
+      }, [glbRef.current]);
+    
 
 
     return (
-        <group>
+        <group ref={groupRef}>
             { useRaysBg && <primitive object={mesh}></primitive> }
             <mesh
                 frustumCulled={true} 
@@ -1336,6 +1412,35 @@ export default function LayeredMaterialCard({
                 )}
         
             </EffectComposer>
+
+
+            { useGLBTexture && (
+                <>
+                    <Mask
+                            scale={[1, 1, 1]}
+                            position={blendMode === 0 ? [0, 0, 0.01] : [0, .5, 0.01] }
+                        >
+                            <planeGeometry args={blendMode === 0 ? [2, 3] : [2, 2]} />
+                            <shaderMaterial 
+                                args={[stencilMaterial]} 
+                            />
+                    </Mask>
+                    <Float speed={4}>
+                        <group ref={glbRef} position={[0, -.95, .65]}>
+                            <primitive 
+                                object={glbTextureModel.scene}
+                                scale={[10, 10, 10]}
+                            />
+                        </group>
+                    </Float>
+                    {/* <group position={[.55, -.85, .15]}>
+                            <primitive 
+                                object={glbTextureModel2.scene}
+                                scale={[0.001, 0.001, 0.001]}
+                            />
+                    </group> */}
+                </>
+            )}
       
         </group>
     )
