@@ -255,6 +255,7 @@ export default function LayeredMaterialCard({
         },
     }
 
+
     /**
      * Video textures
      */
@@ -271,29 +272,34 @@ export default function LayeredMaterialCard({
     const videoTexture = useMemo(() => {
         return new THREE.VideoTexture(videoElement);
     }, [videoElement]);
-        
-
-    // const hdriTexture = useLoader(RGBELoader, "/env/the_sky_is_on_fire_4k.hdr");
-    const hdriTexture = useLoader(THREE.TextureLoader, "/env/orlando_stadium_4k.jpg");
-    // hdriTexture.mapping = THREE.EquirectangularReflectionMapping;
-    const { useVideoTexture } = useControls("Video Texture", {
+    const { useVideoTexture, clip } = useControls("Video Texture", {
         useVideoTexture: { value: cardConfig.use_video, label: "Enable" },
+        clip: { value: "/clips/Lamine_clip.mov", onChange: () => {}, label: 'Clip' }
     });
-
-
-    const glbTextureModel = useGLTF("/models/cat_compressed.glb")
-    // const glbTextureModel2 = useGLTF("/models/fcb_low_polly.glb")
-    const { useGLBTexture } = useControls('GLB Texture', {
-        useGLBTexture: { value: false, label: "Enable" }
-    })
-
+        
 
     /**
      * HDRI textures
      */
-    const { useHDRITexture } = useControls("HDRI Texture", {
-        useHDRITexture: { value: cardConfig.use_hdri, label: "Enable" }
+    // const hdriTexture = useLoader(RGBELoader, "/env/the_sky_is_on_fire_4k.hdr");
+    const hdriTexture = useLoader(THREE.TextureLoader, "/env/orlando_stadium_4k.jpg");
+    // hdriTexture.mapping = THREE.EquirectangularReflectionMapping;
+    const { useHDRITexture, hdri } = useControls("HDRI Texture", {
+        useHDRITexture: { value: cardConfig.use_hdri, label: "Enable" },
+        hdri: { image: "/env/orlando_stadium_4k.jpg", onChange: () => {}, label: 'HDRI' }
     })
+
+
+    /**
+     * GLB textures
+     */
+    const glbTextureModel = useGLTF("/models/cat_compressed.glb")
+    // const glbTextureModel2 = useGLTF("/models/fcb_low_polly.glb")
+    const { useGLBTexture, glb } = useControls('GLB Texture', {
+        useGLBTexture: { value: false, label: "Enable" },
+        glb: { value: "/models/cat_compressed.glb", onChange: () => {}, label: 'GLB' }
+    })
+
 
 
     // Blended Textures
