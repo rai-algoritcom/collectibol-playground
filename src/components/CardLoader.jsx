@@ -378,7 +378,6 @@ export default function CardLoader({ controlsRef, isGameplay }) {
     //     }
     // }, [queue])
 
-
     return (
         <Suspense fallback={<></>}>
             {

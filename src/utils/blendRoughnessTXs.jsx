@@ -59,6 +59,7 @@ export function blendRoughnessZipped(
     gradingRoughnessProps,
     optimize = false
 ) {
+
     // Textures 
     const { gradingv2 } = textures 
     const { gradingDoblez, gradingExterior, gradingRascado, gradingScratches } = gradingv2

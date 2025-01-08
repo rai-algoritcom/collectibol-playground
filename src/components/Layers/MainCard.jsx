@@ -106,6 +106,7 @@ const MainCard = ({
         gradingAlbedoProps
     } = useMemo(() => getGradingProps(), [])
 
+    console.log(gradingRoughnessProps)
 
     useEffect(() => {
 
