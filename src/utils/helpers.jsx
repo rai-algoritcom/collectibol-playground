@@ -142,8 +142,8 @@ export const takeScreenshot = async (gl, scene, camera, mesh, htmlElements = [],
     const meshScreenX = ((meshScreenPosition.x + 1) / 2) * width;
     const meshScreenY = ((1 - meshScreenPosition.y) / 2) * height;
 
-    const widthScalingFactor = (isMin && index == 0) ? .98 : 1.4; // Adjust for consistent scaling
-    const heightScalingFactor = (isMin && index == 0) ? .98 : 1.4;
+    const widthScalingFactor = (isMin && index == 0) ? .98 : 1.0; // Adjust for consistent scaling
+    const heightScalingFactor = (isMin && index == 0) ? .98 : 1.0;
 
     const meshScaleX = ((htmlRect.width / window.innerWidth) * width) * widthScalingFactor;
     const meshScaleY = ((htmlRect.height / window.innerHeight) * height) * heightScalingFactor;
