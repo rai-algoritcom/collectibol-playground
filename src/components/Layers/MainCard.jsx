@@ -51,6 +51,7 @@ const MainCard = ({
        position,
        // textures
        textures,
+       mainIntTexture,
        layoutColor,
        // roughness
        roughnessIntensity,
@@ -101,12 +102,14 @@ const MainCard = ({
     const [animationTrigger] = useState('rotation')
 
 
+    console.log(mainIntTexture)
+
+
     const {
         gradingRoughnessProps,
         gradingAlbedoProps
     } = useMemo(() => getGradingProps(), [])
 
-    console.log(gradingRoughnessProps)
 
     useEffect(() => {
 
@@ -119,7 +122,12 @@ const MainCard = ({
         const blendedAlbedo3Textures = 
             blendAlbedosZipped(
                 { renderScene, renderCamera, renderer: gl },
-                textures, true, layoutColor, gradingAlbedoProps
+                {...textures,
+                  main_interest: {
+                    ...textures.main_interest,
+                    albedo: mainIntTexture
+                  }
+                }, true, layoutColor, gradingAlbedoProps
             )
 
         const blendedAlphaTextures = 

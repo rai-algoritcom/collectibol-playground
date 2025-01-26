@@ -1,0 +1,70 @@
+import { Text3D } from "@react-three/drei";
+import * as THREE from "three"
+
+
+export default function CollCardFooter() {
+    return (
+        <group>
+                <Text3D
+                  font={('/fonts/Inter_Bold.json')}
+                  scale={0.08}
+                  bevelSegments={3}
+                  bevelEnabled
+                  bevelThickness={0.0005}
+                  position-x={-.9}
+                  position-y={-1.4}
+                  position-z={0.0002}
+                >
+                  EX 3
+                </Text3D>
+                <Text3D
+                  font={('/fonts/Inter_Medium_Regular.json')}
+                  scale={0.035}
+                  bevelSegments={3}
+                  bevelEnabled
+                  bevelThickness={0.0005}
+                  position-x={-.625}
+                  position-y={-1.36}
+                  position-z={0.0002}
+                >
+                  Lamine Yamal, 
+                </Text3D>
+                <Text3D
+                  font={('/fonts/Inter_Medium_Regular.json')}
+                  scale={0.035}
+                  bevelSegments={3}
+                  bevelEnabled
+                  bevelThickness={0.0005}
+                  position-x={-.625}
+                  position-y={-1.42}
+                  position-z={0.0002}
+                >
+                  la revelación 
+                </Text3D>
+                <Text3D
+                  font={('/fonts/Inter_Medium_Regular.json')}
+                  scale={0.035}
+                  bevelSegments={3}
+                  bevelEnabled
+                  bevelThickness={0.0005}
+                  position-x={.39}
+                  position-y={-1.36}
+                  position-z={0.0002}
+                >
+                  FC BARCELONA 
+                </Text3D>
+                <Text3D
+                    font={('/fonts/Inter_Medium_Regular.json')}
+                  scale={0.035}
+                  bevelSegments={3}
+                  bevelEnabled
+                  bevelThickness={0.0005}
+                  position-x={.34}
+                  position-y={-1.42}
+                  position-z={0.0002}
+                >
+                  &copy;2025 Collectibol
+                </Text3D>
+        </group>
+    )
+}

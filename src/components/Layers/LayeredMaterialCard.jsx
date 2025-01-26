@@ -33,7 +33,8 @@ import {
     shineFragmentShader,
     videoFragmentShader,
     hdriFragmentShader,
-    refractionFragmentShader
+    refractionFragmentShader,
+    rarityFragmentShader
 } from '../../shaders/fragments/index'
 
 /**
@@ -69,7 +70,10 @@ import {
     blendAlbedoTXs, 
     blendRoughnessTXs, 
     blendHeightTXs, 
-    blendAlphaTXs, 
+    blendAlphaTXs,
+    blendAlbedosBacksideZipped,
+    blendRoughnessBacksideZipped,
+    blendAlbedosZipped, 
 } from "../../utils";
 
 import { 
@@ -85,8 +89,8 @@ import Stats from "three/examples/jsm/libs/stats.module.js";
 import { writeStorageConfig } from "../../data/localStorage";
 
 import { BrightnessContrast, ChromaticAberration, DepthOfField, EffectComposer, GodRays, HueSaturation } from "@react-three/postprocessing"
-import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
-import { Float, Mask, useGLTF } from "@react-three/drei";
+import { Decal, Float, Mask, useGLTF, useTexture } from "@react-three/drei";
+import CollCardFooter from "./FooterCardV2";
 
 
 
@@ -115,7 +119,9 @@ export default function LayeredMaterialCard({
 
     const groupRef = useRef()
     const planeRef = useRef()
+
     const shaderRef = useRef()
+
     const overlayRef = useRef()
     const skillsRef = useRef()
     const footerRef = useRef()
@@ -140,6 +146,8 @@ export default function LayeredMaterialCard({
     const rascadoRand = getRandomPositionAndRotation()
     const scratchesRand = getRandomPositionAndRotation()
     const manchasRand = getRandomPositionAndRotation()
+
+    const logoTexture = useLoader(THREE.TextureLoader, '/icons/fcb.png')
 
     const { posDoblez, rotDoblez } = useControls('Doblez Config.', {
         posDoblez: {
@@ -301,15 +309,50 @@ export default function LayeredMaterialCard({
     })
 
 
+    const renderScene = useMemo(() => new THREE.Scene(), [])
+    const renderCamera = useMemo(() => new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1), [])
 
     // Blended Textures
     const blendedAlbedoTextures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps, useVideoTexture || useGLBTexture, useHDRITexture);
+        return  blendAlbedosZipped(
+            { renderScene, renderCamera, renderer: gl },
+            textures,
+            false,
+            layoutColor,
+            gradingAlbedoProps
+        )
+        // return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps, useVideoTexture || useGLBTexture, useHDRITexture);
     }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture, useHDRITexture, useGLBTexture]);
 
     const blendedAlbedo3Textures = useMemo(() => {
-        return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor, gradingAlbedoProps, useVideoTexture || useGLBTexture, useHDRITexture);
+        return  blendAlbedosZipped(
+            { renderScene, renderCamera, renderer: gl },
+            textures,
+            true,
+            layoutColor,
+            gradingAlbedoProps
+        )
+        // return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor, gradingAlbedoProps, useVideoTexture || useGLBTexture, useHDRITexture);
     }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture, useHDRITexture, useGLBTexture])
+
+
+
+    const blendedAlbedoBacksideTextures = useMemo(() => {
+        return  blendAlbedosBacksideZipped(
+            { renderScene, renderCamera, renderer: gl },
+            textures,
+            gradingAlbedoProps
+        )
+    }, [gl, textures,  posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches ])
+
+    const blendedRoughnessBacksideTextures = useMemo(() => {
+        return blendRoughnessBacksideZipped(
+            { renderScene, renderCamera, renderer: gl },
+            textures,
+            gradingRoughnessProps
+        )
+    })
+
 
     const blendedAlphaTextures = useMemo(() => {
         return blendAlphaTXs(gl, textures, alphaToggles);
@@ -936,6 +979,7 @@ export default function LayeredMaterialCard({
             shaderRef.current.uniforms.foldRotationZ.value = foldRotation;
         }
 
+
         if (overlayRef.current) {
             overlayRef.current.uniforms.foldIntensity.value = foldIntensity;
             overlayRef.current.uniforms.foldPosition.value.set(foldX, foldY);
@@ -1080,16 +1124,79 @@ export default function LayeredMaterialCard({
           });
         }
       }, [glbRef.current]);
+
+
+
+
+
+      /**
+       * FX Footer -Rarity-
+       */
+      const envMap = new THREE.CubeTextureLoader().load([
+        '/cube/px.png', '/cube/nx.png',
+        '/cube/py.png', '/cube/ny.png',
+        '/cube/pz.png', '/cube/nz.png',
+      ]);
+
+      const raritiesColors = [
+        new THREE.Color(0.0156, 0.490, 0.784), // Common
+        new THREE.Color(0.360, 0.015, 0.784), // Rare
+        new THREE.Color(0.784, .015, .682), // Epic
+        new THREE.Color(0.784, .047, .015), // Legendary
+        new THREE.Color(0.784, .462, .015), // Mythic
+      ]
     
 
 
     return (
         <group ref={groupRef}>
-            { useRaysBg && <primitive object={mesh}></primitive> }
-            <mesh
+            {/* { useRaysBg && <primitive object={mesh}></primitive> } */}
+
+
+            <ambientLight intensity={3} color="white" />
+            <directionalLight position={[0, 0, 3]} intensity={.25} color="#cccccc" />
+            <hemisphereLight
+                intensity={4} // Adjust for brightness
+                skyColor="white" // Upper hemisphere color
+                groundColor="#888888" // Lower hemisphere (ground) color
+            />
+
+            
+            {/* Realistic Mesh */}
+            <mesh rotation={[0, 0, 0]} renderOrder={0}>
+                <planeGeometry args={[2, 3, 10, 10]} />
+                <meshStandardMaterial 
+                    transparent={false}
+                    alphaMap={textures.base.alpha} 
+                    alphaTest={0.1} 
+                    map={blendedAlbedoTextures} 
+                    roughnessMap={blendedRoughnessTextures} 
+                    normalMap={blendedNormalTextures}
+                    metalness={0.45} // Lower for non-metallic surfaces
+                    roughness={.8} // Adjust to balance reflectivity
+                    side={THREE.FrontSide}
+                    opacity={1}
+                    color="white"
+                />
+                 <Decal 
+                    position={[.85, -1.38, 0.06]} // Adjust position relative to the mesh
+                    rotation={[0, 0, 0]} // Adjust rotation as needed
+                    scale={.125} // Adjust size of the decal
+                    map={logoTexture}
+                    depthTest={false}
+                    depthWrite={true}
+                    polygonOffsetFactor={-60}
+                    renderOrder={1}
+                />
+            </mesh>
+
+
+            {/* <mesh
                 frustumCulled={true} 
                 ref={planeRef}
                 key={`main-${key}`} 
+                renderOrder={1}
+                visible={false}
             > 
                 <planeGeometry args={[2, 3, 120, 120]} />
                 {
@@ -1125,16 +1232,12 @@ export default function LayeredMaterialCard({
                                 cameraPosition: { value: new THREE.Vector3(0, 0, 5) },
                                 uOrbitCameraPosition: { value: camera.position },
 
-                                /**
-                                 * Folding
-                                 */
+                       
                                 foldIntensity: { value: 0.25 },
                                 foldPosition: { value: new THREE.Vector2(0.0, 0.0) },
                                 foldRotationZ: { value: 0.0 },
 
-                                /**
-                                 * Lights
-                                 */
+                         
                                 // Ambient Light 
                                 ambientLightColor: { value: ambientLightColor },
                                 ambientLightIntensity: { value: ambientLightIntensity },
@@ -1240,9 +1343,6 @@ export default function LayeredMaterialCard({
                                 : useShiney 
                                 ? 
                                 shineFragmentShader 
-                                /*: useTransition
-                                ?
-                                transitionFragmentShader*/ // newTransitionFragmentShader 
                                 : 
                                 standardFragmentShader
                             }
@@ -1251,9 +1351,47 @@ export default function LayeredMaterialCard({
                             // depthWrite={false}
                     />
                 }
-            </mesh>
+                <Decal 
+                    position={[.85, -1.38, 0.06]} // Adjust position relative to the mesh
+                    rotation={[0, 0, 0]} // Adjust rotation as needed
+                    scale={.125} // Adjust size of the decal
+                    map={logoTexture}
+                    depthTest={false}
+                    depthWrite={true}
+                    polygonOffsetFactor={-60}
+                    renderOrder={2}
+                />
+            </mesh> */}
+
+
             
-            {(useCardio || useSquares || useCircle || useDank || useShine || useEther || useFire || useWaves || useSmoke || useRay || useCrystal || useGalaxy || useLiquid || useAsci || useSpin || useParticles || useBlobs || useGrass) && (
+            /**
+            * Footer Mask FX -Rarity Logo-
+            */
+            <mesh position={[0, 0, 0.01]}>
+                <planeGeometry args={[2, 3, 10, 10]} />
+                <shaderMaterial 
+            
+                    vertexShader={standardVertexShader}
+                    fragmentShader={rarityFragmentShader}
+                    transparent={true}
+                    uniforms={{
+                        environmentMap:{ value: envMap },
+                        reflectivity: { value: 0.5 }, 
+                        baseColor: { value: raritiesColors[4] },
+                        heightMap: { value: blendedHeightTextures },
+                        displacementScale: { value: displacementScale },
+                        alphaMap: { value: blendedAlphaTextures },
+                        rarityMask: { value: useTexture('/mobile/fx/footer_mask.jpg') },
+                    }}
+                />
+            </mesh>
+
+
+
+
+            
+            {/* {(useCardio || useSquares || useCircle || useDank || useShine || useEther || useFire || useWaves || useSmoke || useRay || useCrystal || useGalaxy || useLiquid || useAsci || useSpin || useParticles || useBlobs || useGrass) && (
                 <mesh frustumCulled={true} position={[0, 0, .005]} key={`overlay-${key}`} >
                     <planeGeometry args={[2, 3, 120, 120]} />
                     <shaderMaterial
@@ -1356,18 +1494,40 @@ export default function LayeredMaterialCard({
                         blending={THREE.AdditiveBlending}
                     />
                 </mesh>
-            )}
+            )} */}
 
-            
+
+            {/* Backside */}
+
+            <directionalLight position={[0, 0, -3]} intensity={0.75} />
+            <mesh rotation={[0, Math.PI * 3, 0]}>
+                <planeGeometry args={[2, 3, 10, 10]} />
+                <meshStandardMaterial 
+                    transparent={false}
+                    alphaMap={textures.base.alpha} 
+                    alphaTest={0.1}
+                    map={blendedAlbedoBacksideTextures} 
+                    roughnessMap={blendedRoughnessBacksideTextures} 
+                    normalMap={blendedNormalTextures}
+                    metalness={0.75}
+                    roughness={1}
+                    color="#cccccc"
+                />
+            </mesh>
+
+
+            <CollCardFooter />
+
+{/*             
             <SkillsCard 
                 ref={skillsRef} 
             />
-            
+             */}
 
-            <FooterCard 
+            {/* <FooterCard 
                 blendMode={blendMode} 
                 ref={footerRef} 
-            />
+            /> */}
 
             <EffectComposer> 
                 { useDepthOfField && (

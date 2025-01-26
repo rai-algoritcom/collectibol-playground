@@ -8,8 +8,27 @@
 
 body {
   margin: 0;
+  background-color: #070707;
 }
 
+
+.bg {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  opacity: .35;
+  background-image: url('https://static.resumementor.com/images/1920/i/L2ltYWdlcy9iYWNrZ3JvdW5kcy9ncmlkLXBhdHRlcm4ud2VicA~~.webp');
+}
+
+.bg-main {
+  background-color: #070707;
+  width: 30vw;
+  height: 80vh;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+}
 
 
 * {

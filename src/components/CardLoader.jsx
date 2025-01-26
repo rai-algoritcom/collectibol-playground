@@ -31,7 +31,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
         },
         pattern: {
             albedo2: '/mobile/fx/fluid.jpg',
-            albedo: '/mobile/prod/pattern/albido3.jpg',
+            albedo: '/mobile/prod/pattern/bk.png',
             height: '/mobile/fx/fluid.jpg'
         },
         main_interest: {
@@ -64,6 +64,11 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 albedo: '/mobile/prod/crop_grading/poor4/scratches_albedo.png',
                 roughness: '/mobile/prod/crop_grading/poor4/scratches_roughness.png'
             }
+        },
+        backside: {
+            albedo: '/mobile/backside/albedo.jpg',
+            roughness1: '/mobile/backside/roughness1.jpg',
+            roughness2: '/mobile/backside/roughness2.jpg'
         },
         fx: {
             irisMask: '/mobile/fx/iris-mask.jpg',
@@ -333,12 +338,15 @@ export default function CardLoader({ controlsRef, isGameplay }) {
     const gradingRascado = useTexture(texturePaths.gradingV2.rascado)
     const gradingScratches = useTexture(texturePaths.gradingV2.scratches)
 
+    const backsideTextures = useTexture(texturePaths.backside)
+
     const textures = useMemo(() => ({
         base: baseTextures,
         pattern: patternTexture,
         main_interest: mainInterestTextures,
         layout: layoutTextures,
         fx: fxTextures,
+        backside: backsideTextures,
         gradingv2: {
             gradingDoblez,
             gradingExterior,
@@ -346,7 +354,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
             gradingRascado,
             gradingScratches
         }
-    }), [baseTextures, patternTexture, mainInterestTextures, layoutTextures, fxTextures, gradingDoblez, gradingExterior, gradingManchas, gradingRascado, gradingScratches])
+    }), [baseTextures, patternTexture, mainInterestTextures, layoutTextures, fxTextures, backsideTextures, gradingDoblez, gradingExterior, gradingManchas, gradingRascado, gradingScratches])
 
 
     // Queue to process cards sequentally 
@@ -378,6 +386,24 @@ export default function CardLoader({ controlsRef, isGameplay }) {
     //     }
     // }, [queue])
 
+    const mit =
+     [
+        useTexture('/mobile/web/1.png'),
+        useTexture('/mobile/web/2.png'),
+        useTexture('/mobile/web/3.png'),
+        useTexture('/mobile/web/4.png'),
+        useTexture('/mobile/web/5.png'),
+        useTexture('/mobile/web/6.png'),
+        useTexture('/mobile/web/7.png'),
+        useTexture('/mobile/web/8.png'),
+        useTexture('/mobile/web/9.png'),
+        useTexture('/mobile/web/10.png'),
+        useTexture('/mobile/web/11.png'),
+        useTexture('/mobile/web/12.png'),
+        useTexture('/mobile/web/13.png'),
+        useTexture('/mobile/web/14.png')
+     ]
+
     return (
         <Suspense fallback={<></>}>
             {
@@ -397,7 +423,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                             // enqueue={enqueue}
                             // processNext={processNext}
                             // isProcessing={(id) => processingCard.current === id}
-        
+                            mainIntTexture={mit[i]}
                             {...props}
                         />
                     ))

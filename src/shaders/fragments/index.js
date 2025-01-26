@@ -7,6 +7,7 @@ import newTransitionFragmentShader from '../../shaders/fragments/newTransitionSh
 import refractionFragmentShader from '../../shaders/fragments/refractionShader.glsl' 
 import videoFragmentShader from '../../shaders/fragments/videoShader.glsl'
 import hdriFragmentShader from '../../shaders/fragments/hdriShader.glsl'
+import rarityFragmentShader from "../../shaders/fragments/rarityShader.glsl"
 
 export {
     shineFragmentShader,
@@ -17,5 +18,6 @@ export {
     newTransitionFragmentShader,
     refractionFragmentShader,
     videoFragmentShader,
-    hdriFragmentShader
+    hdriFragmentShader,
+    rarityFragmentShader
 }

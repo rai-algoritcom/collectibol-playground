@@ -7,7 +7,7 @@ import { useEffect } from "react"
 export default function Field({
     onLoad
 }) {
-    const { scene } = useGLTF('/models/ground_optim2.glb', true)
+    const { scene } = useGLTF('/models/ground.glb', true)
     const { set, size, camera } = useThree()
 
     useEffect(() => {

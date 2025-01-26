@@ -237,6 +237,21 @@ export function blendAlbedosZipped(
                     return result;
                 }
 
+                vec3 adjustSaturation(vec3 color, float saturation) {
+                    float intensity = dot(color, vec3(0.299, 0.587, 0.114)); // Luminance
+                    return mix(vec3(intensity), color, saturation);
+                }
+
+                // Convert to linear space
+                vec3 toLinear(vec3 color) {
+                    return pow(color, vec3(2.2));
+                }
+
+                // Convert to sRGB
+                vec3 toSRGB(vec3 color) {
+                    return pow(color, vec3(1.0 / 2.2));
+                }
+
                 void main() {
                     vec4 base = texture2D(baseMap, vUv);
                     vec4 pattern = texture2D(patternMap, vUv);
@@ -248,11 +263,182 @@ export function blendAlbedosZipped(
                     vec4 result; 
                     vec2 uv = vUv;
 
+                    pattern.rgb = toLinear(pattern.rgb);
+                    mainInterest.rgb = toLinear(mainInterest.rgb);
+
+                    pattern.rgb = adjustSaturation(pattern.rgb, 1.); // Boost saturation by 50%
+                    mainInterest.rgb = adjustSaturation(mainInterest.rgb, 1.);
+                    pattern.rgb *= 1.2; // Increase brightness by 20%
+                    mainInterest.rgb *= 1.2; // Increase brightness by 20%
+                    
                     // Mixing 
                     result = mix(base, pattern, pattern.a);
                     result = mix(result, mainInterest, mainInterest.a);
-                    result = mix(result, vec4(mix(_layout.rgb, color, 1.), 1.0), _layout.a);
+                    result = mix(result, vec4(mix(_layout.rgb, color, 1.), 1.), _layout.a);
                     result = mix(result, gradingExterior, gradingExterior.a);
+                    // Grading configs
+                    vec2 centeredUV = uv * 0.25 - 0.25;
+                    float aspectScale = overlayAspectRatio / meshAspectRatio; 
+                    centeredUV.x *= aspectScale;
+                    // Rotation + Offset Pos. Manchas
+                    vec4 gradingManchas = mixGrading(centeredUV, rotationManchas, positionOffsetManchas, gradingManchasMap);
+                    result = mix(result, gradingManchas, gradingManchas.a);
+                    // Rotation + Offset Pos. Doblez
+                    vec4 gradingDoblez = mixGrading(centeredUV, rotationDoblez, positionOffsetDoblez, gradingDoblezMap);
+                    result = mix(result, gradingDoblez, gradingDoblez.a);
+                    // Rotation + Offset Pos. Rascado
+                    vec4 gradingRascado = mixGrading(centeredUV, rotationRascado, positionOffsetRascado, gradingRascadoMap);
+                    result = mix(result, gradingRascado, gradingRascado.a);
+                    // Rotation + Offset Pos. Scratches
+                    vec4 gradingScratches = mixGrading(centeredUV, rotationScratches, positionOffsetScratches, gradingScratchesMap);
+                    result = mix(result, gradingScratches, gradingScratches.a);
+
+                    //result.rgb = toSRGB(result.rgb);
+                    gl_FragColor = result;
+                }
+          
+            `
+        })
+    )
+
+    renderScene.add(quad);
+  
+    renderer.setRenderTarget(renderTarget);
+    renderer.render(renderScene, renderCamera);
+    renderer.setRenderTarget(null);
+
+    renderScene.remove(quad);
+    return renderTarget.texture;
+}
+
+
+
+
+
+export function blendAlbedosBacksideZipped(
+    { renderScene, renderCamera, renderer },
+    textures,
+    gradingAlbedoProps
+) {
+
+    // Textures
+    const { backside, gradingv2 } = textures;
+    const { gradingDoblez, gradingExterior, gradingManchas, gradingRascado, gradingScratches } = gradingv2;
+
+    // Offset + Rotation
+    const { manchas, doblez, rascado, scratches } = gradingAlbedoProps;
+
+    backside.albedo.minFilter = THREE.LinearFilter;
+    backside.albedo.magFilter = THREE.LinearFilter;
+    backside.albedo.format = THREE.RGBAFormat;
+
+    gradingDoblez.albedo.minFilter = THREE.LinearFilter;
+    gradingDoblez.albedo.magFilter = THREE.LinearFilter;
+    gradingDoblez.albedo.format = THREE.RGBAFormat;
+    gradingExterior.albedo.minFilter = THREE.LinearFilter;
+    gradingExterior.albedo.magFilter = THREE.LinearFilter;
+    gradingExterior.albedo.format = THREE.RGBAFormat;
+    gradingManchas.albedo.minFilter = THREE.LinearFilter;
+    gradingManchas.albedo.magFilter = THREE.LinearFilter;
+    gradingManchas.albedo.format = THREE.RGBAFormat;
+    gradingRascado.albedo.minFilter = THREE.LinearFilter;
+    gradingRascado.albedo.magFilter = THREE.LinearFilter;
+    gradingRascado.albedo.format = THREE.RGBAFormat;
+    gradingScratches.albedo.minFilter = THREE.LinearFilter;
+    gradingScratches.albedo.magFilter = THREE.LinearFilter;
+    gradingScratches.albedo.format = THREE.RGBAFormat;
+
+    const width = backside.albedo.image.width
+    const height = backside.albedo.image.height
+
+    const renderTarget = new THREE.WebGLRenderTarget(width, height, {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        format: THREE.RGBAFormat,
+    });
+
+    const quad = new THREE.Mesh(
+        new THREE.PlaneGeometry(2, 2),
+        new THREE.ShaderMaterial({
+            uniforms: {
+                // textures
+                backsideMap: { value: backside.albedo },
+                gradingDoblezMap: { value: gradingDoblez.albedo },
+                gradingExteriorMap: { value: gradingExterior.albedo },
+                gradingManchasMap: { value: gradingManchas.albedo },
+                gradingRascadoMap: { value: gradingRascado.albedo },
+                gradingScratchesMap: { value: gradingScratches.albedo },
+                // grading pos. offset + rotation
+                positionOffsetManchas: { value: manchas.pos },
+                rotationManchas: { value: manchas.rot },
+                positionOffsetDoblez: { value: doblez.pos },
+                rotationDoblez: { value: doblez.rot },
+                positionOffsetRascado: { value: rascado.pos },
+                rotationRascado: { value: rascado.rot },
+                positionOffsetScratches: { value: scratches.pos },
+                rotationScratches: { value: scratches.rot },
+                // + configs
+                overlayAspectRatio: { value: 1 },
+                meshAspectRatio: { value: 1 },
+            },
+            vertexShader: /* glsl */ `
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    gl_Position = vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: /*glsl*/ `
+                uniform sampler2D backsideMap;
+                uniform sampler2D gradingDoblezMap;
+                uniform sampler2D gradingExteriorMap;
+                uniform sampler2D gradingManchasMap;
+                uniform sampler2D gradingRascadoMap;
+                uniform sampler2D gradingScratchesMap;
+
+                uniform vec2 positionOffsetManchas;
+                uniform float rotationManchas;
+                uniform vec2 positionOffsetDoblez;
+                uniform float rotationDoblez;
+                uniform vec2 positionOffsetRascado;
+                uniform float rotationRascado;
+                uniform vec2 positionOffsetScratches;
+                uniform float rotationScratches;
+
+                uniform float overlayAspectRatio;
+                uniform float meshAspectRatio;
+
+                varying vec2 vUv;
+
+                vec4 mixGrading(
+                    vec2 centeredUv,
+                    float rotation,
+                    vec2 positionOffset,
+                    sampler2D gradingMap
+                ) {
+                    // Rotation + Offset Pos. Manchas
+                    float cosAngle = cos(rotation);
+                    float sinAngle = sin(rotation);
+                    mat2 rotationMatrix = mat2(cosAngle, -sinAngle, sinAngle, cosAngle);
+                    vec2 centeredUV = rotationMatrix * vec2(centeredUv.x, -centeredUv.y);
+                    centeredUV += positionOffset;
+                    vec2 uv = centeredUV + 0.5;
+                    vec4 result = texture2D(gradingMap, uv);
+                    if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
+                        result = vec4(0.0); // Clip parts outside the texture
+                    }
+                    return result;
+                }
+
+                void main() {
+                    vec4 backside = texture2D(backsideMap, vUv);
+                    vec4 gradingExterior = texture2D(gradingExteriorMap, vUv);
+
+                    vec4 result; 
+                    vec2 uv = vUv;
+
+                    // Mixing 
+                    result = mix(backside, gradingExterior, gradingExterior.a);
                     // Grading configs
                     vec2 centeredUV = uv * 0.25 - 0.25;
                     float aspectScale = overlayAspectRatio / meshAspectRatio; 

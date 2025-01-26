@@ -12,7 +12,7 @@ export const texturePaths = {
     },
     pattern: {
         albedo2: '/mobile/fx/fluid.jpg',
-        albedo: '/mobile/prod/pattern/albido3.jpg',
+        albedo: '/mobile/prod/pattern/bk.png',
         height: '/mobile/fx/fluid.jpg'
     },
     main_interest: {

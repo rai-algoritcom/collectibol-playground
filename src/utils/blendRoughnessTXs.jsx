@@ -53,6 +53,158 @@ export function blendRoughnessTXs(renderer, textures, controls, gradingRoughness
 }
 
 
+
+export function blendRoughnessBacksideZipped(
+    { renderScene, renderCamera, renderer },
+    textures,
+    gradingRoughnessProps
+) {
+    // Textures
+    const { backside, gradingv2 } = textures; 
+    const { gradingDoblez, gradingExterior, gradingRascado, gradingScratches } = gradingv2;
+
+    // Offset + Rotation
+    const { doblez, rascado, scratches } = gradingRoughnessProps
+
+    if (!renderer) return null
+
+
+    backside.roughness1.minFilter = THREE.LinearFilter 
+    backside.roughness1.magFilter = THREE.LinearFilter
+    backside.roughness1.format = THREE.RGBAFormat;
+
+    gradingDoblez.roughness.minFilter = THREE.LinearFilter 
+    gradingDoblez.roughness.magFilter = THREE.LinearFilter
+    gradingDoblez.roughness.format = THREE.RGBAFormat;
+    gradingExterior.roughness.minFilter = THREE.LinearFilter 
+    gradingExterior.roughness.magFilter = THREE.LinearFilter
+    gradingExterior.roughness.format = THREE.RGBAFormat;
+    gradingRascado.roughness.minFilter = THREE.LinearFilter 
+    gradingRascado.roughness.magFilter = THREE.LinearFilter
+    gradingRascado.roughness.format = THREE.RGBAFormat;
+    gradingScratches.roughness.minFilter = THREE.LinearFilter 
+    gradingScratches.roughness.magFilter = THREE.LinearFilter
+    gradingScratches.roughness.format = THREE.RGBAFormat;
+
+
+    const width = backside.roughness1.image.width 
+    const height = backside.roughness1.image.height
+
+    const renderTarget = new THREE.WebGLRenderTarget(width, height, {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        format: THREE.RGBAFormat,
+    });
+
+    console.log(backside.roughness1)
+
+    const quad = new THREE.Mesh(
+        new THREE.PlaneGeometry(2, 2),
+        new THREE.ShaderMaterial({
+            uniforms: {
+                // textures 
+                backsideMap: { value: backside.roughness1 },
+                gradingDoblezMap: { value: gradingDoblez.roughness },
+                gradingExteriorMap: { value: gradingExterior.roughness },
+                gradingRascadoMap: { value: gradingRascado.roughness },
+                gradingScratchesMap: { value: gradingScratches.roughness },
+                // offset + rotation
+                positionOffsetDoblez: { value: doblez.pos },
+                rotationDoblez: { value: doblez.rot },
+                positionOffsetRascado: { value: rascado.pos },
+                rotationRascado: { value: rascado.rot },
+                positionOffsetScratches: { value: scratches.pos },
+                rotationScratches: { value: scratches.rot },
+                // + configs 
+                overlayAspectRatio: { value: 1 },
+                meshAspectRatio: { value: 1 },
+            },
+            vertexShader: /* glsl */ `
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv; 
+                    gl_Position = vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: /* glsl */ `
+                uniform sampler2D backsideMap;
+                uniform sampler2D gradingDoblezMap;
+                uniform sampler2D gradingExteriorMap;
+                uniform sampler2D gradingRascadoMap;
+                uniform sampler2D gradingScratchesMap;
+
+                uniform vec2 positionOffsetDoblez;
+                uniform vec2 positionOffsetRascado;
+                uniform vec2 positionOffsetScratches;
+                uniform float rotationDoblez;
+                uniform float rotationRascado;
+                uniform float rotationScratches;
+
+                uniform float overlayAspectRatio;
+                uniform float meshAspectRatio;
+
+                varying vec2 vUv;
+
+                vec4 mixGrading(
+                    vec2 centeredUv,
+                    float rotation,
+                    vec2 positionOffset,
+                    sampler2D gradingMap
+                ) {
+                    // Rotation + Offset Pos. Manchas
+                    float cosAngle = cos(rotation);
+                    float sinAngle = sin(rotation);
+                    mat2 rotationMatrix = mat2(cosAngle, -sinAngle, sinAngle, cosAngle);
+                    vec2 centeredUV = rotationMatrix * vec2(centeredUv.x, -centeredUv.y);
+                    centeredUV += positionOffset;
+                    vec2 uv = centeredUV + 0.5;
+                    vec4 result = texture2D(gradingMap, uv);
+                    if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
+                        result = vec4(0.0); // Clip parts outside the texture
+                    }
+                    return result;
+                }
+
+                void main() {
+                    vec4 backside = texture2D(backsideMap, vUv);
+                    vec4 gradingExterior = texture2D(gradingExteriorMap, vUv);
+
+                    vec4 result;
+                    vec2 uv = vUv;
+
+                    // Mixing 
+                    result = mix(backside, gradingExterior, gradingExterior.a);
+                    // Grading configs
+                    vec2 centeredUV = uv * 0.25 - 0.25;
+                    float aspectScale = overlayAspectRatio / meshAspectRatio; 
+                    centeredUV.x *= aspectScale;
+                    // Rotation + Offset Pos. Doblez
+                    vec4 gradingDoblez = mixGrading(centeredUV, rotationDoblez, positionOffsetDoblez, gradingDoblezMap);
+                    result = clamp(result + gradingDoblez, 0.0, 1.0);
+                    // Rotation + Offset Pos. Rascado
+                    vec4 gradingRascado = mixGrading(centeredUV, rotationRascado, positionOffsetRascado, gradingRascadoMap);
+                    result = clamp(result + gradingRascado, 0.0, 1.0);
+                    // Rotation + Offset Pos. Scratches 
+                    vec4 gradingScratches = mixGrading(centeredUV, rotationScratches, positionOffsetScratches, gradingScratchesMap);
+                    result = clamp(result + gradingScratches, 0.0, 1.0);
+
+                    gl_FragColor = result;
+                }
+            `
+        })
+    )
+
+    renderScene.add(quad);
+  
+    renderer.setRenderTarget(renderTarget);
+    renderer.render(renderScene, renderCamera);
+    renderer.setRenderTarget(null);
+
+    renderScene.remove(quad);
+    return renderTarget.texture;
+}
+
+
 export function blendRoughnessZipped(
     { renderScene, renderCamera, renderer },
     textures,

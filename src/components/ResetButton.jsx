@@ -15,17 +15,16 @@ export default function ResetButton({
                     fontSize: '.85rem',
                     textAlign: 'center',
                     textDecoration: 'none',
-                    border: '2px solid black',
+                    border: '.5px solid gainsboro',
                     borderRadius: '8px',
                     color: 'white',
-                    background: 'rgba(255, 255, 255, 0.1)', // Subtle transparent background
-                    backdropFilter: 'blur(10px)', // Blur effect for modern aesthetics
+                    backdropFilter: 'blur(10px)',
                     transition: 'all 0.3s ease',
                     cursor: 'pointer',
                     fontFamily: 'sans-serif',
-                    fontWeight: '400',
+                    fontWeight: 'bold',
                     display: 'flex',
-                    alignItems: 'center'
+                    alignItems: 'center',
                   }}
                   onMouseEnter={(e) => {
                     e.target.style.background = 'white';

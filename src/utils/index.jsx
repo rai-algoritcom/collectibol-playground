@@ -6,11 +6,13 @@ import { blendRoughnessTXs } from "./blendRoughnessTXs.jsx"
 
 import getGradingProps from "./getGradingProps.jsx"
 
-import { blendAlbedosZipped  } from "./blendAlbedoTXs.jsx"
+import { blendAlbedosZipped , blendAlbedosBacksideZipped } from "./blendAlbedoTXs.jsx"
+
 import { blendAlphasZipped } from "./blendAlphaTXs.jsx"
 import { blendHeightsZipped } from "./blendHeightTXs.jsx"
 import { blendNormalsZipped } from "./blendNormalTXs.jsx"
-import { blendRoughnessZipped } from "./blendRoughnessTXs.jsx"
+
+import { blendRoughnessZipped, blendRoughnessBacksideZipped } from "./blendRoughnessTXs.jsx"
 
 export {
     blendAlbedoTXs,
@@ -24,4 +26,6 @@ export {
     blendHeightsZipped,
     blendNormalsZipped,
     blendRoughnessZipped,
+    blendAlbedosBacksideZipped,
+    blendRoughnessBacksideZipped
 }
