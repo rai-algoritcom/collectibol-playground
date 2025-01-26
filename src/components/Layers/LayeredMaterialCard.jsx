@@ -1153,12 +1153,13 @@ export default function LayeredMaterialCard({
             {/* { useRaysBg && <primitive object={mesh}></primitive> } */}
 
 
-            <ambientLight intensity={3} color="white" />
+            <ambientLight intensity={.5} color="white" />
             <directionalLight position={[0, 0, 3]} intensity={.25} color="#cccccc" />
             <hemisphereLight
                 intensity={4} // Adjust for brightness
                 skyColor="white" // Upper hemisphere color
                 groundColor="#888888" // Lower hemisphere (ground) color
+                position={[0, 0, 3]} 
             />
 
             
