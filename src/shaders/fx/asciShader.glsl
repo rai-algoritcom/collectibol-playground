@@ -80,6 +80,6 @@ void main() {
   // Sample alpha from mask
   float alpha = texture2D(uAlphaMask, vUv).r;
 
-  gl_FragColor = vec4(col, alpha);
+  gl_FragColor = vec4(col, alpha * 0.24);
 }
 

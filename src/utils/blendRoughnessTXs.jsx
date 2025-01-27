@@ -96,8 +96,6 @@ export function blendRoughnessBacksideZipped(
         format: THREE.RGBAFormat,
     });
 
-    console.log(backside.roughness1)
-
     const quad = new THREE.Mesh(
         new THREE.PlaneGeometry(2, 2),
         new THREE.ShaderMaterial({

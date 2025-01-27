@@ -38,6 +38,6 @@ void main() {
     float alpha = texture2D(uAlphaMask, vUv).r;
 
     // Apply the alpha mask to the output
-    gl_FragColor = vec4(cl, alpha);
+    gl_FragColor = vec4(cl * 20., alpha * .2);
 }
 

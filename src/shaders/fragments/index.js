@@ -7,6 +7,10 @@ import newTransitionFragmentShader from '../../shaders/fragments/newTransitionSh
 import refractionFragmentShader from '../../shaders/fragments/refractionShader.glsl' 
 import videoFragmentShader from '../../shaders/fragments/videoShader.glsl'
 import hdriFragmentShader from '../../shaders/fragments/hdriShader.glsl'
+
+
+import outerIridescenceFragmentShader from '../../shaders/fragments/outerIridescenceShader.glsl'
+import outerBrightnessFragmentShader from '../../shaders/fragments/outerBrightnessShader.glsl'
 import rarityFragmentShader from "../../shaders/fragments/rarityShader.glsl"
 
 export {
@@ -19,5 +23,8 @@ export {
     refractionFragmentShader,
     videoFragmentShader,
     hdriFragmentShader,
+
+    outerIridescenceFragmentShader,
+    outerBrightnessFragmentShader,
     rarityFragmentShader
 }

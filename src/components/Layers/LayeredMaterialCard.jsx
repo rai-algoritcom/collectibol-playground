@@ -34,7 +34,9 @@ import {
     videoFragmentShader,
     hdriFragmentShader,
     refractionFragmentShader,
-    rarityFragmentShader
+    rarityFragmentShader,
+    outerIridescenceFragmentShader,
+    outerBrightnessFragmentShader
 } from '../../shaders/fragments/index'
 
 /**
@@ -974,16 +976,16 @@ export default function LayeredMaterialCard({
 
         if (shaderRef.current) {
             shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
-            shaderRef.current.uniforms.foldIntensity.value = foldIntensity;
-            shaderRef.current.uniforms.foldPosition.value.set(foldX, foldY);
-            shaderRef.current.uniforms.foldRotationZ.value = foldRotation;
+            // shaderRef.current.uniforms.foldIntensity.value = foldIntensity;
+            // shaderRef.current.uniforms.foldPosition.value.set(foldX, foldY);
+            // shaderRef.current.uniforms.foldRotationZ.value = foldRotation;
         }
 
 
         if (overlayRef.current) {
-            overlayRef.current.uniforms.foldIntensity.value = foldIntensity;
-            overlayRef.current.uniforms.foldPosition.value.set(foldX, foldY);
-            overlayRef.current.uniforms.foldRotationZ.value = foldRotation;
+            // overlayRef.current.uniforms.foldIntensity.value = foldIntensity;
+            // overlayRef.current.uniforms.foldPosition.value.set(foldX, foldY);
+            // overlayRef.current.uniforms.foldRotationZ.value = foldRotation;
         }
 
         if (planeRef.current && camera && shaderRef.current) {
@@ -1147,14 +1149,13 @@ export default function LayeredMaterialCard({
       ]
     
 
-
     return (
         <group ref={groupRef}>
             {/* { useRaysBg && <primitive object={mesh}></primitive> } */}
 
 
             <ambientLight intensity={.5} color="white" />
-            <directionalLight position={[0, 0, 3]} intensity={.25} color="#cccccc" />
+            <directionalLight position={[0, 0, 3]} intensity={.45} color="#cccccc" />
             <hemisphereLight
                 intensity={4} // Adjust for brightness
                 skyColor="white" // Upper hemisphere color
@@ -1365,6 +1366,42 @@ export default function LayeredMaterialCard({
             </mesh> */}
 
 
+            /**
+             *  Outer Mask FX -Brightness, Iridescence, ShaderFX-
+             */
+             <mesh visible={true} key={`main-${key}`}  ref={planeRef} position={[0, 0, 0.005]} renderOrder={0}>
+                <planeGeometry args={[2, 3, 10, 10]} />
+                <shaderMaterial 
+                      ref={shaderRef}
+                      needsUpdate={true}
+                      uniformsNeedUpdate={true}
+                      vertexShader={standardVertexShader}
+                      // fragmentShader={smokeFxFragmentShader}
+                      fragmentShader={outerIridescenceFragmentShader /*outerBrightnessFragmentShader*/ }
+                      transparent={true}
+                      uniforms={{
+                        fxMask: { value: textures.fx.irisMask },
+                        uAlphaMask: { value: textures.fx.irisMask },
+                        iridescenceMask: { value: textures.fx.iridescence },
+                        brightnessMask: { value: textures.fx.brightness },
+                        
+                        displacementScale: { value: displacementScale },
+                        cameraPosition: { value: new THREE.Vector3(0, 0, 5) },
+
+                        roughnessIntensity: { value: roughnessIntensity },
+                        roughnessPresence: { value: roughnessPresence },
+
+                        iridescenceIntensity: { value: iridescenceIntensity },
+                        brightnessIntensity: { value: brightnessIntensity * 2.0 },
+
+
+                        uTime: { value: 0.0 },
+                        uRotation: { value: 0.0 },
+                        uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+                      }}
+                />
+             </mesh> 
+
             
             /**
             * Footer Mask FX -Rarity Logo-
@@ -1378,7 +1415,7 @@ export default function LayeredMaterialCard({
                     transparent={true}
                     uniforms={{
                         environmentMap:{ value: envMap },
-                        reflectivity: { value: 0.5 }, 
+                        reflectivity: { value: .25 }, 
                         baseColor: { value: raritiesColors[4] },
                         heightMap: { value: blendedHeightTextures },
                         displacementScale: { value: displacementScale },
