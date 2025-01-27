@@ -77,5 +77,5 @@ void main() {
     float alpha = length(fcol) > 0.01 ? alphaMask : 0.0; // Multiply by mask
 
     gl_FragColor.rgb = fcol * 1.8 + vec3(dither());
-    gl_FragColor.a = alpha; // Final alpha with mask applied
+    gl_FragColor.a = alpha * .5; // Final alpha with mask applied
 }

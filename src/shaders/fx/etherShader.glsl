@@ -6,6 +6,7 @@
 
     uniform float uTime;
     uniform vec2 uResolution;
+    uniform sampler2D uAlphaMask; // Alpha mask texture
 
     // Rotation matrix for 90 degrees
     mat2 rotate(float angle) {
@@ -23,6 +24,7 @@
     }
 
     void main() {
+        float alpha = texture2D(uAlphaMask, vUv).r;
         // Apply a 90-degree rotation to UV coordinates
         vec2 p = vUv - 0.5; // Center UVs around (0, 0)
         p = rotate(PI / 2.0) * p; // Rotate by 90 degrees
@@ -42,6 +44,6 @@
             d += min(rz, 1.0);
         }
 
-        gl_FragColor = vec4(cl, 1.0);
+        gl_FragColor = vec4(cl,alpha * .25);
     }
 

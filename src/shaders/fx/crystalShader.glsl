@@ -138,6 +138,6 @@
         float alpha = texture2D(uAlphaMask, vUv).r; // Use the red channel for alpha
 
         // Final output with alpha applied
-        gl_FragColor = vec4(col, alpha);
+        gl_FragColor = vec4(col, alpha * 1.);
     }
 

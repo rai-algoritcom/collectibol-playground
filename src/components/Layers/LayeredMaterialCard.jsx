@@ -1369,7 +1369,13 @@ export default function LayeredMaterialCard({
             /**
              *  Outer Mask FX -Brightness, Iridescence, ShaderFX-
              */
-             <mesh visible={true} key={`main-${key}`}  ref={planeRef} position={[0, 0, 0.005]} renderOrder={0}>
+             <mesh 
+                visible={useBrightness || useIridescence || useCardio || useSquares || useCircle || useDank || useShine || useEther || useFire || useWaves || useSmoke || useRay || useCrystal || useGalaxy || useLiquid || useAsci || useSpin || useParticles || useBlobs || useGrass} 
+                key={`main-${key}`}  
+                ref={planeRef} 
+                position={[0, 0, 0.005]} 
+                renderOrder={0}
+            >
                 <planeGeometry args={[2, 3, 10, 10]} />
                 <shaderMaterial 
                       ref={shaderRef}
@@ -1377,7 +1383,68 @@ export default function LayeredMaterialCard({
                       uniformsNeedUpdate={true}
                       vertexShader={standardVertexShader}
                       // fragmentShader={smokeFxFragmentShader}
-                      fragmentShader={outerIridescenceFragmentShader /*outerBrightnessFragmentShader*/ }
+                      fragmentShader={
+                        useIridescence 
+                        ?
+                        outerIridescenceFragmentShader 
+                        : 
+                        useBrightness 
+                        ?
+                        outerBrightnessFragmentShader 
+                        : 
+                        useCircle 
+                        ?
+                        circleFxFragmentShader
+                        : useSquares 
+                        ?
+                        squaresFxFragmentShader
+                        : useDank
+                        ? 
+                        dankFxFragmentShader
+                        : useShine
+                        ?
+                        lightFxFragmentShader
+                        : useEther
+                        ?
+                        etherFxFragmentShader
+                        : useFire
+                        ?
+                        fireFxFragmentShader
+                        : useWaves
+                        ?
+                        waveFxFragmentShader
+                        : useSmoke 
+                        ?
+                        smokeFxFragmentShader
+                        : useRay 
+                        ?
+                        rayFxFragmentShader
+                        : useCrystal 
+                        ?
+                        crystalFxFragmentShader
+                        : useGalaxy 
+                        ?
+                        galaxyFxFragmentShader
+                        : useLiquid 
+                        ? 
+                        liquidFxFragmentShader
+                        : useAsci 
+                        ?
+                        asciFxFragmentShader
+                        : useSpin 
+                        ?
+                        spinFxFragmentShader
+                        : useParticles 
+                        ? 
+                        particlesFxFragmentShader
+                        : useBlobs
+                        ? 
+                        blobsFxFragmentShader
+                        : useGrass 
+                        ? 
+                        grassFxFragmentShader
+                        : cardioFxFragmentShader
+                        }
                       transparent={true}
                       uniforms={{
                         fxMask: { value: textures.fx.irisMask },
