@@ -90,7 +90,7 @@ export const getCardConfigJSON = () => {
             id: 'none'
         },
         fragment_fx: {
-            id: 'none',
+            id: 'asci',
             trigger: 'rotation'
         }
     })
