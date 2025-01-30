@@ -609,26 +609,33 @@ export default function LayeredMaterialCard({
     // })
 
 
-    const { useCardio, useSquares, useCircle, useDank, useShine, useEther, useFire, useWaves, useSmoke, useRay, useCrystal, useGalaxy, useLiquid, useAsci, useSpin, useParticles, useBlobs, useGrass } = useControls('Animations Fragment (overlay)', {
-        '*Trigger': { options: { rotation: 'rotation', time: 'time' }, onChange: (v) => setAnimationTrigger(v), value: cardConfig.fragment_fx.trigger },
-        useCardio: { value: cardConfig.fragment_fx.id === 'cardio', label: 'Cardio Fx' },
+    const useCardio = false 
+    const useCircle = false
+    const useShine = false
+    const useEther = false
+    const useCrystal = false
+    const useGrass = false
+
+    const { useSquares, useDank, useFire, useWaves, useSmoke, useRay, useGalaxy, useLiquid, useAsci, useSpin, useParticles, useBlobs } = useControls('Animations Fragment (overlay)', {
+        // '*Trigger': { options: { rotation: 'rotation', time: 'time' }, onChange: (v) => setAnimationTrigger(v), value: cardConfig.fragment_fx.trigger },
+        // useCardio: { value: cardConfig.fragment_fx.id === 'cardio', label: 'Cardio Fx' },
         useSquares: { value: cardConfig.fragment_fx.id === 'squares', label: 'Fractal Fx' },
-        useCircle: { value: cardConfig.fragment_fx.id === 'circle', label: 'Circle Fx' },
+        // useCircle: { value: cardConfig.fragment_fx.id === 'circle', label: 'Circle Fx' },
         useDank: { value: cardConfig.fragment_fx.id === 'dank', label: 'Dank Fx' },
-        useShine: { value: cardConfig.fragment_fx.id === 'shine', label: 'Shine Fx' },
-        useEther: { value: cardConfig.fragment_fx.id === 'ether', label: 'Ether Fx' },
+        // useShine: { value: cardConfig.fragment_fx.id === 'shine', label: 'Shine Fx' },
+        // useEther: { value: cardConfig.fragment_fx.id === 'ether', label: 'Ether Fx' },
         useFire: { value: cardConfig.fragment_fx.id === 'fire', label: 'Fire Fx' },
         useWaves: { value: cardConfig.fragment_fx.id === 'waves', label: 'Waves Fx' },
         useSmoke: { value: cardConfig.fragment_fx.id === 'smoke', label: 'Smoke Fx' },
         useRay: { value: cardConfig.fragment_fx.id === 'ray', label: '[!] Ray Fx' },
-        useCrystal: { value: cardConfig.fragment_fx.id === 'crystal', label: 'Crystal Fx' },
+        // useCrystal: { value: cardConfig.fragment_fx.id === 'crystal', label: 'Crystal Fx' },
         useGalaxy: { value: cardConfig.fragment_fx.id === 'galaxy', label: 'Galaxy Fx' },
         useLiquid: { value: cardConfig.fragment_fx.id === 'liquid', label: 'Liquid Fx' },
         useAsci: { value: cardConfig.fragment_fx.id === 'asci', label: 'Ascii Fx' },
         useSpin: { value: cardConfig.fragment_fx.id === 'spin', label: 'Spin Fx' },
         useParticles: { value: cardConfig.fragment_fx.id === 'particles', label: '[!] Particles Fx' },
         useBlobs: { value: cardConfig.fragment_fx.id === 'blobs', label: 'Blobs Fx' },
-        useGrass: { value: cardConfig.fragment_fx.id === 'grass', label: 'Grass Fx' }
+        // useGrass: { value: cardConfig.fragment_fx.id === 'grass', label: 'Grass Fx' }
     })
 
 
