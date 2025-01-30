@@ -1138,7 +1138,11 @@ export default function LayeredMaterialCard({
         '/cube/px.png', '/cube/nx.png',
         '/cube/py.png', '/cube/ny.png',
         '/cube/pz.png', '/cube/nz.png',
+        // '/metal/nx.jpg', '/metal/nx.jpg',
+        // '/metal/nx.jpg', '/metal/nx.jpg',
+        // '/metal/nx.jpg', '/metal/nx.jpg',
       ]);
+
 
       const raritiesColors = [
         new THREE.Color(0.0156, 0.490, 0.784), // Common

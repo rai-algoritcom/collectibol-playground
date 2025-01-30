@@ -40,4 +40,3 @@ void main() {
     // Final output with alpha
     gl_FragColor = vec4(finalColor * 1.95, alphaValue * smoothMask * 0.65);
 }
-
