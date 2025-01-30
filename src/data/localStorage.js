@@ -7,7 +7,7 @@ export const getCardConfigJSON = () => {
         return cardConfig
     }
     return ({
-        layout_color: { r: 44, g: 44, b: 49 },
+        layout_color: { r: 1, g: 1, b: 1},
         albedo_ch: {
             base_albedo: true,
             pattern_albedo: true,

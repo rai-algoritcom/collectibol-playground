@@ -60,7 +60,7 @@ export const texturePaths = {
 
 export const getCardConfigJSON = () => {
     return ({
-        layout_color: { r: 44, g: 44, b: 49 },
+        layout_color: { r: 0, g: 0, b: 0 },
         albedo_ch: {
             base_albedo: true,
             pattern_albedo: true,
