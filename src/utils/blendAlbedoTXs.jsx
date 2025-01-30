@@ -95,7 +95,8 @@ export function blendAlbedosZipped(
     textures,
     is2ndLayout = false,
     layoutColor, 
-    gradingAlbedoProps
+    gradingAlbedoProps,
+    isPoor = true
 ) {
 
     // Textures
@@ -182,6 +183,8 @@ export function blendAlbedosZipped(
                 // + configs
                 overlayAspectRatio: { value: 1 },
                 meshAspectRatio: { value: 1 },
+                // Grading 
+                isPoor: { value: isPoor }
             },
             vertexShader: /* glsl */ `
                 varying vec2 vUv;
@@ -214,6 +217,8 @@ export function blendAlbedosZipped(
 
                 uniform float overlayAspectRatio;
                 uniform float meshAspectRatio;
+
+                uniform bool isPoor;
 
                 varying vec2 vUv;
 
@@ -275,23 +280,28 @@ export function blendAlbedosZipped(
                     result = mix(base, pattern, pattern.a);
                     result = mix(result, mainInterest, mainInterest.a);
                     result = mix(result, vec4(mix(_layout.rgb, color, 1.), 1.), _layout.a);
-                    result = mix(result, gradingExterior, gradingExterior.a);
+                    if (isPoor) {
+                        result = mix(result, gradingExterior, gradingExterior.a);
+                    }
                     // Grading configs
                     vec2 centeredUV = uv * 0.25 - 0.25;
                     float aspectScale = overlayAspectRatio / meshAspectRatio; 
                     centeredUV.x *= aspectScale;
-                    // Rotation + Offset Pos. Manchas
-                    vec4 gradingManchas = mixGrading(centeredUV, rotationManchas, positionOffsetManchas, gradingManchasMap);
-                    result = mix(result, gradingManchas, gradingManchas.a);
-                    // Rotation + Offset Pos. Doblez
-                    vec4 gradingDoblez = mixGrading(centeredUV, rotationDoblez, positionOffsetDoblez, gradingDoblezMap);
-                    result = mix(result, gradingDoblez, gradingDoblez.a);
-                    // Rotation + Offset Pos. Rascado
-                    vec4 gradingRascado = mixGrading(centeredUV, rotationRascado, positionOffsetRascado, gradingRascadoMap);
-                    result = mix(result, gradingRascado, gradingRascado.a);
-                    // Rotation + Offset Pos. Scratches
-                    vec4 gradingScratches = mixGrading(centeredUV, rotationScratches, positionOffsetScratches, gradingScratchesMap);
-                    result = mix(result, gradingScratches, gradingScratches.a);
+
+                    if (isPoor) {
+                        // Rotation + Offset Pos. Manchas
+                        vec4 gradingManchas = mixGrading(centeredUV, rotationManchas, positionOffsetManchas, gradingManchasMap);
+                        result = mix(result, gradingManchas, gradingManchas.a);
+                        // Rotation + Offset Pos. Doblez
+                        vec4 gradingDoblez = mixGrading(centeredUV, rotationDoblez, positionOffsetDoblez, gradingDoblezMap);
+                        result = mix(result, gradingDoblez, gradingDoblez.a);
+                        // Rotation + Offset Pos. Rascado
+                        vec4 gradingRascado = mixGrading(centeredUV, rotationRascado, positionOffsetRascado, gradingRascadoMap);
+                        result = mix(result, gradingRascado, gradingRascado.a);
+                        // Rotation + Offset Pos. Scratches
+                        vec4 gradingScratches = mixGrading(centeredUV, rotationScratches, positionOffsetScratches, gradingScratchesMap);
+                        result = mix(result, gradingScratches, gradingScratches.a);
+                    }
 
                     //result.rgb = toSRGB(result.rgb);
                     gl_FragColor = result;
@@ -318,7 +328,8 @@ export function blendAlbedosZipped(
 export function blendAlbedosBacksideZipped(
     { renderScene, renderCamera, renderer },
     textures,
-    gradingAlbedoProps
+    gradingAlbedoProps,
+    isPoor = false
 ) {
 
     // Textures
@@ -380,6 +391,8 @@ export function blendAlbedosBacksideZipped(
                 // + configs
                 overlayAspectRatio: { value: 1 },
                 meshAspectRatio: { value: 1 },
+                // Grading 
+                isPoor: { value: isPoor }
             },
             vertexShader: /* glsl */ `
                 varying vec2 vUv;
@@ -407,6 +420,8 @@ export function blendAlbedosBacksideZipped(
 
                 uniform float overlayAspectRatio;
                 uniform float meshAspectRatio;
+
+                uniform bool isPoor;
 
                 varying vec2 vUv;
 
@@ -443,18 +458,21 @@ export function blendAlbedosBacksideZipped(
                     vec2 centeredUV = uv * 0.25 - 0.25;
                     float aspectScale = overlayAspectRatio / meshAspectRatio; 
                     centeredUV.x *= aspectScale;
-                    // Rotation + Offset Pos. Manchas
-                    vec4 gradingManchas = mixGrading(centeredUV, rotationManchas, positionOffsetManchas, gradingManchasMap);
-                    result = mix(result, gradingManchas, gradingManchas.a);
-                    // Rotation + Offset Pos. Doblez
-                    vec4 gradingDoblez = mixGrading(centeredUV, rotationDoblez, positionOffsetDoblez, gradingDoblezMap);
-                    result = mix(result, gradingDoblez, gradingDoblez.a);
-                    // Rotation + Offset Pos. Rascado
-                    vec4 gradingRascado = mixGrading(centeredUV, rotationRascado, positionOffsetRascado, gradingRascadoMap);
-                    result = mix(result, gradingRascado, gradingRascado.a);
-                    // Rotation + Offset Pos. Scratches
-                    vec4 gradingScratches = mixGrading(centeredUV, rotationScratches, positionOffsetScratches, gradingScratchesMap);
-                    result = mix(result, gradingScratches, gradingScratches.a);
+
+                    if (isPoor) {
+                        // Rotation + Offset Pos. Manchas
+                        vec4 gradingManchas = mixGrading(centeredUV, rotationManchas, positionOffsetManchas, gradingManchasMap);
+                        result = mix(result, gradingManchas, gradingManchas.a);
+                        // Rotation + Offset Pos. Doblez
+                        vec4 gradingDoblez = mixGrading(centeredUV, rotationDoblez, positionOffsetDoblez, gradingDoblezMap);
+                        result = mix(result, gradingDoblez, gradingDoblez.a);
+                        // Rotation + Offset Pos. Rascado
+                        vec4 gradingRascado = mixGrading(centeredUV, rotationRascado, positionOffsetRascado, gradingRascadoMap);
+                        result = mix(result, gradingRascado, gradingRascado.a);
+                        // Rotation + Offset Pos. Scratches
+                        vec4 gradingScratches = mixGrading(centeredUV, rotationScratches, positionOffsetScratches, gradingScratchesMap);
+                        result = mix(result, gradingScratches, gradingScratches.a);
+                    }
 
                     gl_FragColor = result;
                 }

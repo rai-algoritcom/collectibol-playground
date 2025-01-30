@@ -57,7 +57,8 @@ export function blendRoughnessTXs(renderer, textures, controls, gradingRoughness
 export function blendRoughnessBacksideZipped(
     { renderScene, renderCamera, renderer },
     textures,
-    gradingRoughnessProps
+    gradingRoughnessProps,
+    isPoor = true
 ) {
     // Textures
     const { backside, gradingv2 } = textures; 
@@ -116,6 +117,8 @@ export function blendRoughnessBacksideZipped(
                 // + configs 
                 overlayAspectRatio: { value: 1 },
                 meshAspectRatio: { value: 1 },
+                // Grading 
+                isPoor: { value: isPoor }
             },
             vertexShader: /* glsl */ `
                 varying vec2 vUv;
@@ -140,6 +143,8 @@ export function blendRoughnessBacksideZipped(
 
                 uniform float overlayAspectRatio;
                 uniform float meshAspectRatio;
+
+                uniform bool isPoor;
 
                 varying vec2 vUv;
 
@@ -176,15 +181,18 @@ export function blendRoughnessBacksideZipped(
                     vec2 centeredUV = uv * 0.25 - 0.25;
                     float aspectScale = overlayAspectRatio / meshAspectRatio; 
                     centeredUV.x *= aspectScale;
-                    // Rotation + Offset Pos. Doblez
-                    vec4 gradingDoblez = mixGrading(centeredUV, rotationDoblez, positionOffsetDoblez, gradingDoblezMap);
-                    result = clamp(result + gradingDoblez, 0.0, 1.0);
-                    // Rotation + Offset Pos. Rascado
-                    vec4 gradingRascado = mixGrading(centeredUV, rotationRascado, positionOffsetRascado, gradingRascadoMap);
-                    result = clamp(result + gradingRascado, 0.0, 1.0);
-                    // Rotation + Offset Pos. Scratches 
-                    vec4 gradingScratches = mixGrading(centeredUV, rotationScratches, positionOffsetScratches, gradingScratchesMap);
-                    result = clamp(result + gradingScratches, 0.0, 1.0);
+
+                    if (isPoor) {
+                        // Rotation + Offset Pos. Doblez
+                        vec4 gradingDoblez = mixGrading(centeredUV, rotationDoblez, positionOffsetDoblez, gradingDoblezMap);
+                        result = clamp(result + gradingDoblez, 0.0, 1.0);
+                        // Rotation + Offset Pos. Rascado
+                        vec4 gradingRascado = mixGrading(centeredUV, rotationRascado, positionOffsetRascado, gradingRascadoMap);
+                        result = clamp(result + gradingRascado, 0.0, 1.0);
+                        // Rotation + Offset Pos. Scratches 
+                        vec4 gradingScratches = mixGrading(centeredUV, rotationScratches, positionOffsetScratches, gradingScratchesMap);
+                        result = clamp(result + gradingScratches, 0.0, 1.0);
+                    }
 
                     gl_FragColor = result;
                 }
@@ -207,8 +215,10 @@ export function blendRoughnessZipped(
     { renderScene, renderCamera, renderer },
     textures,
     gradingRoughnessProps,
-    optimize = false
+    optimize = false,
+    isPoor = true
 ) {
+
 
     // Textures 
     const { gradingv2 } = textures 
@@ -261,6 +271,8 @@ export function blendRoughnessZipped(
                 // + configs 
                 overlayAspectRatio: { value: 1 },
                 meshAspectRatio: { value: 1 },
+                // Grading 
+                isPoor: { value: isPoor }
             },
             vertexShader: /* glsl */ `
                 varying vec2 vUv;
@@ -284,6 +296,8 @@ export function blendRoughnessZipped(
 
                 uniform float overlayAspectRatio;
                 uniform float meshAspectRatio;
+
+                uniform bool isPoor;
 
                 varying vec2 vUv;
 
@@ -319,15 +333,18 @@ export function blendRoughnessZipped(
                     vec2 centeredUV = uv * 0.25 - 0.25;
                     float aspectScale = overlayAspectRatio / meshAspectRatio; 
                     centeredUV.x *= aspectScale;
-                    // Rotation + Offset Pos. Doblez
-                    vec4 gradingDoblez = mixGrading(centeredUV, rotationDoblez, positionOffsetDoblez, gradingDoblezMap);
-                    result = clamp(result + gradingDoblez, 0.0, 1.0);
-                    // Rotation + Offset Pos. Rascado
-                    vec4 gradingRascado = mixGrading(centeredUV, rotationRascado, positionOffsetRascado, gradingRascadoMap);
-                    result = clamp(result + gradingRascado, 0.0, 1.0);
-                    // Rotation + Offset Pos. Scratches 
-                    vec4 gradingScratches = mixGrading(centeredUV, rotationScratches, positionOffsetScratches, gradingScratchesMap);
-                    result = clamp(result + gradingScratches, 0.0, 1.0);
+
+                    if (isPoor) {
+                        // Rotation + Offset Pos. Doblez
+                        vec4 gradingDoblez = mixGrading(centeredUV, rotationDoblez, positionOffsetDoblez, gradingDoblezMap);
+                        result = clamp(result + gradingDoblez, 0.0, 1.0);
+                        // Rotation + Offset Pos. Rascado
+                        vec4 gradingRascado = mixGrading(centeredUV, rotationRascado, positionOffsetRascado, gradingRascadoMap);
+                        result = clamp(result + gradingRascado, 0.0, 1.0);
+                        // Rotation + Offset Pos. Scratches 
+                        vec4 gradingScratches = mixGrading(centeredUV, rotationScratches, positionOffsetScratches, gradingScratchesMap);
+                        result = clamp(result + gradingScratches, 0.0, 1.0);
+                    }
 
                     gl_FragColor = result;
                 }

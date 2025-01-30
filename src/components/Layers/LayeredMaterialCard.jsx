@@ -75,7 +75,8 @@ import {
     blendAlphaTXs,
     blendAlbedosBacksideZipped,
     blendRoughnessBacksideZipped,
-    blendAlbedosZipped, 
+    blendAlbedosZipped,
+    blendRoughnessZipped, 
 } from "../../utils";
 
 import { 
@@ -135,6 +136,8 @@ export default function LayeredMaterialCard({
         useState(cardConfig)
     const [animationTrigger, setAnimationTrigger] = 
         useState(cardConfig.fragment_fx.trigger)
+
+    const [isPoor, setIsPoor] = useState(true)
 
     /**
      * Randomize offset and rotation for 'Grading v2': 
@@ -282,10 +285,13 @@ export default function LayeredMaterialCard({
     const videoTexture = useMemo(() => {
         return new THREE.VideoTexture(videoElement);
     }, [videoElement]);
-    const { useVideoTexture, clip } = useControls("Video Texture", {
-        useVideoTexture: { value: cardConfig.use_video, label: "Enable" },
-        clip: { value: "/clips/Lamine_clip.mov", onChange: () => {}, label: 'Clip' }
-    });
+    const useVideoTexture = false 
+    const clip =  "/clips/Lamine_clip.mov"
+
+    // const { useVideoTexture, clip } = useControls("Video Texture", {
+    //     useVideoTexture: { value: cardConfig.use_video, label: "Enable" },
+    //     clip: { value: "/clips/Lamine_clip.mov", onChange: () => {}, label: 'Clip' }
+    // });
         
 
     /**
@@ -294,10 +300,12 @@ export default function LayeredMaterialCard({
     // const hdriTexture = useLoader(RGBELoader, "/env/the_sky_is_on_fire_4k.hdr");
     const hdriTexture = useLoader(THREE.TextureLoader, "/env/orlando_stadium_4k.jpg");
     // hdriTexture.mapping = THREE.EquirectangularReflectionMapping;
-    const { useHDRITexture, hdri } = useControls("HDRI Texture", {
-        useHDRITexture: { value: cardConfig.use_hdri, label: "Enable" },
-        hdri: { image: "/env/orlando_stadium_4k.jpg", onChange: () => {}, label: 'HDRI' }
-    })
+    const useHDRITexture = false 
+    const hdri = "/env/orlando_stadium_4k.jpg"
+    // const { useHDRITexture, hdri } = useControls("HDRI Texture", {
+    //     useHDRITexture: { value: cardConfig.use_hdri, label: "Enable" },
+    //     hdri: { image: "/env/orlando_stadium_4k.jpg", onChange: () => {}, label: 'HDRI' }
+    // })
 
 
     /**
@@ -305,10 +313,12 @@ export default function LayeredMaterialCard({
      */
     const glbTextureModel = useGLTF("/models/cat_compressed.glb")
     // const glbTextureModel2 = useGLTF("/models/fcb_low_polly.glb")
-    const { useGLBTexture, glb } = useControls('GLB Texture', {
-        useGLBTexture: { value: false, label: "Enable" },
-        glb: { value: "/models/cat_compressed.glb", onChange: () => {}, label: 'GLB' }
-    })
+    const useGLBTexture = false 
+    const glb = "/models/cat_compressed.glb"
+    // const { useGLBTexture, glb } = useControls('GLB Texture', {
+    //     useGLBTexture: { value: false, label: "Enable" },
+    //     glb: { value: "/models/cat_compressed.glb", onChange: () => {}, label: 'GLB' }
+    // })
 
 
     const renderScene = useMemo(() => new THREE.Scene(), [])
@@ -321,21 +331,23 @@ export default function LayeredMaterialCard({
             textures,
             false,
             layoutColor,
-            gradingAlbedoProps
+            gradingAlbedoProps,
+            isPoor
         )
         // return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps, useVideoTexture || useGLBTexture, useHDRITexture);
-    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture, useHDRITexture, useGLBTexture]);
+    }, [gl, textures, albedoToggles, layoutColor, isPoor]);
 
     const blendedAlbedo3Textures = useMemo(() => {
-        return  blendAlbedosZipped(
+        return blendAlbedosZipped(
             { renderScene, renderCamera, renderer: gl },
             textures,
             true,
             layoutColor,
-            gradingAlbedoProps
+            gradingAlbedoProps,
+            isPoor
         )
         // return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor, gradingAlbedoProps, useVideoTexture || useGLBTexture, useHDRITexture);
-    }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture, useHDRITexture, useGLBTexture])
+    }, [gl, textures, albedoToggles, layoutColor, isPoor])
 
 
 
@@ -343,17 +355,20 @@ export default function LayeredMaterialCard({
         return  blendAlbedosBacksideZipped(
             { renderScene, renderCamera, renderer: gl },
             textures,
-            gradingAlbedoProps
+            gradingAlbedoProps,
+            isPoor
         )
-    }, [gl, textures,  posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches ])
+    }, [gl, textures,  isPoor ])
+
 
     const blendedRoughnessBacksideTextures = useMemo(() => {
         return blendRoughnessBacksideZipped(
             { renderScene, renderCamera, renderer: gl },
             textures,
-            gradingRoughnessProps
+            gradingRoughnessProps,
+            isPoor
         )
-    })
+    }, [gl, textures, roughnessToggles, isPoor])
 
 
     const blendedAlphaTextures = useMemo(() => {
@@ -369,8 +384,15 @@ export default function LayeredMaterialCard({
     }, [gl, textures, heightToggles]);
 
     const blendedRoughnessTextures = useMemo(() => {
-        return blendRoughnessTXs(gl, textures, roughnessToggles, gradingRoughnessProps);
-    }, [gl, textures, roughnessToggles, posRascado, rotRascado, posDoblez, rotDoblez, posScratches, rotScratches ]);
+        // return blendRoughnessTXs(gl, textures, roughnessToggles, gradingRoughnessProps, isPoor);
+        return blendRoughnessZipped(
+            { renderScene, renderCamera, renderer: gl },
+            textures,
+            gradingRoughnessProps,
+            false,
+            isPoor
+        )
+    }, [gl, textures, roughnessToggles, isPoor ]);
 
     const blendedNormalTextures = useMemo(() => {
         return blendNormalTXs(gl, textures, normalToggles, gradingNormalsProps);
@@ -378,46 +400,54 @@ export default function LayeredMaterialCard({
 
 
 
-    const { roughnessIntensity, roughnessPresence } = useControls('Roughness Config.', {
-        roughnessIntensity: {
-            label: 'Intensity',
-            value: cardConfig.roughness_intensity,
-            min: 0.0,
-            max: 2.0,
-            step: 0.1,
-        },
-        roughnessPresence: {
-            label: 'Presence',
-            value: cardConfig.roughness_presence,
-            min: 0.0,
-            max: 1.0,
-            step: 0.1,
-        },
-    });
+    // const { roughnessIntensity, roughnessPresence } = useControls('Roughness Config.', {
+    //     roughnessIntensity: {
+    //         label: 'Intensity',
+    //         value: cardConfig.roughness_intensity,
+    //         min: 0.0,
+    //         max: 2.0,
+    //         step: 0.1,
+    //     },
+    //     roughnessPresence: {
+    //         label: 'Presence',
+    //         value: cardConfig.roughness_presence,
+    //         min: 0.0,
+    //         max: 1.0,
+    //         step: 0.1,
+    //     },
+        
+    // });
+    const roughnessIntensity = cardConfig.roughness_intensity
+    const roughnessPresence = cardConfig.roughness_presence
 
-    const { normalIntensity } = useControls('Normal Config.', {
-        normalIntensity: { 
-            label: 'Intensity', 
-            value: cardConfig.normal_intensity, 
-            min: 0.1, 
-            max: 5.0, 
-            step: 0.01 
-        }
-    });
+    const normalIntensity = cardConfig.normal_intensity
+    const displacementScale = cardConfig.displacement_scale 
 
-    const { displacementScale } = useControls('Displacement Config.', {
-        displacementScale: { 
-            label: 'Height Scale', 
-            value: cardConfig.displacement_scale, 
-            min: 0.0, 
-            max: 0.5, 
-            step: 0.0001 
-        }
-    })
+    // const { normalIntensity } = useControls('Normal Config.', {
+    //     normalIntensity: { 
+    //         label: 'Intensity', 
+    //         value: cardConfig.normal_intensity, 
+    //         min: 0.1, 
+    //         max: 5.0, 
+    //         step: 0.01 
+    //     }
+    // });
+
+    // const { displacementScale } = useControls('Displacement Config.', {
+    //     displacementScale: { 
+    //         label: 'Height Scale', 
+    //         value: cardConfig.displacement_scale, 
+    //         min: 0.0, 
+    //         max: 0.5, 
+    //         step: 0.0001 
+    //     }
+    // })
+
+
 
 
     const {
-        // AL
+        //AL
         ambientLightColor,
         ambientLightIntensity,
         // PL 1
@@ -426,7 +456,7 @@ export default function LayeredMaterialCard({
         pointLightDecay,
         plXandY,
         plZ,
-        // PL 2
+        //PL 2
         pointLightColor2,
         pointLightIntensity2,
         pointLightDecay2,
@@ -492,66 +522,91 @@ export default function LayeredMaterialCard({
 
     
 
-    const { useShiney, shineyIntensity, shineyColor } = useControls('Shine Fx', {
-        useShiney: { value: cardConfig.shine.use_shine, label: 'Enable' },
-        shineyIntensity: { value: cardConfig.shine.shine_intensity, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
-        shineyColor: { value: cardConfig.shine.shine_color, label: 'Color' },
-    })
+    const useShiney = cardConfig.shine.use_shine 
+    const shineyIntensity = cardConfig.shine.shine_intensity 
+    const shineyColor = cardConfig.shine.shine_color
+
+    // const { useShiney, shineyIntensity, shineyColor } = useControls('Shine Fx', {
+    //     useShiney: { value: cardConfig.shine.use_shine, label: 'Enable' },
+    //     shineyIntensity: { value: cardConfig.shine.shine_intensity, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
+    //     shineyColor: { value: cardConfig.shine.shine_color, label: 'Color' },
+    // })
 
 
+    const useRefraction =  cardConfig.refraction.use_refraction 
+    const stripesVisible = cardConfig.refraction.stripes_visible
+    const refractionIntensity = cardConfig.refraction.refraction_intensity
 
-    const { useRefraction, refractionIntensity, stripesVisible } = useControls('Refraction Fx', {
-        useRefraction: { value: cardConfig.refraction.use_refraction, label: 'Enable' },
-        stripesVisible: { value: cardConfig.refraction.stripes_visible, label: 'Stripes' },
-        refractionIntensity: { value: cardConfig.refraction.refraction_intensity, min: 0, max: 1.0, step: 0.001, label: 'Intensity' },
-    })
+    // const { useRefraction, refractionIntensity, stripesVisible } = useControls('Refraction Fx', {
+    //     useRefraction: { value: cardConfig.refraction.use_refraction, label: 'Enable' },
+    //     stripesVisible: { value: cardConfig.refraction.stripes_visible, label: 'Stripes' },
+    //     refractionIntensity: { value: cardConfig.refraction.refraction_intensity, min: 0, max: 1.0, step: 0.001, label: 'Intensity' },
+    // })
 
 
+    const useTransition = cardConfig.transition.use_transition
+    const transitionSpeed = cardConfig.transition.transition_speed
     
-    const { useTransition, transitionSpeed } = useControls('Transition Fx', {
-        useTransition: { value: cardConfig.transition.use_transition, label: 'Enable' },
-        transitionSpeed: { value: cardConfig.transition.transition_speed, min: 0, max: 3, label: 'Speed' },
-        'mode': {
-                value: 'full',
-                options: {
-                    Full: 'full',
-                    Skills: 'max',
-                    Min: 'min'
-                },
-                label: '*Mode',
-                onChange: (value) => { 
-                    if (value == 'full') {
-                        setBlendMode(0)
-                    } else if (value == 'max') {
-                        setBlendMode(0)
-                    } else {
-                        setBlendMode(1)
-                    }
-                    changeCardMode(value)
-                }
-        }
-    }, [shaderRef.current])
+    // const { useTransition, transitionSpeed } = useControls('Transition Fx', {
+    //     useTransition: { value: cardConfig.transition.use_transition, label: 'Enable' },
+    //     transitionSpeed: { value: cardConfig.transition.transition_speed, min: 0, max: 3, label: 'Speed' },
+    //     'mode': {
+    //             value: 'full',
+    //             options: {
+    //                 Full: 'full',
+    //                 Skills: 'max',
+    //                 Min: 'min'
+    //             },
+    //             label: '*Mode',
+    //             onChange: (value) => { 
+    //                 if (value == 'full') {
+    //                     setBlendMode(0)
+    //                 } else if (value == 'max') {
+    //                     setBlendMode(0)
+    //                 } else {
+    //                     setBlendMode(1)
+    //                 }
+    //                 changeCardMode(value)
+    //             }
+    //     }
+    // }, [shaderRef.current])
 
 
-    const { useFolding, foldIntensity, foldX, foldY, foldRotation } = useControls('Folding Fx', { 
-        useFolding: { value: cardConfig.folding.use_folding, label: 'Enable' },
-        foldIntensity: { value: cardConfig.folding.fold_intensity, min: 0, max: 2, step: 0.01, label: 'Intensity' },
-        foldX: { value: cardConfig.folding.fold_x, min: -1.5, max: 1.5, step: 0.01, label: 'Position X' },
-        foldY: { value: cardConfig.folding.fold_y, min: -1.5, max: 1.5, step: 0.01, label: 'Position Y' },
-        foldRotation: { value: cardConfig.folding.fold_rotation, min: -Math.PI, max: Math.PI, step: 0.01, label: 'Rotation Z' }
-    })
+
+    const useFolding = cardConfig.folding.use_folding
+    const foldIntensity = cardConfig.folding.fold_intensity
+    const foldX = cardConfig.folding.fold_x
+    const foldY = cardConfig.folding.fold_y
+    const foldRotation = cardConfig.folding.fold_rotation
+
+    // const { useFolding, foldIntensity, foldX, foldY, foldRotation } = useControls('Folding Fx', { 
+    //     useFolding: { value: cardConfig.folding.use_folding, label: 'Enable' },
+    //     foldIntensity: { value: cardConfig.folding.fold_intensity, min: 0, max: 2, step: 0.01, label: 'Intensity' },
+    //     foldX: { value: cardConfig.folding.fold_x, min: -1.5, max: 1.5, step: 0.01, label: 'Position X' },
+    //     foldY: { value: cardConfig.folding.fold_y, min: -1.5, max: 1.5, step: 0.01, label: 'Position Y' },
+    //     foldRotation: { value: cardConfig.folding.fold_rotation, min: -Math.PI, max: Math.PI, step: 0.01, label: 'Rotation Z' }
+    // })
     
 
-    const { useGlitch, useWave, useBreath, useTwister, usePulse, useJitter, useNoise, useCloth } = useControls('Animations Vertex', {
-        useGlitch: { value: cardConfig.vertex_fx.id === 'glitch', label: 'Glitch Fx' },
-        useWave: { value: cardConfig.vertex_fx.id === 'wave', label: 'Wave Fx' },
-        useBreath: { value: cardConfig.vertex_fx.id === 'breath', label: 'Breathe Fx' },
-        useTwister: { value: cardConfig.vertex_fx.id === 'twister', label: 'Twist Fx' },
-        usePulse: { value: cardConfig.vertex_fx.id === 'pulse', label: 'Float Fx' },
-        useJitter: { value: cardConfig.vertex_fx.id === 'jitter', label: 'Jitter Fx' },
-        useNoise: { value: cardConfig.vertex_fx.id === 'noise', label: 'Noise Fx' },
-        useCloth: { value: cardConfig.vertex_fx.id === 'cloth', label: 'Cloth Fx' }
-    })
+    const useGlitch = cardConfig.vertex_fx.id
+    const useWave = cardConfig.vertex_fx.id
+    const useBreath = cardConfig.vertex_fx.id
+    const useTwister = cardConfig.vertex_fx.id
+    const usePulse = cardConfig.vertex_fx.id
+    const useJitter = cardConfig.vertex_fx.id
+    const useNoise = cardConfig.vertex_fx.id 
+    const useCloth =  cardConfig.vertex_fx.id
+
+    // const { useGlitch, useWave, useBreath, useTwister, usePulse, useJitter, useNoise, useCloth } = useControls('Animations Vertex', {
+    //     useGlitch: { value: cardConfig.vertex_fx.id === 'glitch', label: 'Glitch Fx' },
+    //     useWave: { value: cardConfig.vertex_fx.id === 'wave', label: 'Wave Fx' },
+    //     useBreath: { value: cardConfig.vertex_fx.id === 'breath', label: 'Breathe Fx' },
+    //     useTwister: { value: cardConfig.vertex_fx.id === 'twister', label: 'Twist Fx' },
+    //     usePulse: { value: cardConfig.vertex_fx.id === 'pulse', label: 'Float Fx' },
+    //     useJitter: { value: cardConfig.vertex_fx.id === 'jitter', label: 'Jitter Fx' },
+    //     useNoise: { value: cardConfig.vertex_fx.id === 'noise', label: 'Noise Fx' },
+    //     useCloth: { value: cardConfig.vertex_fx.id === 'cloth', label: 'Cloth Fx' }
+    // })
 
 
     const { useCardio, useSquares, useCircle, useDank, useShine, useEther, useFire, useWaves, useSmoke, useRay, useCrystal, useGalaxy, useLiquid, useAsci, useSpin, useParticles, useBlobs, useGrass } = useControls('Animations Fragment (overlay)', {
@@ -577,44 +632,87 @@ export default function LayeredMaterialCard({
     })
 
 
+    useControls(
+        'Grading', {
+            'Grading Level': {
+                value: 'poor',
+                options: {
+                    Poor: 'poor',
+                    Mint: 'mint'
+                },
+                onChange: (value) => {
+                    if (value == "mint") {
+                        setIsPoor(false)
+                    } else {
+                        setIsPoor(true)
+                    }
+                }
+            }
+        }
+    )
+
+
+
     /**
      * PostProcessing
      */
-    const { useDepthOfField, focusDistance, focalLength, bokehScale } = useControls('Depth of Field [Postprocessing]', {
-        useDepthOfField: { value: false, label: 'Enable' },
-        focusDistance: { value: 0.012, min: 0.001, max: 0.1, step: 0.001, label: 'Focus Distance' },
-        focalLength: { value: 0.015, min: 0.001, max: 0.1, step: 0.001, label: 'Focal Length' },
-        bokehScale: { value: 7, min: 0, max: 20, step: 0.1, label: 'Bokeh Scale'} 
-    })
+    const useDepthOfField = false 
+    const focusDistance = 0.012 
+    const focalLength = 0.015
+    const bokehScale = 7
 
-    const { useHueSaturation, hue, saturation } = useControls('Hue Saturation [Postprocessing]', {
-        useHueSaturation: { value: false, label: 'Enable' },
-        hue: { value: 0, min: -1, max: 1, step: 0.01, label: 'Hue' },
-        saturation: { value: -0.15, min: -1, max: 1, step: 0.01, label: 'Saturation' },
-    })
+    // const { useDepthOfField, focusDistance, focalLength, bokehScale } = useControls('Depth of Field [Postprocessing]', {
+    //     useDepthOfField: { value: false, label: 'Enable' },
+    //     focusDistance: { value: 0.012, min: 0.001, max: 0.1, step: 0.001, label: 'Focus Distance' },
+    //     focalLength: { value: 0.015, min: 0.001, max: 0.1, step: 0.001, label: 'Focal Length' },
+    //     bokehScale: { value: 7, min: 0, max: 20, step: 0.1, label: 'Bokeh Scale'} 
+    // })
 
-    const { useBrightnessContrast, brightness, contrast } = useControls('Brightness Contrast [Postprocessing]', {
-        useBrightnessContrast: { value: false, label: 'Enable' },
-        brightness: { value: 0.0, min: -1, max: 1, step: 0.01, label: 'Brightness' },
-        contrast: { value: 0.035, min: -1, max: 1, step: 0.01, label: 'Contrast' },
-    })
+    const useHueSaturation = false 
+    const hue = -1
+    const saturation = -0.15
+    // const { useHueSaturation, hue, saturation } = useControls('Hue Saturation [Postprocessing]', {
+    //     useHueSaturation: { value: false, label: 'Enable' },
+    //     hue: { value: 0, min: -1, max: 1, step: 0.01, label: 'Hue' },
+    //     saturation: { value: -0.15, min: -1, max: 1, step: 0.01, label: 'Saturation' },
+    // })
 
-    const { useChromaticAberration, radialModulation, offset } = useControls('Chromatic Aberration [Postprocessing]', {
-        useChromaticAberration: { value: false, label: 'Enable' },
-        radialModulation: { value: true, label: 'Radial Modulation' },
-        offset: { value: 0.0015, min: 0, max: 0.1, step: 0.0001, label: 'Offset' },
-    })
+    const useBrightnessContrast = false 
+    const brightness = 0.0 
+    const contrast = 0.035
+    // const { useBrightnessContrast, brightness, contrast } = useControls('Brightness Contrast [Postprocessing]', {
+    //     useBrightnessContrast: { value: false, label: 'Enable' },
+    //     brightness: { value: 0.0, min: -1, max: 1, step: 0.01, label: 'Brightness' },
+    //     contrast: { value: 0.035, min: -1, max: 1, step: 0.01, label: 'Contrast' },
+    // })
 
-    const { useGodRays, useRaysBg, raysBgColor, samples, density, weight, decay, exposure } = useControls('God Rays [Postprocessing]', {
-        useGodRays: { value: false, label: 'Enable' },
-        useRaysBg: { value: false, label: 'Background' },
-        raysBgColor: { value: { r: 100, g: 20, b: 0 }, label: 'Background Color' },
-        samples: { value: 10, min: 1, max: 100, step: 1, label: 'Samples' },
-        density: { value: 0.97, min: 0, max: 1, step: 0.01, label: 'Density' },
-        weight: { value: 0.5, min: 0, max: 1, step: 0.001, label: 'Weight' },
-        decay: { value: 0.95, min: 0, max: 1, step: 0.001, label: 'Decay' },
-        exposure: { value: 0.3, min: 0, max: 1, step: 0.001, label: 'Exposure' },
-    })
+    const useChromaticAberration = false 
+    const radialModulation = true 
+    const offset = 0.0015
+    // const { useChromaticAberration, radialModulation, offset } = useControls('Chromatic Aberration [Postprocessing]', {
+    //     useChromaticAberration: { value: false, label: 'Enable' },
+    //     radialModulation: { value: true, label: 'Radial Modulation' },
+    //     offset: { value: 0.0015, min: 0, max: 0.1, step: 0.0001, label: 'Offset' },
+    // })
+
+    const useGodRays = false 
+    const useRaysBg = false 
+    const raysBgColor = { r: 100, g: 20, b: 0 }
+    const density = 0.896 
+    const weight = 0.6 
+    const decay = 0.86 
+    const exposure = 0.5
+
+    // const { useGodRays, useRaysBg, raysBgColor, samples, density, weight, decay, exposure } = useControls('God Rays [Postprocessing]', {
+    //     useGodRays: { value: false, label: 'Enable' },
+    //     useRaysBg: { value: false, label: 'Background' },
+    //     raysBgColor: { value: { r: 100, g: 20, b: 0 }, label: 'Background Color' },
+    //     samples: { value: 10, min: 1, max: 100, step: 1, label: 'Samples' },
+    //     density: { value: 0.97, min: 0, max: 1, step: 0.01, label: 'Density' },
+    //     weight: { value: 0.5, min: 0, max: 1, step: 0.001, label: 'Weight' },
+    //     decay: { value: 0.95, min: 0, max: 1, step: 0.001, label: 'Decay' },
+    //     exposure: { value: 0.3, min: 0, max: 1, step: 0.001, label: 'Exposure' },
+    // })
 
     let mesh = new THREE.Mesh(
         new THREE.PlaneGeometry(2, 3, 120, 120),
@@ -877,7 +975,7 @@ export default function LayeredMaterialCard({
             });
         }
     }, [
-        
+        isPoor,
         animationTrigger,
         // Fragment FX
         useGrass,
