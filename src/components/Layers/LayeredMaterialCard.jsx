@@ -154,117 +154,120 @@ export default function LayeredMaterialCard({
 
     const logoTexture = useLoader(THREE.TextureLoader, '/icons/fcb.png')
 
-    const { posDoblez, rotDoblez } = useControls('Doblez Config.', {
-        posDoblez: {
-            value: doblezRand.pos,
-            min: -0.1,
-            max: 0.1,
-            step: 0.001,
-            label: 'Position'
-        },
-        rotDoblez: {
-            value: doblezRand.rot, 
-            min: 0, 
-            max: Math.PI * 3,
-            label: 'Rotation'
-        }, 
-    }, { collapsed: true })
+    // const posDoblez = doblezRand.pos 
+    // const rotDoblez = doblezRand.rot
 
-    const { posManchas, rotManchas } = useControls('Manchas Config.', {
-        posManchas: {
-            value: manchasRand.pos,
-            min: -0.1,
-            max: 0.1,
-            step: 0.001,
-            label: 'Position'
-        },
-        rotManchas: {
-            value: manchasRand.rot,
-            min: 0,
-            max: Math.PI * 3,
-            label: 'Rotation'
-        }
-    },         {collapsed: true})
+    // const { posDoblez, rotDoblez } = useControls('Doblez Config.', {
+    //     posDoblez: {
+    //         value: doblezRand.pos,
+    //         min: -0.1,
+    //         max: 0.1,
+    //         step: 0.001,
+    //         label: 'Position'
+    //     },
+    //     rotDoblez: {
+    //         value: doblezRand.rot, 
+    //         min: 0, 
+    //         max: Math.PI * 3,
+    //         label: 'Rotation'
+    //     }, 
+    // }, { collapsed: true })
 
-    const { posRascado, rotRascado } = useControls('Rascado Config.', {
-        posRascado: {
-            value: rascadoRand.pos,
-            min: -0.1,
-            max: 0.1,
-            step: 0.001,
-            label: 'Position'
-        },
-        rotRascado: {
-            value: rascadoRand.rot,
-            min: 0,
-            max: Math.PI * 3, 
-            label: 'Rotation'
-        }
-    },         {collapsed: true})
+    // const { posManchas, rotManchas } = useControls('Manchas Config.', {
+    //     posManchas: {
+    //         value: manchasRand.pos,
+    //         min: -0.1,
+    //         max: 0.1,
+    //         step: 0.001,
+    //         label: 'Position'
+    //     },
+    //     rotManchas: {
+    //         value: manchasRand.rot,
+    //         min: 0,
+    //         max: Math.PI * 3,
+    //         label: 'Rotation'
+    //     }
+    // }, { collapsed: true })
 
-    const { posScratches, rotScratches } = useControls('Scratches Config.', {
-        posScratches: {
-            value: scratchesRand.pos,
-            min: -0.1,
-            max: 0.1,
-            step: 0.001,
-            label: 'Position'
-        },
-        rotScratches: {
-            value: scratchesRand.rot,
-            min: 0,
-            max: Math.PI * 3,
-            label: 'Rotation'
-        }
-    },         {collapsed: true})
+    // const { posRascado, rotRascado } = useControls('Rascado Config.', {
+    //     posRascado: {
+    //         value: rascadoRand.pos,
+    //         min: -0.1,
+    //         max: 0.1,
+    //         step: 0.001,
+    //         label: 'Position'
+    //     },
+    //     rotRascado: {
+    //         value: rascadoRand.rot,
+    //         min: 0,
+    //         max: Math.PI * 3, 
+    //         label: 'Rotation'
+    //     }
+    // },         {collapsed: true})
+
+    // const { posScratches, rotScratches } = useControls('Scratches Config.', {
+    //     posScratches: {
+    //         value: scratchesRand.pos,
+    //         min: -0.1,
+    //         max: 0.1,
+    //         step: 0.001,
+    //         label: 'Position'
+    //     },
+    //     rotScratches: {
+    //         value: scratchesRand.rot,
+    //         min: 0,
+    //         max: Math.PI * 3,
+    //         label: 'Rotation'
+    //     }
+    // },         {collapsed: true})
 
 
     const gradingRoughnessProps = {
         doblez: {
-            pos: posDoblez,
-            rot: rotDoblez,
+            pos: doblezRand.pos,
+            rot: doblezRand.rot,
         },
         rascado: {
-            pos: posRascado,
-            rot: rotRascado
+            pos: rascadoRand.pos,
+            rot: rascadoRand.rot
         },
         scratches: {
-            pos: posScratches,
-            rot: rotScratches
+            pos: scratchesRand.pos,
+            rot: scratchesRand.rot
         }
     }
     
     const gradingNormalsProps = {
         scratches: {
-            pos: posScratches,
-            rot: rotScratches
+            pos: scratchesRand.pos,
+            rot: scratchesRand.rot
         },
         doblez: {
-            pos: posDoblez, 
-            rot: rotDoblez
+            pos: doblezRand.pos,
+            rot: doblezRand.rot,
         },
         rascado: {
-            pos: posRascado,
-            rot: rotRascado
+            pos: rascadoRand.pos,
+            rot: rascadoRand.rot
         }
     }
 
     const gradingAlbedoProps = {
         manchas: {
-            pos: posManchas,
-            rot: rotManchas
+            pos: manchasRand.pos,
+            rot: manchasRand.rot
         },
         doblez: {
-            pos: posDoblez, 
-            rot: rotDoblez
+            pos: doblezRand.pos,
+            rot: doblezRand.rot,
         },
         rascado: {
-            pos: posRascado,
-            rot: rotRascado
+            pos: rascadoRand.pos,
+            rot: rascadoRand.rot
         },
         scratches: {
-            pos: posScratches,
-            rot: rotScratches
+            pos: scratchesRand.pos,
+            rot: scratchesRand.rot
         },
     }
 
@@ -396,7 +399,7 @@ export default function LayeredMaterialCard({
 
     const blendedNormalTextures = useMemo(() => {
         return blendNormalTXs(gl, textures, normalToggles, gradingNormalsProps);
-    }, [gl, textures, normalToggles, posRascado, rotRascado, posDoblez, rotDoblez, posScratches, rotScratches ]);
+    }, [gl, textures, normalToggles ]);
 
 
 
