@@ -167,8 +167,8 @@ export default function LayeredMaterialCard({
             min: 0, 
             max: Math.PI * 3,
             label: 'Rotation'
-        }
-    })
+        }, 
+    }, { collapsed: true })
 
     const { posManchas, rotManchas } = useControls('Manchas Config.', {
         posManchas: {
@@ -184,7 +184,7 @@ export default function LayeredMaterialCard({
             max: Math.PI * 3,
             label: 'Rotation'
         }
-    })
+    },         {collapsed: true})
 
     const { posRascado, rotRascado } = useControls('Rascado Config.', {
         posRascado: {
@@ -200,7 +200,7 @@ export default function LayeredMaterialCard({
             max: Math.PI * 3, 
             label: 'Rotation'
         }
-    })
+    },         {collapsed: true})
 
     const { posScratches, rotScratches } = useControls('Scratches Config.', {
         posScratches: {
@@ -216,7 +216,7 @@ export default function LayeredMaterialCard({
             max: Math.PI * 3,
             label: 'Rotation'
         }
-    })
+    },         {collapsed: true})
 
 
     const gradingRoughnessProps = {
@@ -505,7 +505,7 @@ export default function LayeredMaterialCard({
             max: 20,
             label: 'PL2 z'
         },
-    })
+    },         {collapsed: true})
     
 
 
@@ -732,10 +732,10 @@ export default function LayeredMaterialCard({
 
 
 
-    useControls({
-        'Snapshot .jpg': button(async () => await takeScreenshot(gl, scene, camera, planeRef.current, [footerRef.current, skillsRef.current], false, useTransition && blendMode == 1)),
-        'Snapshot .png': button(() => takeScreenshot(gl, scene, camera, planeRef.current, [footerRef.current, skillsRef.current], true, useTransition && blendMode == 1)),
-    }, [scene, useTransition, blendMode])
+    // useControls({
+    //     'Snapshot .jpg': button(async () => await takeScreenshot(gl, scene, camera, planeRef.current, [footerRef.current, skillsRef.current], false, useTransition && blendMode == 1)),
+    //     'Snapshot .png': button(() => takeScreenshot(gl, scene, camera, planeRef.current, [footerRef.current, skillsRef.current], true, useTransition && blendMode == 1)),
+    // }, [scene, useTransition, blendMode])
 
 
     useControls({

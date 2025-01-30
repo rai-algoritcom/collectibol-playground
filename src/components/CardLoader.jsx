@@ -82,36 +82,44 @@ export default function CardLoader({ controlsRef, isGameplay }) {
     })
 
 
-    const { base_alpha, base_albedo, base_height, base_normal, base_roughness } = useControls(
-        'Base Textures + Channels', {
-            'Alpha': { image: texturePaths.base.alpha, onChange: (v) => updateTexture('base', 'alpha', v) },
-            'Alpha II': { image: texturePaths.base.alpha2, onChange: (v) => updateTexture('base', 'alpha2', v)  },
-            'Height': { image: texturePaths.base.height, onChange: (v) => updateTexture('base', 'height', v) },
-            'Normal': { image: texturePaths.base.normal, onChange: (v) => updateTexture('base', 'normal', v) },
-            'Roughness': { image: texturePaths.base.roughness, onChange: (v) => updateTexture('base', 'roughness', v) }, 
-            base_alpha: {
-                value: cardConfig.alpha_ch.base_alpha,
-                label: 'Alpha ch.'
-            },
-            base_height: {
-                value: cardConfig.height_ch.base_height,
-                label: 'Height ch.'
-            },
-            base_normal: {
-                value: cardConfig.normal_ch.base_normal,
-                label: 'Normal ch.'
-            },
-            base_roughness: {
-                value: cardConfig.roughness_ch.base_roughness,
-                label: 'Roughness ch.'
-            }
-    })
+
+    const base_albedo = null
+    const base_alpha = cardConfig.alpha_ch.base_alpha
+    const base_height = cardConfig.height_ch.base_height
+    const base_normal = cardConfig.normal_ch.base_normal
+    const base_roughness = cardConfig.roughness_ch.base_roughness
+
+    // const { base_alpha, base_albedo, base_height, base_normal, base_roughness } = useControls(
+    //     'Base Textures + Channels', {
+    //         'Alpha': { image: texturePaths.base.alpha, onChange: (v) => updateTexture('base', 'alpha', v) },
+    //         'Alpha II': { image: texturePaths.base.alpha2, onChange: (v) => updateTexture('base', 'alpha2', v)  },
+    //         'Height': { image: texturePaths.base.height, onChange: (v) => updateTexture('base', 'height', v) },
+    //         'Normal': { image: texturePaths.base.normal, onChange: (v) => updateTexture('base', 'normal', v) },
+    //         'Roughness': { image: texturePaths.base.roughness, onChange: (v) => updateTexture('base', 'roughness', v) }, 
+    //         base_alpha: {
+    //             value: cardConfig.alpha_ch.base_alpha,
+    //             label: 'Alpha ch.'
+    //         },
+    //         base_height: {
+    //             value: cardConfig.height_ch.base_height,
+    //             label: 'Height ch.'
+    //         },
+    //         base_normal: {
+    //             value: cardConfig.normal_ch.base_normal,
+    //             label: 'Normal ch.'
+    //         },
+    //         base_roughness: {
+    //             value: cardConfig.roughness_ch.base_roughness,
+    //             label: 'Roughness ch.'
+    //         }
+    // })
 
 
+  
     const { pattern_albedo } = useControls(
         'Pattern Textures + Channels', {
             'Albedo I': { image: texturePaths.pattern.albedo, onChange: (v) => updateTexture('pattern', 'albedo', v) },
-            'Albedo II': { image: texturePaths.pattern.albedo2, onChange: (v) => updateTexture('pattern', 'albedo2', v) },
+            // 'Albedo II': { image: texturePaths.pattern.albedo2, onChange: (v) => updateTexture('pattern', 'albedo2', v) },
             pattern_albedo: {
                 value: cardConfig.albedo_ch.pattern_albedo,
                 label: 'Albedo ch.'
@@ -122,7 +130,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
     const { main_interest_albedo, main_interest_height } = useControls(
         'Main Textures + Channels', {
             'Albedo': { image: texturePaths.main_interest.albedo, onChange: (v) => updateTexture('main_interest', 'albedo', v) },
-            'Height': { image: texturePaths.main_interest.height, onChange: (v) => updateTexture('main_interest', 'height', v) },
+            // 'Height': { image: texturePaths.main_interest.height, onChange: (v) => updateTexture('main_interest', 'height', v) },
             main_interest_albedo: {
                 value: cardConfig.albedo_ch.main_interest_albedo,
                 label: 'Albedo ch.'
@@ -149,7 +157,8 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 value: cardConfig.height_ch.layout_height,
                 label: 'Height ch.'
             },
-        }
+        },
+        {collapsed: true}
     )
 
 
@@ -166,6 +175,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 label: 'Roughness ch.'
             }
         },
+        {collapsed: true}
     )
 
     const { grading_v2_exterior_albedo, grading_v2_exterior_roughness } = useControls(
@@ -180,7 +190,8 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 value: cardConfig.roughness_ch.grading_v2_exterior_roughness,
                 label: 'Roughness ch.'
             }
-        }
+        },
+        {collapsed: true}
     )
 
     const { grading_v2_manchas_albedo } = useControls(
@@ -190,7 +201,8 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 value: cardConfig.albedo_ch.grading_v2_manchas_albedo,
                 label: 'Albedo ch.'
             }
-        }
+        },
+        {collapsed: true}
     )
 
     const { grading_v2_rascado_albedo, grading_v2_rascado_roughness } = useControls(
@@ -205,7 +217,8 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 value: cardConfig.roughness_ch.grading_v2_rascado_roughness,
                 label: 'Roughness ch.'
             }
-        }
+        },
+        {collapsed: true}
     )
 
     const { grading_v2_scratches_albedo, grading_v2_scratches_roughness } = useControls(
@@ -220,7 +233,8 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 value: cardConfig.roughness_ch.grading_v2_scratches_roughness,
                 label: 'Roughness ch.'
             }
-        }
+        },
+        {collapsed: true}
     )
 
 
@@ -289,17 +303,17 @@ export default function CardLoader({ controlsRef, isGameplay }) {
     )*/
 
 
-    useControls(
-        'Fx Textures', {
-            'Iridescence': { image: texturePaths.fx.iridescence, onChange: (v) => updateTexture('fx', 'iridescence', v) },
-            'Iris Mask': { image: texturePaths.fx.irisMask, onChange: (v) => updateTexture('fx', 'irisMask', v) },
-            'Brightness Mask': { image: texturePaths.fx.brightnessMask, onChange: (v) => updateTexture('fx', 'brightness', v) }, 
-            'Shine Mask': { image: texturePaths.fx.shine, onChange: (v) => updateTexture('fx', 'shine', v) },
-            'Refraction': { image: texturePaths.fx.refraction, onChange: (v) => updateTexture('fx', 'refraction', v) },
-            'Transition': { image: texturePaths.fx.transition, onChange: (v) => updateTexture('fx', 'transition', v) },
-            'Brightness': { image: texturePaths.fx.brightness, onChange: (v) => updateTexture('fx', 'brightness', v) },
-        }
-    )
+    // useControls(
+    //     'Fx Textures', {
+    //         'Iridescence': { image: texturePaths.fx.iridescence, onChange: (v) => updateTexture('fx', 'iridescence', v) },
+    //         'Iris Mask': { image: texturePaths.fx.irisMask, onChange: (v) => updateTexture('fx', 'irisMask', v) },
+    //         'Brightness Mask': { image: texturePaths.fx.brightnessMask, onChange: (v) => updateTexture('fx', 'brightness', v) }, 
+    //         'Shine Mask': { image: texturePaths.fx.shine, onChange: (v) => updateTexture('fx', 'shine', v) },
+    //         'Refraction': { image: texturePaths.fx.refraction, onChange: (v) => updateTexture('fx', 'refraction', v) },
+    //         'Transition': { image: texturePaths.fx.transition, onChange: (v) => updateTexture('fx', 'transition', v) },
+    //         'Brightness': { image: texturePaths.fx.brightness, onChange: (v) => updateTexture('fx', 'brightness', v) },
+    //     }
+    // )
 
 
     const updateTexture = (category, type, value) => {
