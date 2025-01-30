@@ -29,10 +29,10 @@ export default function Builder() {
 
             </Canvas>
 
-            <LinkButton 
+            {/* <LinkButton 
                 to={"/gameplay"}
                 content={"Gameplay"}
-            />
+            /> */}
 
             <ResetButton 
                 onClick={ () => removeStorageConfig() } 
