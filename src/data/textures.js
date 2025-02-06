@@ -9,8 +9,12 @@ export default {
     },
     pattern: {
         albedo2: '/mobile/fx/fluid.jpg',
-        albedo: '/mobile/prod/pattern/bk.png',
+        // albedo: '/mobile/prod/pattern/bk.png',
+        albedo: '/mobile/prod/pattern_bg/Background_01.png',
         height: '/mobile/fx/fluid.jpg'
+    },
+    pattern_bg: {
+        albedo: '/mobile/prod/pattern_bg/Pattern_Alpha_04.png'
     },
     main_interest: {
         albedo: '/mobile/prod/main_interest/albido.png',

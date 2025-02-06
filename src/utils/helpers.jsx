@@ -13,6 +13,15 @@ export const getRandomPositionAndRotation = () => ({
 })
 
 
+export const getRandoPositionAndRotationPattern = () => ({
+  pos: new THREE.Vector2(
+    randomInRange(-0.2, 0.2),
+    randomInRange(-0.2, 0.2)
+  ),
+  rot: randomInRange(0, Math.PI * 6)
+})
+
+
 export function normalizeAngle(newAngle, lastAngle) {
   let delta = newAngle - lastAngle;
 

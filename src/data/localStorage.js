@@ -11,6 +11,7 @@ export const getCardConfigJSON = () => {
         albedo_ch: {
             base_albedo: true,
             pattern_albedo: true,
+            pattern_bg_albedo: true,
             main_interest_albedo: true,
             layout_albedo: true,
             grading_v2_doblez_albedo: true,

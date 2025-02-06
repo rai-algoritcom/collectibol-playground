@@ -82,7 +82,8 @@ import {
     downloadJSON, 
     normalizeAngle,
     takeScreenshot,
-    getRandomPositionAndRotation 
+    getRandomPositionAndRotation, 
+    getRandoPositionAndRotationPattern
 } from "../../utils/helpers";
 
 import FooterCard from "./FooterCard";
@@ -148,6 +149,8 @@ export default function LayeredMaterialCard({
     const rascadoRand = getRandomPositionAndRotation()
     const scratchesRand = getRandomPositionAndRotation()
     const manchasRand = getRandomPositionAndRotation()
+    // <---->
+    const patternBgRand = getRandoPositionAndRotationPattern()
 
     const logoTexture = useLoader(THREE.TextureLoader, '/icons/fcb.png')
 
@@ -215,6 +218,26 @@ export default function LayeredMaterialCard({
         }
     })
 
+    const { posPatternBg, rotPatternBg } = useControls('Pattern Config,', {
+        posPatternBg: {
+            value: patternBgRand.pos,
+            min: -0.1,
+            max: 0.1,
+            step: 0.001,
+            label: 'Position'
+        },
+        rotPatternBg: {
+            value: patternBgRand.rot,
+            min: 0,
+            max: Math.PI * 3,
+            label: 'Rotation'
+        }
+    })
+
+    const patternBgProps = {
+        pos: posPatternBg,
+        rot: rotPatternBg
+    }
 
     const gradingRoughnessProps = {
         doblez: {
@@ -321,7 +344,8 @@ export default function LayeredMaterialCard({
             textures,
             false,
             layoutColor,
-            gradingAlbedoProps
+            gradingAlbedoProps,
+            patternBgProps
         )
         // return blendAlbedoTXs(gl, textures, albedoToggles, false, false, layoutColor, gradingAlbedoProps, useVideoTexture || useGLBTexture, useHDRITexture);
     }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture, useHDRITexture, useGLBTexture]);
@@ -332,7 +356,8 @@ export default function LayeredMaterialCard({
             textures,
             true,
             layoutColor,
-            gradingAlbedoProps
+            gradingAlbedoProps,
+            patternBgProps
         )
         // return blendAlbedoTXs(gl, textures, albedoToggles, false, true, layoutColor, gradingAlbedoProps, useVideoTexture || useGLBTexture, useHDRITexture);
     }, [gl, textures, albedoToggles, layoutColor, posRascado, rotRascado, posManchas, rotManchas, posDoblez, rotDoblez, posScratches, rotScratches, useVideoTexture, useHDRITexture, useGLBTexture])

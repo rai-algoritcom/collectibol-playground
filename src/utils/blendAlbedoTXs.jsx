@@ -95,15 +95,17 @@ export function blendAlbedosZipped(
     textures,
     is2ndLayout = false,
     layoutColor, 
-    gradingAlbedoProps
+    gradingAlbedoProps,
+    patternBgProps
 ) {
 
     // Textures
-    const { base, pattern, main_interest, layout, gradingv2 } = textures;
+    const { base, pattern, main_interest, layout, pattern_bg, gradingv2 } = textures;
     const { gradingDoblez, gradingExterior, gradingManchas, gradingRascado, gradingScratches } = gradingv2;
 
     // Offset + Rotation
     const { manchas, doblez, rascado, scratches } = gradingAlbedoProps;
+    const patternBg = patternBgProps;
 
     // Layout color
     const { r, g, b } = layoutColor;
@@ -114,9 +116,15 @@ export function blendAlbedosZipped(
     base.albedo.minFilter = THREE.LinearFilter;
     base.albedo.magFilter = THREE.LinearFilter;
     base.albedo.format = THREE.RGBAFormat;
+
     pattern.albedo.minFilter = THREE.LinearFilter;
     pattern.albedo.magFilter = THREE.LinearFilter;
     pattern.albedo.format = THREE.RGBAFormat;
+
+    pattern_bg.albedo.minFilter = THREE.LinearFilter;
+    pattern_bg.albedo.magFilter = THREE.LinearFilter;
+    pattern_bg.albedo.format = THREE.RGBAFormat;
+
     main_interest.albedo.minFilter = THREE.LinearFilter;
     main_interest.albedo.magFilter = THREE.LinearFilter;
     main_interest.albedo.format = THREE.RGBAFormat;
@@ -161,6 +169,7 @@ export function blendAlbedosZipped(
                 // textures
                 baseMap: { value: base.albedo },
                 patternMap: { value: pattern.albedo },
+                patternBgMap: { value: pattern_bg.albedo },
                 mainInterestMap: { value: main_interest.albedo },
                 layoutMap: { value: is2ndLayout ? layout.albedo2 : layout.albedo },
                 gradingDoblezMap: { value: gradingDoblez.albedo },
@@ -179,9 +188,13 @@ export function blendAlbedosZipped(
                 rotationRascado: { value: rascado.rot },
                 positionOffsetScratches: { value: scratches.pos },
                 rotationScratches: { value: scratches.rot },
+                // pattern bg props 
+                positionOffsetPatternBg: { value: patternBg.pos },
+                rotationPatternBg: { value: patternBg.rot },
                 // + configs
                 overlayAspectRatio: { value: 1 },
                 meshAspectRatio: { value: 1 },
+                hasPatternBg: { value: true }
             },
             vertexShader: /* glsl */ `
                 varying vec2 vUv;
@@ -193,6 +206,7 @@ export function blendAlbedosZipped(
             fragmentShader: /*glsl*/ `
                 uniform sampler2D baseMap;
                 uniform sampler2D patternMap;
+                uniform sampler2D patternBgMap;
                 uniform sampler2D mainInterestMap;
                 uniform sampler2D layoutMap;
                 uniform sampler2D gradingDoblezMap;
@@ -202,6 +216,7 @@ export function blendAlbedosZipped(
                 uniform sampler2D gradingScratchesMap;
 
                 uniform vec3 color;
+                uniform bool hasPatternBg;
 
                 uniform vec2 positionOffsetManchas;
                 uniform float rotationManchas;
@@ -211,6 +226,9 @@ export function blendAlbedosZipped(
                 uniform float rotationRascado;
                 uniform vec2 positionOffsetScratches;
                 uniform float rotationScratches;
+
+                uniform vec2 positionOffsetPatternBg;
+                uniform float rotationPatternBg;
 
                 uniform float overlayAspectRatio;
                 uniform float meshAspectRatio;
@@ -268,18 +286,40 @@ export function blendAlbedosZipped(
 
                     pattern.rgb = adjustSaturation(pattern.rgb, 1.); // Boost saturation by 50%
                     mainInterest.rgb = adjustSaturation(mainInterest.rgb, 1.);
+
                     pattern.rgb *= 1.2; // Increase brightness by 20%
                     mainInterest.rgb *= 1.2; // Increase brightness by 20%
-                    
-                    // Mixing 
-                    result = mix(base, pattern, pattern.a);
-                    result = mix(result, mainInterest, mainInterest.a);
-                    result = mix(result, vec4(mix(_layout.rgb, color, 1.), 1.), _layout.a);
-                    result = mix(result, gradingExterior, gradingExterior.a);
+
                     // Grading configs
                     vec2 centeredUV = uv * 0.25 - 0.25;
                     float aspectScale = overlayAspectRatio / meshAspectRatio; 
                     centeredUV.x *= aspectScale;
+
+                    // Mixing 
+                    result = mix(base, pattern, pattern.a);
+
+                    if (hasPatternBg) {
+                        // Scale down UVs (centered around 0.5)
+                        vec2 scaleFactor = vec2(1.25, 1.25); // Adjust for desired downscaling (1.0 = no scaling)
+                        vec2 scaledUV = (centeredUV * scaleFactor) + (0.5 * (1.0 - scaleFactor));
+
+                        vec4 patternBg = mixGrading(scaledUV, rotationPatternBg, positionOffsetPatternBg, patternBgMap);
+                        patternBg.rgb = toLinear(patternBg.rgb);
+                        patternBg.rgb = adjustSaturation(patternBg.rgb, 1.);
+                        patternBg.rgb *= .85;
+                    
+                        // Smooth alpha blending for better edge transition
+                        float feather = .8; // Adjust for more or less softness
+                        float alpha = smoothstep(0.0, feather, patternBg.a); // Soften the transition
+                        vec3 patternColor = patternBg.rgb * alpha; // Multiply color by new soft alpha
+                    
+                        result = mix(result, vec4(patternColor, alpha), alpha);
+                    }
+
+                    result = mix(result, mainInterest, mainInterest.a);
+                    result = mix(result, vec4(mix(_layout.rgb, color, 1.), 1.), _layout.a);
+                    result = mix(result, gradingExterior, gradingExterior.a);
+
                     // Rotation + Offset Pos. Manchas
                     vec4 gradingManchas = mixGrading(centeredUV, rotationManchas, positionOffsetManchas, gradingManchasMap);
                     result = mix(result, gradingManchas, gradingManchas.a);

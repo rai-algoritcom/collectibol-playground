@@ -31,11 +31,15 @@ export default function CardLoader({ controlsRef, isGameplay }) {
         },
         pattern: {
             albedo2: '/mobile/fx/fluid.jpg',
-            albedo: '/mobile/prod/pattern/bk.png',
+            // albedo: '/mobile/prod/pattern/bk.png',
+            albedo: '/mobile/prod/pattern_bg/Background_01.png',
             height: '/mobile/fx/fluid.jpg'
         },
+        pattern_bg: {
+            albedo: '/mobile/prod/pattern_bg/Pattern_Alpha_05.png'
+        },
         main_interest: {
-            albedo: '/mobile/prod/main_interest/albido.png',
+            albedo: '/mobile/prod/main_interest/albido2.png',
             height: '/mobile/prod/main_interest/height.png',
         },
         layout: {
@@ -71,7 +75,8 @@ export default function CardLoader({ controlsRef, isGameplay }) {
             roughness2: '/mobile/backside/roughness2.jpg'
         },
         fx: {
-            irisMask: '/mobile/fx/iris-mask.jpg',
+            irisMask: '/mobile/prod/pattern_bg/Fx_01.png',
+            // irisMask: '/mobile/fx/iris-mask.jpg',
             iridescence: '/mobile/fx/iris4.jpg',
             brightnessMask: '/mobile/fx/LamineCard.png',
             brightness: '/mobile/fx/brightness.jpg',
@@ -109,7 +114,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
 
 
     const { pattern_albedo } = useControls(
-        'Pattern Textures + Channels', {
+        'Background Textures + Channels', {
             'Albedo I': { image: texturePaths.pattern.albedo, onChange: (v) => updateTexture('pattern', 'albedo', v) },
             'Albedo II': { image: texturePaths.pattern.albedo2, onChange: (v) => updateTexture('pattern', 'albedo2', v) },
             pattern_albedo: {
@@ -117,6 +122,16 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 label: 'Albedo ch.'
             }
     })
+
+    const { pattern_bg_albedo } = useControls(
+        'Pattern Textures + Channels', {
+            'Albedo': { image: texturePaths.pattern_bg.albedo, onChange: (v) => updateTexture('pattern_bg', 'albedo', v) },
+            pattern_bg_albedo: {
+                value: cardConfig.albedo_ch.pattern_bg_albedo,
+                label: 'Albedo ch.'
+            }
+        }
+    )
 
 
     const { main_interest_albedo, main_interest_height } = useControls(
@@ -227,6 +242,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
     const albedoToggles = {
         base_albedo,
         pattern_albedo,
+        pattern_bg_albedo,
         main_interest_albedo,
         layout_albedo,
         grading_v2_doblez_albedo,
@@ -328,6 +344,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
 
     const baseTextures = useTexture(texturePaths.base);
     const patternTexture = useTexture(texturePaths.pattern);
+    const patternBgTexture = useTexture(texturePaths.pattern_bg);
     const mainInterestTextures = useTexture(texturePaths.main_interest);
     const layoutTextures = useTexture(texturePaths.layout);
     const fxTextures = useTexture(texturePaths.fx);
@@ -343,6 +360,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
     const textures = useMemo(() => ({
         base: baseTextures,
         pattern: patternTexture,
+        pattern_bg: patternBgTexture,
         main_interest: mainInterestTextures,
         layout: layoutTextures,
         fx: fxTextures,
@@ -354,7 +372,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
             gradingRascado,
             gradingScratches
         }
-    }), [baseTextures, patternTexture, mainInterestTextures, layoutTextures, fxTextures, backsideTextures, gradingDoblez, gradingExterior, gradingManchas, gradingRascado, gradingScratches])
+    }), [baseTextures, patternTexture, patternBgTexture, mainInterestTextures, layoutTextures, fxTextures, backsideTextures, gradingDoblez, gradingExterior, gradingManchas, gradingRascado, gradingScratches])
 
 
     // Queue to process cards sequentally 
@@ -386,23 +404,23 @@ export default function CardLoader({ controlsRef, isGameplay }) {
     //     }
     // }, [queue])
 
-    const mit =
-     [
-        useTexture('/mobile/web/1.png'),
-        useTexture('/mobile/web/2.png'),
-        useTexture('/mobile/web/3.png'),
-        useTexture('/mobile/web/4.png'),
-        useTexture('/mobile/web/5.png'),
-        useTexture('/mobile/web/6.png'),
-        useTexture('/mobile/web/7.png'),
-        useTexture('/mobile/web/8.png'),
-        useTexture('/mobile/web/9.png'),
-        useTexture('/mobile/web/10.png'),
-        useTexture('/mobile/web/11.png'),
-        useTexture('/mobile/web/12.png'),
-        useTexture('/mobile/web/13.png'),
-        useTexture('/mobile/web/14.png')
-     ]
+    // const mit =
+    //  [
+    //     useTexture('/mobile/web/1.png'),
+    //     useTexture('/mobile/web/2.png'),
+    //     useTexture('/mobile/web/3.png'),
+    //     useTexture('/mobile/web/4.png'),
+    //     useTexture('/mobile/web/5.png'),
+    //     useTexture('/mobile/web/6.png'),
+    //     useTexture('/mobile/web/7.png'),
+    //     useTexture('/mobile/web/8.png'),
+    //     useTexture('/mobile/web/9.png'),
+    //     useTexture('/mobile/web/10.png'),
+    //     useTexture('/mobile/web/11.png'),
+    //     useTexture('/mobile/web/12.png'),
+    //     useTexture('/mobile/web/13.png'),
+    //     useTexture('/mobile/web/14.png')
+    //  ]
 
     return (
         <Suspense fallback={<></>}>
@@ -410,22 +428,23 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 isGameplay 
                 ? 
                     mock.map((props, i) => (
-                        <MainCard 
-                            key={`card-${i}`}
-                            id={`card-${i}`}
+                        <></>
+                        // <MainCard 
+                        //     key={`card-${i}`}
+                        //     id={`card-${i}`}
 
-                            controlsRef={controlsRef}
-                            textures={textures}
+                        //     controlsRef={controlsRef}
+                        //     textures={textures}
 
-                            renderScene={renderScene}
-                            renderCamera={renderCamera}
+                        //     renderScene={renderScene}
+                        //     renderCamera={renderCamera}
 
-                            // enqueue={enqueue}
-                            // processNext={processNext}
-                            // isProcessing={(id) => processingCard.current === id}
-                            mainIntTexture={mit[i]}
-                            {...props}
-                        />
+                        //     // enqueue={enqueue}
+                        //     // processNext={processNext}
+                        //     // isProcessing={(id) => processingCard.current === id}
+                        //     mainIntTexture={mit[i]}
+                        //     {...props}
+                        // />
                     ))
                 : 
                 

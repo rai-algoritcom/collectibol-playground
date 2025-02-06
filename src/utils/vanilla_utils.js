@@ -15,6 +15,9 @@ export const texturePaths = {
         albedo: '/mobile/prod/pattern/bk.png',
         height: '/mobile/fx/fluid.jpg'
     },
+    pattern_bg: {
+        albedo: '/mobile/prod/pattern_bg/Pattern_Alpha_01.png'
+    },
     main_interest: {
         albedo: '/mobile/prod/main_interest/albido.png',
         height: '/mobile/prod/main_interest/height.png',
@@ -64,6 +67,7 @@ export const getCardConfigJSON = () => {
         albedo_ch: {
             base_albedo: true,
             pattern_albedo: true,
+            pattern_bg_albedo: true,
             main_interest_albedo: true,
             layout_albedo: true,
             grading_v2_doblez_albedo: true,
