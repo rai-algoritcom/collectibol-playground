@@ -2,7 +2,7 @@
 
 uniform float uTime;               // Animation time
 uniform vec2 uResolution;          // Screen resolution
-uniform sampler2D uAlphaMask;        // Alpha mask texture
+uniform sampler2D uAlphaMask;      // Alpha mask texture
 
 varying vec2 vUv;                  // UV coordinates passed from vertex shader
 
@@ -73,9 +73,18 @@ void main() {
     fcol *= 0.2 + 0.8 * pow(16.0 * q.x * q.y * (1.0 - q.x) * (1.0 - q.y), 0.1);
 
     // Apply alpha mask
-    float alphaMask = texture2D(uAlphaMask, vUv).r; // Use red channel of alphaMap
-    float alpha = length(fcol) > 0.01 ? alphaMask : 0.0; // Multiply by mask
+    float alphaMask = texture2D(uAlphaMask, vUv).r; // Use red channel of alphaMask
 
+    // Apply full transparency where the mask is black
+    if (alphaMask <= 0.01) {
+        gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0); // Fully transparent
+        return;
+    }
+
+    // Improved alpha handling for better blending
+    float alphaValue = alphaMask; // Directly use the mask value for transparency
+
+    // Output final color with adjusted alpha
     gl_FragColor.rgb = fcol * 1.8 + vec3(dither());
-    gl_FragColor.a = alpha * .5; // Final alpha with mask applied
+    gl_FragColor.a = alphaValue * 0.5;
 }

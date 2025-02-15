@@ -1,5 +1,3 @@
-
-
 uniform float uTime;
 uniform vec2 uResolution;
 uniform sampler2D uAlphaMask; // Alpha mask texture
@@ -80,6 +78,14 @@ void main() {
   // Sample alpha from mask
   float alpha = texture2D(uAlphaMask, vUv).r;
 
-  gl_FragColor = vec4(col, alpha * 0.24);
-}
+  // Apply full transparency on fully black parts
+  if (alpha <= 0.01) {
+      gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0); // Full transparency
+      return;
+  }
 
+  // Improved alpha handling for better blending
+  float alphaValue = alpha; // Use the mask value directly for transparency
+
+  gl_FragColor = vec4(col, alphaValue * .95);
+}
