@@ -92,7 +92,7 @@ import Stats from "three/examples/jsm/libs/stats.module.js";
 import { writeStorageConfig } from "../../data/localStorage";
 
 import { BrightnessContrast, ChromaticAberration, DepthOfField, EffectComposer, GodRays, HueSaturation } from "@react-three/postprocessing"
-import { Decal, Float, Mask, useGLTF, useTexture } from "@react-three/drei";
+import { Decal, Float, Mask, useGLTF, useHelper, useTexture } from "@react-three/drei";
 import CollCardFooter from "./FooterCardV2";
 
 
@@ -1178,9 +1178,10 @@ export default function LayeredMaterialCard({
       ]
     
 
+
     return (
         <group ref={groupRef}>
-            {/* { useRaysBg && <primitive object={mesh}></primitive> } */}
+            { useRaysBg && <primitive object={mesh}></primitive> }
 
 
             <ambientLight intensity={.5} color="white" />
@@ -1191,6 +1192,7 @@ export default function LayeredMaterialCard({
                 groundColor="#888888" // Lower hemisphere (ground) color
                 position={[0, 0, 3]} 
             />
+
 
             
             {/* Realistic Mesh */}

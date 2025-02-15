@@ -1,7 +1,7 @@
 
-import { useTexture } from "@react-three/drei";
+import { useHelper, useTexture } from "@react-three/drei";
 import LayeredMaterialCard from "./Layers/LayeredMaterialCard.jsx";
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useMemo, useRef, useState } from "react";
 import { useControls } from "leva";
 import * as THREE from "three"
 import MainCard from "./Layers/MainCard.jsx";
@@ -422,8 +422,55 @@ export default function CardLoader({ controlsRef, isGameplay }) {
     //     useTexture('/mobile/web/14.png')
     //  ]
 
+    const dirLightRef = useRef();
+    const pointLight1Ref = useRef();
+    const pointLight2Ref = useRef()
+
+    // useHelper(dirLightRef, THREE.DirectionalLightHelper, 1, 'white'); // 1 = size of the helper
+    // useHelper(pointLight1Ref, THREE.PointLightHelper, 0.5, '#f3e2e2');
+    // useHelper(pointLight2Ref, THREE.PointLightHelper, 0.5, 'white');
+
     return (
         <Suspense fallback={<></>}>
+            {/* Directional Light */}
+                
+
+
+                {/* <directionalLight
+                    ref={dirLightRef}
+                    intensity={3.58}
+                    decay={1000}
+                    position={[.876, 1, 4.535]}
+                    shadow-mapSize-width={1024}
+                    shadow-mapSize-height={1024}
+                    shadow-camera-left={-10}
+                    shadow-camera-right={10}
+                    shadow-camera-top={10}
+                    shadow-camera-bottom={-10}
+                    castShadow={true}
+                />
+
+      
+                <pointLight
+                    ref={pointLight1Ref}
+                    intensity={10.44}
+                    decay={2}
+                    castShadow={true}
+                    distance={50}
+                    position={[0, 1, -1.165]}
+                    power={100}
+                />
+
+                <pointLight
+                    ref={pointLight2Ref}
+                    intensity={50}
+                    decay={2}
+                    castShadow={true}
+                    distance={20}
+                    position={[-6.037, 1, 1.171]}
+                    power={50}
+                /> */}
+
             {
                 isGameplay 
                 ? 
