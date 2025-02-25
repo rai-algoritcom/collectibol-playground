@@ -74,6 +74,9 @@ export default function CardLoader({ controlsRef, isGameplay }) {
             roughness1: '/mobile/backside/roughness1.jpg',
             roughness2: '/mobile/backside/roughness2.jpg'
         },
+        signature: {
+            albedo: '/mobile/signature/sign.png'
+        },
         fx: {
             irisMask: '/mobile/prod/pattern_bg/Fx_01.png',
             // irisMask: '/mobile/fx/iris-mask.jpg',
@@ -356,6 +359,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
     const gradingScratches = useTexture(texturePaths.gradingV2.scratches)
 
     const backsideTextures = useTexture(texturePaths.backside)
+    const signatureTextures = useTexture(texturePaths.signature)
 
     const textures = useMemo(() => ({
         base: baseTextures,
@@ -365,6 +369,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
         layout: layoutTextures,
         fx: fxTextures,
         backside: backsideTextures,
+        signature: signatureTextures,
         gradingv2: {
             gradingDoblez,
             gradingExterior,
@@ -372,7 +377,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
             gradingRascado,
             gradingScratches
         }
-    }), [baseTextures, patternTexture, patternBgTexture, mainInterestTextures, layoutTextures, fxTextures, backsideTextures, gradingDoblez, gradingExterior, gradingManchas, gradingRascado, gradingScratches])
+    }), [baseTextures, patternTexture, patternBgTexture, mainInterestTextures, layoutTextures, fxTextures, backsideTextures, signatureTextures, gradingDoblez, gradingExterior, gradingManchas, gradingRascado, gradingScratches])
 
 
     // Queue to process cards sequentally 
@@ -421,14 +426,6 @@ export default function CardLoader({ controlsRef, isGameplay }) {
     //     useTexture('/mobile/web/13.png'),
     //     useTexture('/mobile/web/14.png')
     //  ]
-
-    const dirLightRef = useRef();
-    const pointLight1Ref = useRef();
-    const pointLight2Ref = useRef()
-
-    // useHelper(dirLightRef, THREE.DirectionalLightHelper, 1, 'white'); // 1 = size of the helper
-    // useHelper(pointLight1Ref, THREE.PointLightHelper, 0.5, '#f3e2e2');
-    // useHelper(pointLight2Ref, THREE.PointLightHelper, 0.5, 'white');
 
     return (
         <Suspense fallback={<></>}>

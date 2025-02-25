@@ -11,6 +11,7 @@ import { Resizer, BlendFunction, KernelSize } from "postprocessing"
  * Vertex
  */
 import {
+    signVertexShader,
     standardVertexShader,
     foldingVertexShader,
     glitchVertexShader,
@@ -27,6 +28,7 @@ import {
  * Fragment
  */
 import {
+    signFragmentShader,
     standardFragmentShader,
     iridescenceFragmentShader,
     brightnessFragmentShader,
@@ -1395,6 +1397,26 @@ export default function LayeredMaterialCard({
                     renderOrder={2}
                 />
             </mesh> */}
+
+
+            
+            /**
+             *  Signature
+             */
+             <mesh
+                position={[0, 0, 0.001]}
+             >
+                <planeGeometry args={[2, 3, 10, 10]} />
+                <shaderMaterial 
+                    vertexShader={signVertexShader}
+                    fragmentShader={signFragmentShader}
+                    transparent={true}
+                    uniforms={{
+                      uAlphaMask: { value: textures.base.alpha },
+                      signatureMask: { value: textures.signature.albedo }
+                    }}
+                />
+             </mesh>
 
 
             /**

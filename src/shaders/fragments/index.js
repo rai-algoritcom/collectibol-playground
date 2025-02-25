@@ -13,6 +13,8 @@ import outerIridescenceFragmentShader from '../../shaders/fragments/outerIridesc
 import outerBrightnessFragmentShader from '../../shaders/fragments/outerBrightnessShader.glsl'
 import rarityFragmentShader from "../../shaders/fragments/rarityShader.glsl"
 
+import signFragmentShader from "../../shaders/fragments/signShader.glsl"
+
 export {
     shineFragmentShader,
     transitionFragmentShader,
@@ -26,5 +28,6 @@ export {
 
     outerIridescenceFragmentShader,
     outerBrightnessFragmentShader,
-    rarityFragmentShader
+    rarityFragmentShader,
+    signFragmentShader
 }

@@ -9,6 +9,7 @@ import jitterVertexShader from '../../shaders/vertex/jitterShader.glsl';
 import noiseVertexShader from '../../shaders/vertex/noiseShader.glsl'
 import clothVertexShader from '../../shaders/vertex/clothShader.glsl'
 
+import signVertexShader from '../../shaders/vertex/signVertexShader.glsl'
 
 export {
     standardVertexShader,
@@ -20,5 +21,6 @@ export {
     pulseVertexShader,
     jitterVertexShader,
     noiseVertexShader,
-    clothVertexShader
+    clothVertexShader,
+    signVertexShader
 }
