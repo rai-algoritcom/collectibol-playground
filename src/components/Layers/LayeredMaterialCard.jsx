@@ -223,15 +223,15 @@ export default function LayeredMaterialCard({
     const { posPatternBg, rotPatternBg } = useControls('Pattern Config,', {
         posPatternBg: {
             value: patternBgRand.pos,
-            min: -0.1,
-            max: 0.1,
+            min: -0.008,
+            max: 0.008,
             step: 0.001,
             label: 'Position'
         },
         rotPatternBg: {
             value: patternBgRand.rot,
             min: 0,
-            max: Math.PI * 3,
+            max: Math.PI * .3,
             label: 'Rotation'
         }
     })
@@ -1405,6 +1405,7 @@ export default function LayeredMaterialCard({
              */
              <mesh
                 position={[0, 0, 0.001]}
+                visible={false}
              >
                 <planeGeometry args={[2, 3, 10, 10]} />
                 <shaderMaterial 

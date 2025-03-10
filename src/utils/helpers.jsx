@@ -9,16 +9,16 @@ export const getRandomPositionAndRotation = () => ({
       randomInRange(-0.1, 0.1),
       randomInRange(-0.1, 0.1)
   ),
-  rot: randomInRange(0, Math.PI * 3)
+  rot: randomInRange(0, Math.PI * 6)
 })
 
 
 export const getRandoPositionAndRotationPattern = () => ({
   pos: new THREE.Vector2(
-    randomInRange(-0.2, 0.2),
-    randomInRange(-0.2, 0.2)
+    randomInRange(-0.1, 0.1),
+    randomInRange(-0.1, 0.1)
   ),
-  rot: randomInRange(0, Math.PI * 6)
+  rot: randomInRange(0, Math.PI * 3)
 })
 
 

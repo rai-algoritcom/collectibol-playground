@@ -291,8 +291,8 @@ export function blendAlbedosZipped(
                     mainInterest.rgb *= 1.2; // Increase brightness by 20%
 
                     // Grading configs
-                    vec2 centeredUV = uv * 0.25 - 0.25;
-                    float aspectScale = overlayAspectRatio / meshAspectRatio; 
+                    vec2 centeredUV = uv * 1. - 0.5;
+                    float aspectScale = overlayAspectRatio * .68 / meshAspectRatio * 1.; 
                     centeredUV.x *= aspectScale;
 
                     // Mixing 
@@ -300,16 +300,16 @@ export function blendAlbedosZipped(
 
                     if (hasPatternBg) {
                         // Scale down UVs (centered around 0.5)
-                        vec2 scaleFactor = vec2(1.25, 1.25); // Adjust for desired downscaling (1.0 = no scaling)
-                        vec2 scaledUV = (centeredUV * scaleFactor) + (0.5 * (1.0 - scaleFactor));
+                        vec2 scaleFactor = vec2(.7, .65); // Adjust for desired downscaling (1.0 = no scaling)
+                        vec2 scaledUV = ((centeredUV - .5) * scaleFactor) + (1. * (1.0 - scaleFactor));
 
                         vec4 patternBg = mixGrading(scaledUV, rotationPatternBg, positionOffsetPatternBg, patternBgMap);
                         patternBg.rgb = toLinear(patternBg.rgb);
                         patternBg.rgb = adjustSaturation(patternBg.rgb, 1.);
-                        patternBg.rgb *= .85;
+                        patternBg.rgb *= 1.2;
                     
                         // Smooth alpha blending for better edge transition
-                        float feather = .8; // Adjust for more or less softness
+                        float feather = 1.; // Adjust for more or less softness
                         float alpha = smoothstep(0.0, feather, patternBg.a); // Soften the transition
                         vec3 patternColor = patternBg.rgb * alpha; // Multiply color by new soft alpha
                     

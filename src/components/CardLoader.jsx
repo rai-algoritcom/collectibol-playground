@@ -36,7 +36,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
             height: '/mobile/fx/fluid.jpg'
         },
         pattern_bg: {
-            albedo: '/mobile/prod/pattern_bg/Pattern_Alpha_05.png'
+            albedo: '/mobile/prod/pattern_bg/03.png'
         },
         main_interest: {
             albedo: '/mobile/prod/main_interest/albido2.png',
