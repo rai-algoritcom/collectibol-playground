@@ -43,10 +43,11 @@ export default function CardLoader({ controlsRef, isGameplay }) {
             height: '/mobile/prod/main_interest/height.png',
         },
         layout: {
-            albedo: '/mobile/prod/layout/albido2.png',
+            albedo: '/mobile/prod/layout/layout.png',
             albedo2: '/mobile/prod/layout/albido2-skills.png',
             ao: '/mobile/prod/layout/ao.png',
             height: '/mobile/prod/layout/height.png',
+            layoutTxt: '/mobile/prod/layout/rainbow.png'
         },
         gradingV2: {
             doblez: {

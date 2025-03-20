@@ -128,6 +128,11 @@ export function blendAlbedosZipped(
     main_interest.albedo.minFilter = THREE.LinearFilter;
     main_interest.albedo.magFilter = THREE.LinearFilter;
     main_interest.albedo.format = THREE.RGBAFormat;
+
+    layout.layoutTxt.minFilter = THREE.LinearFilter;
+    layout.layoutTxt.magFilter = THREE.LinearFilter;
+    layout.layoutTxt.format = THREE.RGBAFormat;
+
     if (is2ndLayout) {
         layout.albedo2.minFilter = THREE.LinearFilter;
         layout.albedo2.magFilter = THREE.LinearFilter;
@@ -172,6 +177,7 @@ export function blendAlbedosZipped(
                 patternBgMap: { value: pattern_bg.albedo },
                 mainInterestMap: { value: main_interest.albedo },
                 layoutMap: { value: is2ndLayout ? layout.albedo2 : layout.albedo },
+                layoutTxtMap: { value: layout.layoutTxt },
                 gradingDoblezMap: { value: gradingDoblez.albedo },
                 gradingExteriorMap: { value: gradingExterior.albedo },
                 gradingManchasMap: { value: gradingManchas.albedo },
@@ -209,6 +215,7 @@ export function blendAlbedosZipped(
                 uniform sampler2D patternBgMap;
                 uniform sampler2D mainInterestMap;
                 uniform sampler2D layoutMap;
+                uniform sampler2D layoutTxtMap;
                 uniform sampler2D gradingDoblezMap;
                 uniform sampler2D gradingExteriorMap;
                 uniform sampler2D gradingManchasMap;
@@ -274,7 +281,10 @@ export function blendAlbedosZipped(
                     vec4 base = texture2D(baseMap, vUv);
                     vec4 pattern = texture2D(patternMap, vUv);
                     vec4 mainInterest = texture2D(mainInterestMap, vUv);
+
                     vec4 _layout = texture2D(layoutMap, vUv);
+                    vec4 layoutTxt = texture2D(layoutTxtMap, vUv);
+
                     vec4 gradingExterior = texture2D(gradingExteriorMap, vUv);
 
                     vec3 coloredOverlay; 
@@ -317,7 +327,17 @@ export function blendAlbedosZipped(
                     }
 
                     result = mix(result, mainInterest, mainInterest.a);
-                    result = mix(result, vec4(mix(_layout.rgb, color, 1.), 1.), _layout.a);
+
+                    /**
+                     * Layout Txt applied
+                     */
+                    float blackThreshold = 0.1;
+                    float isBlack = step(length(_layout.rgb), blackThreshold);
+                    vec3 layoutColor = mix(_layout.rgb, layoutTxt.rgb, isBlack);
+                    result = mix(result, vec4(layoutColor, 1.), _layout.a); 
+                    // [OLD code] result = mix(result, vec4(mix(_layout.rgb, color, 1.), 1.), _layout.a);
+
+
                     result = mix(result, gradingExterior, gradingExterior.a);
 
                     // Rotation + Offset Pos. Manchas
