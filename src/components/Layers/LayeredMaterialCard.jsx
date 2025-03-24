@@ -943,13 +943,18 @@ export default function LayeredMaterialCard({
             
             if (overlayRef.current) {
                 if (animationTrigger === 'rotation') {
+                    console.log('rotation')
                     overlayRef.current.uniforms.uTime.value = smoothAngle 
                 } else {
+                    console.log('time')
                     overlayRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
                 }
             }
-
-            shaderRef.current.uniforms.uRotation.value = smoothAngle * 3
+            if (animationTrigger === 'rotation') {
+                shaderRef.current.uniforms.uTime.value = smoothAngle * 3
+            } else {
+                shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
+            }
             lastAngle = smoothAngle
         }
     })
