@@ -36,7 +36,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
             height: '/mobile/fx/fluid.jpg'
         },
         pattern_bg: {
-            albedo: '/mobile/prod/pattern_bg/Pattern1.png'
+            albedo: '/mobile/prod/pattern_bg/Pattern_Alpha_05.png'
         },
         main_interest: {
             albedo: '/mobile/prod/main_interest/albido2.png',
@@ -79,7 +79,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
             albedo: '/mobile/signature/sign.png'
         },
         fx: {
-            irisMask: '/mobile/prod/pattern_bg/Fx_01.png',
+            irisMask: '/mobile/prod/pattern_bg/holo.png',
             // irisMask: '/mobile/fx/iris-mask.jpg',
             iridescence: '/mobile/fx/iris4.jpg',
             brightnessMask: '/mobile/fx/LamineCard.png',
@@ -114,7 +114,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 value: cardConfig.roughness_ch.base_roughness,
                 label: 'Roughness ch.'
             }
-    })
+    }, { collapsed: true })
 
 
     const { pattern_albedo } = useControls(
@@ -125,7 +125,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 value: cardConfig.albedo_ch.pattern_albedo,
                 label: 'Albedo ch.'
             }
-    })
+    }, { collapsed: true })
 
     const { pattern_bg_albedo } = useControls(
         'Pattern Textures + Channels', {
@@ -134,7 +134,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 value: cardConfig.albedo_ch.pattern_bg_albedo,
                 label: 'Albedo ch.'
             }
-        }
+        }, { collapsed: true }
     )
 
 
@@ -150,7 +150,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 value: cardConfig.height_ch.main_interest_height,
                 label: 'Height ch.'
             },
-        }
+        }, { collapsed: true }
     )
 
 
@@ -168,7 +168,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 value: cardConfig.height_ch.layout_height,
                 label: 'Height ch.'
             },
-        }
+        }, { collapsed: true }
     )
 
 
@@ -184,7 +184,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 value: cardConfig.roughness_ch.grading_v2_doblez_roughness,
                 label: 'Roughness ch.'
             }
-        },
+        }, { collapsed: true }
     )
 
     const { grading_v2_exterior_albedo, grading_v2_exterior_roughness } = useControls(
@@ -199,7 +199,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 value: cardConfig.roughness_ch.grading_v2_exterior_roughness,
                 label: 'Roughness ch.'
             }
-        }
+        }, { collapsed: true }
     )
 
     const { grading_v2_manchas_albedo } = useControls(
@@ -209,7 +209,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 value: cardConfig.albedo_ch.grading_v2_manchas_albedo,
                 label: 'Albedo ch.'
             }
-        }
+        }, { collapsed: true }
     )
 
     const { grading_v2_rascado_albedo, grading_v2_rascado_roughness } = useControls(
@@ -224,7 +224,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 value: cardConfig.roughness_ch.grading_v2_rascado_roughness,
                 label: 'Roughness ch.'
             }
-        }
+        }, { collapsed: true }
     )
 
     const { grading_v2_scratches_albedo, grading_v2_scratches_roughness } = useControls(
@@ -239,7 +239,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
                 value: cardConfig.roughness_ch.grading_v2_scratches_roughness,
                 label: 'Roughness ch.'
             }
-        }
+        }, { collapsed: true }
     )
 
 

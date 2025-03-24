@@ -170,7 +170,7 @@ export default function LayeredMaterialCard({
             max: Math.PI * 3,
             label: 'Rotation'
         }
-    })
+    }, { collapsed: true })
 
     const { posManchas, rotManchas } = useControls('Manchas Config.', {
         posManchas: {
@@ -186,7 +186,7 @@ export default function LayeredMaterialCard({
             max: Math.PI * 3,
             label: 'Rotation'
         }
-    })
+    }, { collapsed: true })
 
     const { posRascado, rotRascado } = useControls('Rascado Config.', {
         posRascado: {
@@ -202,7 +202,7 @@ export default function LayeredMaterialCard({
             max: Math.PI * 3, 
             label: 'Rotation'
         }
-    })
+    }, { collapsed: true })
 
     const { posScratches, rotScratches } = useControls('Scratches Config.', {
         posScratches: {
@@ -218,7 +218,7 @@ export default function LayeredMaterialCard({
             max: Math.PI * 3,
             label: 'Rotation'
         }
-    })
+    }, { collapsed: true })
 
     const { posPatternBg, rotPatternBg } = useControls('Pattern Config,', {
         posPatternBg: {
@@ -234,7 +234,7 @@ export default function LayeredMaterialCard({
             max: Math.PI * .3,
             label: 'Rotation'
         }
-    })
+    }, { collapsed: true })
 
     const patternBgProps = {
         pos: posPatternBg,
@@ -310,7 +310,7 @@ export default function LayeredMaterialCard({
     const { useVideoTexture, clip } = useControls("Video Texture", {
         useVideoTexture: { value: cardConfig.use_video, label: "Enable" },
         clip: { value: "/clips/Lamine_clip.mov", onChange: () => {}, label: 'Clip' }
-    });
+    }, { collapsed: true });
         
 
     /**
@@ -322,7 +322,7 @@ export default function LayeredMaterialCard({
     const { useHDRITexture, hdri } = useControls("HDRI Texture", {
         useHDRITexture: { value: cardConfig.use_hdri, label: "Enable" },
         hdri: { image: "/env/orlando_stadium_4k.jpg", onChange: () => {}, label: 'HDRI' }
-    })
+    }, { collapsed: true })
 
 
     /**
@@ -333,7 +333,7 @@ export default function LayeredMaterialCard({
     const { useGLBTexture, glb } = useControls('GLB Texture', {
         useGLBTexture: { value: false, label: "Enable" },
         glb: { value: "/models/cat_compressed.glb", onChange: () => {}, label: 'GLB' }
-    })
+    }, { collapsed: true })
 
 
     const renderScene = useMemo(() => new THREE.Scene(), [])
@@ -420,7 +420,7 @@ export default function LayeredMaterialCard({
             max: 1.0,
             step: 0.1,
         },
-    });
+    }, { collapsed: true });
 
     const { normalIntensity } = useControls('Normal Config.', {
         normalIntensity: { 
@@ -430,7 +430,7 @@ export default function LayeredMaterialCard({
             max: 5.0, 
             step: 0.01 
         }
-    });
+    }, { collapsed: true });
 
     const { displacementScale } = useControls('Displacement Config.', {
         displacementScale: { 
@@ -440,7 +440,7 @@ export default function LayeredMaterialCard({
             max: 0.5, 
             step: 0.0001 
         }
-    })
+    }, { collapsed: true })
 
 
     const {
@@ -502,20 +502,20 @@ export default function LayeredMaterialCard({
             max: 20,
             label: 'PL2 z'
         },
-    })
+    }, { collapsed: true })
     
 
 
     const { useBrightness, brightnessIntensity  } = useControls('Brightness Fx', {
         useBrightness: { value: cardConfig.brightness.use_brightness, label: 'Enable' },
         brightnessIntensity: { value: cardConfig.brightness.brightness_intensity, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
-    });
+    }, { collapsed: true });
 
 
     const { useIridescence, iridescenceIntensity } = useControls('Iridescence Fx', {
         useIridescence: { value: cardConfig.iridescence.use_iridescence, label: 'Enable' },
         iridescenceIntensity: { value: cardConfig.iridescence.iridescence_intensity, min: 0, max: 4.0, step: 0.0001, label: 'Intensity' },
-    });
+    }, { collapsed: true });
 
     
 
@@ -523,7 +523,7 @@ export default function LayeredMaterialCard({
         useShiney: { value: cardConfig.shine.use_shine, label: 'Enable' },
         shineyIntensity: { value: cardConfig.shine.shine_intensity, min: 0, max: 0.02, step: 0.0001, label: 'Intensity' },
         shineyColor: { value: cardConfig.shine.shine_color, label: 'Color' },
-    })
+    }, { collapsed: true })
 
 
 
@@ -531,33 +531,35 @@ export default function LayeredMaterialCard({
         useRefraction: { value: cardConfig.refraction.use_refraction, label: 'Enable' },
         stripesVisible: { value: cardConfig.refraction.stripes_visible, label: 'Stripes' },
         refractionIntensity: { value: cardConfig.refraction.refraction_intensity, min: 0, max: 1.0, step: 0.001, label: 'Intensity' },
-    })
+    }, { collapsed: true })
 
 
     
-    const { useTransition, transitionSpeed } = useControls('Transition Fx', {
-        useTransition: { value: cardConfig.transition.use_transition, label: 'Enable' },
-        transitionSpeed: { value: cardConfig.transition.transition_speed, min: 0, max: 3, label: 'Speed' },
-        'mode': {
-                value: 'full',
-                options: {
-                    Full: 'full',
-                    Skills: 'max',
-                    Min: 'min'
-                },
-                label: '*Mode',
-                onChange: (value) => { 
-                    if (value == 'full') {
-                        setBlendMode(0)
-                    } else if (value == 'max') {
-                        setBlendMode(0)
-                    } else {
-                        setBlendMode(1)
-                    }
-                    changeCardMode(value)
-                }
-        }
-    }, [shaderRef.current])
+    const useTransition = cardConfig.transition.use_transition;
+    const transitionSpeed = cardConfig.transition.transition_speed;
+    // const { useTransition, transitionSpeed } = useControls('Transition Fx', {
+    //     useTransition: { value: cardConfig.transition.use_transition, label: 'Enable' },
+    //     transitionSpeed: { value: cardConfig.transition.transition_speed, min: 0, max: 3, label: 'Speed' },
+    //     'mode': {
+    //             value: 'full',
+    //             options: {
+    //                 Full: 'full',
+    //                 Skills: 'max',
+    //                 Min: 'min'
+    //             },
+    //             label: '*Mode',
+    //             onChange: (value) => { 
+    //                 if (value == 'full') {
+    //                     setBlendMode(0)
+    //                 } else if (value == 'max') {
+    //                     setBlendMode(0)
+    //                 } else {
+    //                     setBlendMode(1)
+    //                 }
+    //                 changeCardMode(value)
+    //             }
+    //     }
+    // }, [shaderRef.current], { collapsed: true })
 
 
     const { useFolding, foldIntensity, foldX, foldY, foldRotation } = useControls('Folding Fx', { 
@@ -566,7 +568,7 @@ export default function LayeredMaterialCard({
         foldX: { value: cardConfig.folding.fold_x, min: -1.5, max: 1.5, step: 0.01, label: 'Position X' },
         foldY: { value: cardConfig.folding.fold_y, min: -1.5, max: 1.5, step: 0.01, label: 'Position Y' },
         foldRotation: { value: cardConfig.folding.fold_rotation, min: -Math.PI, max: Math.PI, step: 0.01, label: 'Rotation Z' }
-    })
+    }, { collapsed: true })
     
 
     const { useGlitch, useWave, useBreath, useTwister, usePulse, useJitter, useNoise, useCloth } = useControls('Animations Vertex', {
@@ -578,30 +580,18 @@ export default function LayeredMaterialCard({
         useJitter: { value: cardConfig.vertex_fx.id === 'jitter', label: 'Jitter Fx' },
         useNoise: { value: cardConfig.vertex_fx.id === 'noise', label: 'Noise Fx' },
         useCloth: { value: cardConfig.vertex_fx.id === 'cloth', label: 'Cloth Fx' }
-    })
+    }, { collapsed: true })
 
 
-    const { useCardio, useSquares, useCircle, useDank, useShine, useEther, useFire, useWaves, useSmoke, useRay, useCrystal, useGalaxy, useLiquid, useAsci, useSpin, useParticles, useBlobs, useGrass } = useControls('Animations Fragment (overlay)', {
+    const [customShader, setCustomShader] = useState('void main () { }')
+    const { useSmoke } = useControls('Animations Fragment (overlay)', {
         '*Trigger': { options: { rotation: 'rotation', time: 'time' }, onChange: (v) => setAnimationTrigger(v), value: cardConfig.fragment_fx.trigger },
-        useCardio: { value: cardConfig.fragment_fx.id === 'cardio', label: 'Cardio Fx' },
-        useSquares: { value: cardConfig.fragment_fx.id === 'squares', label: 'Fractal Fx' },
-        useCircle: { value: cardConfig.fragment_fx.id === 'circle', label: 'Circle Fx' },
-        useDank: { value: cardConfig.fragment_fx.id === 'dank', label: 'Dank Fx' },
-        useShine: { value: cardConfig.fragment_fx.id === 'shine', label: 'Shine Fx' },
-        useEther: { value: cardConfig.fragment_fx.id === 'ether', label: 'Ether Fx' },
-        useFire: { value: cardConfig.fragment_fx.id === 'fire', label: 'Fire Fx' },
-        useWaves: { value: cardConfig.fragment_fx.id === 'waves', label: 'Waves Fx' },
         useSmoke: { value: cardConfig.fragment_fx.id === 'smoke', label: 'Smoke Fx' },
-        useRay: { value: cardConfig.fragment_fx.id === 'ray', label: '[!] Ray Fx' },
-        useCrystal: { value: cardConfig.fragment_fx.id === 'crystal', label: 'Crystal Fx' },
-        useGalaxy: { value: cardConfig.fragment_fx.id === 'galaxy', label: 'Galaxy Fx' },
-        useLiquid: { value: cardConfig.fragment_fx.id === 'liquid', label: 'Liquid Fx' },
-        useAsci: { value: cardConfig.fragment_fx.id === 'asci', label: 'Ascii Fx' },
-        useSpin: { value: cardConfig.fragment_fx.id === 'spin', label: 'Spin Fx' },
-        useParticles: { value: cardConfig.fragment_fx.id === 'particles', label: '[!] Particles Fx' },
-        useBlobs: { value: cardConfig.fragment_fx.id === 'blobs', label: 'Blobs Fx' },
-        useGrass: { value: cardConfig.fragment_fx.id === 'grass', label: 'Grass Fx' }
+        shader: { value: '', rows: true, label: 'Shader', onChange: (v) => {
+            setCustomShader(v)
+        }}
     })
+
 
 
     /**
@@ -612,25 +602,25 @@ export default function LayeredMaterialCard({
         focusDistance: { value: 0.012, min: 0.001, max: 0.1, step: 0.001, label: 'Focus Distance' },
         focalLength: { value: 0.015, min: 0.001, max: 0.1, step: 0.001, label: 'Focal Length' },
         bokehScale: { value: 7, min: 0, max: 20, step: 0.1, label: 'Bokeh Scale'} 
-    })
+    }, { collapsed: true })
 
     const { useHueSaturation, hue, saturation } = useControls('Hue Saturation [Postprocessing]', {
         useHueSaturation: { value: false, label: 'Enable' },
         hue: { value: 0, min: -1, max: 1, step: 0.01, label: 'Hue' },
         saturation: { value: -0.15, min: -1, max: 1, step: 0.01, label: 'Saturation' },
-    })
+    }, { collapsed: true })
 
     const { useBrightnessContrast, brightness, contrast } = useControls('Brightness Contrast [Postprocessing]', {
         useBrightnessContrast: { value: false, label: 'Enable' },
         brightness: { value: 0.0, min: -1, max: 1, step: 0.01, label: 'Brightness' },
         contrast: { value: 0.035, min: -1, max: 1, step: 0.01, label: 'Contrast' },
-    })
+    }, { collapsed: true })
 
     const { useChromaticAberration, radialModulation, offset } = useControls('Chromatic Aberration [Postprocessing]', {
         useChromaticAberration: { value: false, label: 'Enable' },
         radialModulation: { value: true, label: 'Radial Modulation' },
         offset: { value: 0.0015, min: 0, max: 0.1, step: 0.0001, label: 'Offset' },
-    })
+    }, { collapsed: true })
 
     const { useGodRays, useRaysBg, raysBgColor, samples, density, weight, decay, exposure } = useControls('God Rays [Postprocessing]', {
         useGodRays: { value: false, label: 'Enable' },
@@ -641,7 +631,7 @@ export default function LayeredMaterialCard({
         weight: { value: 0.5, min: 0, max: 1, step: 0.001, label: 'Weight' },
         decay: { value: 0.95, min: 0, max: 1, step: 0.001, label: 'Decay' },
         exposure: { value: 0.3, min: 0, max: 1, step: 0.001, label: 'Exposure' },
-    })
+    }, { collapsed: true })
 
     let mesh = new THREE.Mesh(
         new THREE.PlaneGeometry(2, 3, 120, 120),
@@ -661,10 +651,10 @@ export default function LayeredMaterialCard({
 
 
 
-    useControls({
-        'Snapshot .jpg': button(async () => await takeScreenshot(gl, scene, camera, planeRef.current, [footerRef.current, skillsRef.current], false, useTransition && blendMode == 1)),
-        'Snapshot .png': button(() => takeScreenshot(gl, scene, camera, planeRef.current, [footerRef.current, skillsRef.current], true, useTransition && blendMode == 1)),
-    }, [scene, useTransition, blendMode])
+    // useControls({
+    //     'Snapshot .jpg': button(async () => await takeScreenshot(gl, scene, camera, planeRef.current, [footerRef.current, skillsRef.current], false, useTransition && blendMode == 1)),
+    //     'Snapshot .png': button(() => takeScreenshot(gl, scene, camera, planeRef.current, [footerRef.current, skillsRef.current], true, useTransition && blendMode == 1)),
+    // }, [scene, useTransition, blendMode])
 
 
     useControls({
@@ -779,61 +769,7 @@ export default function LayeredMaterialCard({
                 },
                 fragment_fx: {
                     trigger: animationTrigger,
-                    id: useCircle 
-                    ?
-                    'circle'
-                    : useSquares 
-                    ?
-                    'fractal'
-                    : useDank
-                    ? 
-                    'dank'
-                    : useShine
-                    ?
-                    'shine'
-                    : useEther
-                    ?
-                    'ether'
-                    : useFire
-                    ?
-                    'fire'
-                    : useWaves
-                    ?
-                    'waves'
-                    : useSmoke 
-                    ?
-                    'smoke'
-                    : useRay 
-                    ?
-                    'ray'
-                    : useCrystal 
-                    ?
-                    'crystal'
-                    : useGalaxy 
-                    ?
-                    'galaxy'
-                    : useLiquid 
-                    ? 
-                    'liquid'
-                    : useAsci 
-                    ?
-                    'asci'
-                    : useSpin 
-                    ?
-                    'spin'
-                    : useParticles 
-                    ? 
-                    'particles'
-                    : useCardio 
-                    ? 
-                    'cardio'
-                    : useBlobs
-                    ? 
-                    'blobs'
-                    : useGrass
-                    ? 
-                    'grass'
-                    : 'none'
+                    id: 'smoke'
                 }
             }
 
@@ -904,27 +840,10 @@ export default function LayeredMaterialCard({
             });
         }
     }, [
-        
+        customShader,
         animationTrigger,
         // Fragment FX
-        useGrass,
-        useBlobs,
-        useParticles,
-        useSpin,
-        useAsci,
-        useLiquid,
-        useGalaxy,
-        useCrystal,
-        useRay,
         useSmoke,
-        useWaves,
-        useFire,
-        useEther,
-        useShine,
-        useDank,
-        useCircle,
-        useSquares,
-        useCardio,
         // Vertex FX
         useCloth,
         useNoise,
@@ -1424,10 +1343,10 @@ export default function LayeredMaterialCard({
              *  Outer Mask FX -Brightness, Iridescence, ShaderFX-
              */
              <mesh 
-                visible={useBrightness || useIridescence || useCardio || useSquares || useCircle || useDank || useShine || useEther || useFire || useWaves || useSmoke || useRay || useCrystal || useGalaxy || useLiquid || useAsci || useSpin || useParticles || useBlobs || useGrass} 
+                visible={useSmoke} 
                 key={`main-${key}`}  
                 ref={planeRef} 
-                position={[0, 0, 0.005]} 
+                position={[0, 0, 0.0001]} 
                 renderOrder={0}
             >
                 <planeGeometry args={[2, 3, 10, 10]} />
@@ -1446,59 +1365,10 @@ export default function LayeredMaterialCard({
                         ?
                         outerBrightnessFragmentShader 
                         : 
-                        useCircle 
+                        customShader
                         ?
-                        circleFxFragmentShader
-                        : useSquares 
-                        ?
-                        squaresFxFragmentShader
-                        : useDank
-                        ? 
-                        dankFxFragmentShader
-                        : useShine
-                        ?
-                        lightFxFragmentShader
-                        : useEther
-                        ?
-                        etherFxFragmentShader
-                        : useFire
-                        ?
-                        fireFxFragmentShader
-                        : useWaves
-                        ?
-                        waveFxFragmentShader
-                        : useSmoke 
-                        ?
-                        smokeFxFragmentShader
-                        : useRay 
-                        ?
-                        rayFxFragmentShader
-                        : useCrystal 
-                        ?
-                        crystalFxFragmentShader
-                        : useGalaxy 
-                        ?
-                        galaxyFxFragmentShader
-                        : useLiquid 
-                        ? 
-                        liquidFxFragmentShader
-                        : useAsci 
-                        ?
-                        asciFxFragmentShader
-                        : useSpin 
-                        ?
-                        spinFxFragmentShader
-                        : useParticles 
-                        ? 
-                        particlesFxFragmentShader
-                        : useBlobs
-                        ? 
-                        blobsFxFragmentShader
-                        : useGrass 
-                        ? 
-                        grassFxFragmentShader
-                        : cardioFxFragmentShader
-                        }
+                        customShader
+                        : smokeFxFragmentShader }
                       transparent={true}
                       uniforms={{
                         fxMask: { value: textures.fx.irisMask },
