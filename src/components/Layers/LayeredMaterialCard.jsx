@@ -672,6 +672,8 @@ export default function LayeredMaterialCard({
 
     useEffect(() => {
 
+        console.log('iridescence', useIridescence)
+
         const cfg =
             {
                 textures: texturePaths,
@@ -943,17 +945,17 @@ export default function LayeredMaterialCard({
             
             if (overlayRef.current) {
                 if (animationTrigger === 'rotation') {
-                    console.log('rotation')
                     overlayRef.current.uniforms.uTime.value = smoothAngle 
                 } else {
-                    console.log('time')
                     overlayRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
                 }
             }
             if (animationTrigger === 'rotation') {
-                shaderRef.current.uniforms.uTime.value = smoothAngle * 3
+                shaderRef.current.uniforms.uTime.value = smoothAngle * 3;
+                shaderRef.current.uniforms.uRotation.value = smoothAngle * 3;
             } else {
-                shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime()
+                shaderRef.current.uniforms.uTime.value = state.clock.getElapsedTime();
+                shaderRef.current.uniforms.uRotation.value = state.clock.getElapsedTime();
             }
             lastAngle = smoothAngle
         }
@@ -1132,7 +1134,7 @@ export default function LayeredMaterialCard({
                     roughnessMap={blendedRoughnessTextures} 
                     normalMap={blendedNormalTextures}
                     metalness={0.45} // Lower for non-metallic surfaces
-                    roughness={.8} // Adjust to balance reflectivity
+                    roughness={.5} // Adjust to balance reflectivity
                     side={THREE.FrontSide}
                     opacity={1}
                     color="white"
@@ -1348,7 +1350,7 @@ export default function LayeredMaterialCard({
              *  Outer Mask FX -Brightness, Iridescence, ShaderFX-
              */
              <mesh 
-                visible={useSmoke} 
+                // visible={useSmoke} 
                 key={`main-${key}`}  
                 ref={planeRef} 
                 position={[0, 0, 0.0001]} 
