@@ -1418,7 +1418,7 @@ export default function LayeredMaterialCard({
                         heightMap: { value: blendedHeightTextures },
                         displacementScale: { value: displacementScale },
                         alphaMap: { value: blendedAlphaTextures },
-                        rarityMask: { value: useTexture('/mobile/fx/footer_mask.jpg') },
+                        rarityMask: { value: useTexture('/mobile/fx/footer_mask2.png') },
                     }}
                 />
             </mesh>

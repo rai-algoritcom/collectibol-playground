@@ -15,7 +15,7 @@ export default function CollCardFooter() {
                   position-y={-1.4}
                   position-z={0.0002}
                 >
-                  EX 3
+                  PR
                 </Text3D>
                 <Text3D
                   font={('/fonts/Inter_Medium_Regular.json')}
@@ -23,11 +23,11 @@ export default function CollCardFooter() {
                   bevelSegments={3}
                   bevelEnabled
                   bevelThickness={0.0005}
-                  position-x={-.625}
-                  position-y={-1.36}
+                  position-x={-.71}
+                  position-y={-1.35}
                   position-z={0.0002}
                 >
-                  Lamine Yamal, 
+                  Joan Laporta 
                 </Text3D>
                 <Text3D
                   font={('/fonts/Inter_Medium_Regular.json')}
@@ -35,11 +35,11 @@ export default function CollCardFooter() {
                   bevelSegments={3}
                   bevelEnabled
                   bevelThickness={0.0005}
-                  position-x={-.625}
-                  position-y={-1.42}
+                  position-x={-.71}
+                  position-y={-1.41}
                   position-z={0.0002}
                 >
-                  la revelación 
+                  President 
                 </Text3D>
                 <Text3D
                   font={('/fonts/Inter_Medium_Regular.json')}
