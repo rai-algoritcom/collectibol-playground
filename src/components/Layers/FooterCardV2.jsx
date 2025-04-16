@@ -27,7 +27,7 @@ export default function CollCardFooter() {
                   position-y={-1.35}
                   position-z={0.0002}
                 >
-                  Joan Laporta 
+                  Player Name 
                 </Text3D>
                 <Text3D
                   font={('/fonts/Inter_Medium_Regular.json')}
@@ -39,7 +39,7 @@ export default function CollCardFooter() {
                   position-y={-1.41}
                   position-z={0.0002}
                 >
-                  President 
+                  Chapter
                 </Text3D>
                 <Text3D
                   font={('/fonts/Inter_Medium_Regular.json')}

@@ -76,7 +76,7 @@ export default function CardLoader({ controlsRef, isGameplay }) {
             roughness2: '/mobile/backside/roughness2.jpg'
         },
         signature: {
-            albedo: '/mobile/signature/sign.png'
+            albedo: '/mobile/signature/sign.png',
         },
         fx: {
             irisMask: '/mobile/prod/pattern_bg/holo.png',

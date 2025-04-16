@@ -62,7 +62,7 @@ export const getCardConfigJSON = () => {
         },
         iridescence: {
             iridescence_intensity: 0.6,
-            use_iridescence: false
+            use_iridescence: true
         },
         shine: {
             shine_intensity: 0.0045,
