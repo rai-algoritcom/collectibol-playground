@@ -24,7 +24,7 @@ export const getCardConfigJSON = () => {
             base_alpha: true
         },
         roughness_ch: {
-            base_roughness: false,
+            base_roughness: true,
             grading_v2_doblez_roughness: true,
             grading_v2_exterior_roughness: true,
             grading_v2_rascado_roughness: true,
